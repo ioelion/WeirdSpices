@@ -5,7 +5,7 @@ using System.Collections;
 namespace Completed
 {
 	using System.Collections.Generic;		//Allows us to use Lists. 
-	using UnityEngine.UI;					//Allows us to use UI.
+	using UnityEngine.UIElements;					//Allows us to use UI.
 	
 	public class GameManager : MonoBehaviour
 	{
@@ -16,7 +16,7 @@ namespace Completed
 		[HideInInspector] public bool playersTurn = true;		//Boolean to check if it's players turn, hidden in inspector but public.
 		
 		
-		private Text levelText;									//Text to display current level number.
+		private TextElement levelText;									//Text to display current level number.
 		private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.
 		private BoardManager boardScript;						//Store a reference to our BoardManager which will set up the level.
 		private int level = 1;									//Current level number, expressed in game as "Day 1".
@@ -81,7 +81,7 @@ namespace Completed
 			levelImage = GameObject.Find("LevelImage");
 			
 			//Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
-			levelText = GameObject.Find("LevelText").GetComponent<Text>();
+			levelText = GameObject.Find("LevelText").GetComponent<TextElement>();
 			
 			//Set the text of levelText to the string "Day" and append the current level number.
 			levelText.text = "Day " + level;

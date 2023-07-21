@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using System.Collections;
 
 
@@ -47,7 +47,7 @@ public class TutorialInfo : MonoBehaviour
 			}
 
 			// set UI toggle to match the existing UI preference
-			showAtStartToggle.isOn = showAtStart;
+			showAtStartToggle.SetEnabled(showAtStart) ;
 
 			// show the overlay info or continue to play the game
 			if (showAtStart) 
@@ -88,7 +88,7 @@ public class TutorialInfo : MonoBehaviour
 	// set the boolean storing show at start status to equal the UI toggle's status
 	public void ToggleShowAtLaunch()
 	{
-		showAtStart = showAtStartToggle.isOn;
+		showAtStart = showAtStartToggle.enabledSelf;
 		PlayerPrefs.SetInt(showAtStartPrefsKey, showAtStart ? 1 : 0);
 	}
 }
