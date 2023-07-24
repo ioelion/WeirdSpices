@@ -21,13 +21,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float timeToWaitTillGrab = 0.5f;
 
-    [SerializeField]
-    private float lastItemDropTime = 0f;
+    private float lastItemDropTime;
 
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
         sr = this.GetComponent<SpriteRenderer>();
+        lastItemDropTime = Time.fixedTime + timeToWaitTillGrab;
     }
 
     // Update is called once per frame
