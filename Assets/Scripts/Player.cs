@@ -5,6 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
+    private Animator animator;
+
+    [SerializeField]
     private int movementSpeed;
 
     private Rigidbody2D rb;
@@ -15,8 +18,6 @@ public class Player : MonoBehaviour
     private GameObject ingredientContainer;
 
     private bool hasIngredient = false;
-
-
 
     [SerializeField]
     private float timeToWaitTillGrab = 0.5f;
@@ -39,13 +40,13 @@ public class Player : MonoBehaviour
 
         if (_force != Vector2.zero)
         {
-            //movementSpeed.animator.SetBool("walking", true);
+            animator.SetBool("playerWalk", true);
             rb.velocity = _force;
             sr.flipX = Mathf.Sign(_force.x) < 0;
         }
         else
         {
-            //manager.animator.SetBool("walking", false);
+            animator.SetBool("playerWalk", false);
             rb.velocity = Vector2.zero;
         }
 
