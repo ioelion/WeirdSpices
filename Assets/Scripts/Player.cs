@@ -10,7 +10,20 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
 
     private SpriteRenderer sr;
-    // Start is called before the first frame update
+
+    [SerializeField]
+    private GameObject ingredientContainer;
+
+    private bool hasIngredient = false;
+
+
+
+    [SerializeField]
+    private float timeToWaitTillGrab = 0.5f;
+
+    [SerializeField]
+    private float lastItemDropTime = 0f;
+
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
@@ -28,7 +41,6 @@ public class Player : MonoBehaviour
         {
             //movementSpeed.animator.SetBool("walking", true);
             rb.velocity = _force;
-            //TODO yoelpedemonte cambiar sprite personaje por uno de costado
             sr.flipX = Mathf.Sign(_force.x) < 0;
         }
         else
@@ -37,23 +49,26 @@ public class Player : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
 
-        if(Input.GetKey(KeyCode.Space)){
-            //TODO yoelpedemonte objeto a donde se adhieran para evitar problemas con el detach children 
-            Transform tfchildren = this.transform.GetChild(0);
-            tfchildren.position = new Vector2(this.transform.position.x + 2, this.transform.position.y + 2);
-            this.transform.DetachChildren();
+        if(Input.GetKeyDown(KeyCode.Space) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
+            if(hasIngredient){
+                Transform tfchildren = ingredientContainer.transform.GetChild(0);
+                tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
+                ingredientContainer.transform.DetachChildren();
+                hasIngredient = false;
+                lastItemDropTime = Time.fixedTime; 
+            }
+
         }
         
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
-        if(other.tag.Equals("Ingredient"))
+        if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Space) &&!hasIngredient && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
         {
-            //TODO yoelpedemonte agregar limite de hijos (semillas)
-            other.gameObject.transform.parent = this.transform;
-            other.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1);
-
+            other.gameObject.transform.parent = ingredientContainer.transform;
+            other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
+            hasIngredient = true;
         }
     }
 
