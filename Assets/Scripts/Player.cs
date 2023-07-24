@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
+        if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
             if(hasIngredient){
                 Transform tfchildren = ingredientContainer.transform.GetChild(0);
                 tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
@@ -60,12 +60,16 @@ public class Player : MonoBehaviour
             }
 
         }
+
+        if(Input.GetKeyDown(KeyCode.Space)){
+            animator.SetTrigger("playerAttack");
+        }
         
     }
 
     void OnTriggerStay2D(Collider2D other)
     {
-        if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Space) &&!hasIngredient && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
+        if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Q) &&!hasIngredient && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
         {
             other.gameObject.transform.parent = ingredientContainer.transform;
             other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
