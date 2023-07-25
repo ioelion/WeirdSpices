@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WeirdSpices{
-    public class Player : MonoBehaviour
+    public class Player : Entity
     {
         [SerializeField]
         private Animator animator;
@@ -24,6 +24,11 @@ namespace WeirdSpices{
         private float timeToWaitTillGrab = 0.5f;
 
         private float lastItemDropTime;
+        
+        [SerializeField]
+        private int hp;
+
+
 
         void Start()
         {
@@ -35,6 +40,21 @@ namespace WeirdSpices{
         // Update is called once per frame
         void Update()
         {
+            Move();
+            KeyDownActions();
+        }
+
+        void OnTriggerStay2D(Collider2D other)
+        {
+            if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Q) &&!hasIngredient && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
+            {
+                other.gameObject.transform.parent = ingredientContainer.transform;
+                other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
+                hasIngredient = true;
+            }
+        }
+
+        private void Move(){
             float _x = Input.GetAxis("Horizontal") * movementSpeed;
             float _y = Input.GetAxis("Vertical") * movementSpeed;
             Vector2 _force = new Vector2(_x, _y);
@@ -50,7 +70,10 @@ namespace WeirdSpices{
                 animator.SetBool("playerWalk", false);
                 rb.velocity = Vector2.zero;
             }
+        }
 
+        private void KeyDownActions(){
+            
             if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
                 if(hasIngredient){
                     Transform tfchildren = ingredientContainer.transform.GetChild(0);
@@ -64,21 +87,16 @@ namespace WeirdSpices{
 
             if(Input.GetKeyDown(KeyCode.Space)){
                 animator.SetTrigger("playerAttack");
-            }
-            
-        }
-
-        void OnTriggerStay2D(Collider2D other)
-        {
-            if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Q) &&!hasIngredient && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
-            {
-                other.gameObject.transform.parent = ingredientContainer.transform;
-                other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
-                hasIngredient = true;
+                base.getWeapon().gameObject.SetActive(true);
             }
         }
 
-
+        public void ReduceHealth(int pointsToReduce){
+            hp -= pointsToReduce;
+            if(hp <=0){
+                Destroy(this.gameObject);
+            }
+        }
     }
 }
 

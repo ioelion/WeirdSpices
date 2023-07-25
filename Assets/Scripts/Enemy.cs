@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WeirdSpices{
-    public class Enemy : MonoBehaviour
+    public class Enemy : Entity
     {
         private Transform target;    
         private Rigidbody2D rb;
@@ -15,6 +15,10 @@ namespace WeirdSpices{
         private Vector2 _force;
         private SpriteRenderer sr;
         private Animator an;
+
+        [SerializeField]
+        private int hp;
+        
 
         // Start is called before the first frame update
         void Start()
@@ -49,14 +53,26 @@ namespace WeirdSpices{
                     rb.SetRotation(0);
                     sr.flipX = Mathf.Sign(_force.x) > 0;
                 }
-                else
+                /*else
                 {
                     an.SetBool("playerWalk", false);
                     rb.velocity = Vector2.zero;
+                }*/
+
+                if((target.position - transform.position).magnitude < 5f){
+                    an.SetTrigger("playerAttack");
+
                 }
             }
 
         }
+        public void ReduceHealth(int pointsToReduce){
+            hp -= pointsToReduce;
+            if(hp <=0){
+                Destroy(this.gameObject);
+            }
+        }
     }
+
 
 }
