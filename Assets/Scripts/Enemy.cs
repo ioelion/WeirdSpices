@@ -15,9 +15,6 @@ namespace WeirdSpices{
         private Vector2 _force;
         private SpriteRenderer sr;
         private Animator an;
-
-        [SerializeField]
-        private int hp;
         
 
         // Start is called before the first frame update
@@ -59,18 +56,12 @@ namespace WeirdSpices{
                     rb.velocity = Vector2.zero;
                 }*/
 
-                if((target.position - transform.position).magnitude < 5f){
+                if((target.position - transform.position).magnitude < 1f){
                     an.SetTrigger("playerAttack");
 
                 }
             }
 
-        }
-        public void ReduceHealth(int pointsToReduce){
-            hp -= pointsToReduce;
-            if(hp <=0){
-                Destroy(this.gameObject);
-            }
         }
     }
 

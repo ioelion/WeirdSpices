@@ -25,11 +25,8 @@ namespace WeirdSpices{
 
         private float lastItemDropTime;
         
-        [SerializeField]
-        private int hp;
 
-
-
+        
         void Start()
         {
             rb = this.GetComponent<Rigidbody2D>();
@@ -38,7 +35,7 @@ namespace WeirdSpices{
         }
 
         // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
             Move();
             KeyDownActions();
@@ -69,6 +66,7 @@ namespace WeirdSpices{
             {
                 animator.SetBool("playerWalk", false);
                 rb.velocity = Vector2.zero;
+
             }
         }
 
@@ -88,15 +86,16 @@ namespace WeirdSpices{
             if(Input.GetKeyDown(KeyCode.Space)){
                 animator.SetTrigger("playerAttack");
                 base.getWeapon().gameObject.SetActive(true);
+                if(sr.flipX){
+                    base.getWeapon().FlipPositionX();
+                }
             }
         }
 
-        public void ReduceHealth(int pointsToReduce){
-            hp -= pointsToReduce;
-            if(hp <=0){
-                Destroy(this.gameObject);
-            }
+        override protected void Die(){
+            Debug.Log("he morido");
         }
+
     }
 }
 
