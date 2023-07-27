@@ -24,6 +24,9 @@ namespace WeirdSpices{
         private float timeToWaitTillGrab = 0.5f;
 
         private float lastItemDropTime = 0f;
+
+        [SerializeField]
+        private GameManager gameManager;
         
 
         
@@ -95,8 +98,14 @@ namespace WeirdSpices{
 
       override protected void Die(){
             Debug.Log("he morido");
+            gameManager.EndGame();
         }
 
+        public override void ReduceHealth(int pointsToReduce)
+        {
+            base.ReduceHealth(pointsToReduce);
+            gameManager.SetPlayerHp(base.GetHealth());
+        }
     }
 }
 

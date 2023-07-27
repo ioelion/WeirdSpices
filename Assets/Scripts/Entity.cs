@@ -33,5 +33,9 @@ namespace WeirdSpices{
         protected virtual void Die(){
             Destroy(this.gameObject);
         }
+
+        public virtual int GetHealth(){
+            return hp;
+        }
     }
 }
