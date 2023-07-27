@@ -10,30 +10,33 @@ namespace WeirdSpices{
 
         [SerializeField]
         private Tile dryTile;
-        private Tilemap tilemap;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-            tilemap = GetComponent<Tilemap>();
-        }
+        [SerializeField]
+        private Tilemap soil;
 
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
+        [SerializeField]
+        private Tilemap foresoil;
 
-        public void PlantSeed(Vector3 position){
+        public void IrrigateSoil(Vector3 position){
             Vector3Int positionInt = Vector3Int.FloorToInt(position); 
-            TileBase tile = this.tilemap.GetTile(positionInt);
-            tilemap.SetTile(positionInt,wetTile);
+            if(this.soil.GetSprite(positionInt) != null){
+                soil.SetTile(positionInt,wetTile);
+            }
+
         }
 
+        public void ManageSeed(Vector3 position, GameObject seed){
+            Vector3Int positionInt = Vector3Int.FloorToInt(position); 
+            if(soil.GetSprite(positionInt) != null && foresoil.GetSprite(positionInt) == null){
+                Tile seedTile = seed.gameObject.GetComponent<Seed>().getTile();
+                foresoil.SetTile(positionInt,seedTile);
+            };
+        }
+        /*
         public void RemoveSeed(Vector3 position){
             Vector3Int positionInt = Vector3Int.FloorToInt(position); 
             TileBase tile = this.tilemap.GetTile(positionInt);
             tilemap.SetTile(positionInt,wetTile);
-        } 
+        }*/ 
     }
 }

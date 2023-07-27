@@ -11,23 +11,23 @@ namespace WeirdSpices{
         [SerializeField]
         private int movementSpeed;
 
-        private Rigidbody2D rb;
-
-        private SpriteRenderer sr;
-
         [SerializeField]
         private GameObject ingredientContainer;
-
-        private bool hasIngredient = false;
 
         [SerializeField]
         private float timeToWaitTillGrab = 0.5f;
 
-        private float lastItemDropTime = 0f;
-
         [SerializeField]
         private GameManager gameManager;
-        
+
+        private Rigidbody2D rb;
+
+        private SpriteRenderer sr;
+
+        //TODO yoelpedemonte modificar hasSeed a hasItem asignando a cada item una clase diferente y forma de distinguirlo
+        private bool hasSeed = false;
+
+        private float lastItemDropTime = 0f;
 
         
         override public void Start()
@@ -47,14 +47,22 @@ namespace WeirdSpices{
 
         void OnTriggerStay2D(Collider2D other)
         {
-            if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Q) &&!hasIngredient && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
+            if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Q) &&!hasSeed && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
             {
                 other.gameObject.transform.parent = ingredientContainer.transform;
                 other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
-                hasIngredient = true;
+                hasSeed = true;
             }
 
-            if(other.tag.Equals("Grow"))
+            if(other.tag.Equals("Soil") && Input.GetKey(KeyCode.F)){
+                Soil soil = other.gameObject.GetComponent<Soil>();
+                if(hasSeed){
+                    soil.ManageSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
+                }else{
+                    soil.IrrigateSoil(this.transform.position);
+                }
+
+            }
         }
 
         private void Move(){
@@ -78,12 +86,12 @@ namespace WeirdSpices{
 
         private void KeyDownActions(){
             
-            if(hasIngredient){
+            if(hasSeed){
                 if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
                     Transform tfchildren = ingredientContainer.transform.GetChild(0);
                     tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
                     ingredientContainer.transform.DetachChildren();
-                    hasIngredient = false;
+                    hasSeed = false;
                     lastItemDropTime = Time.fixedTime; 
                 }
 

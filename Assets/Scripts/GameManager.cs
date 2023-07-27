@@ -6,10 +6,10 @@ using TMPro;
 namespace WeirdSpices{
     public class GameManager : MonoBehaviour
     {
-    [SerializeField] 
-        private TMP_Text playerHP;
-        public TMP_Text end;
-        public GameObject endImage;
+        [SerializeField] 
+        private TMP_Text playerLives;
+        public TMP_Text endText;
+        public GameObject endScreen;
         // Start is called before the first frame update
         void Start()
         {
@@ -26,13 +26,13 @@ namespace WeirdSpices{
         }
 
         public void EndGame(){
-            end.gameObject.SetActive(true);
-            endImage.SetActive(true);
+            endText.gameObject.SetActive(true);
+            endScreen.SetActive(true);
             PauseGame();
         }
 
         public void SetPlayerHp(int hp){
-            this.playerHP.SetText(""+hp); 
+            this.playerLives.SetText(""+hp); 
         }
 
         public void PauseGame ()
