@@ -53,6 +53,8 @@ namespace WeirdSpices{
                 other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
                 hasIngredient = true;
             }
+
+            if(other.tag.Equals("Grow"))
         }
 
         private void Move(){
