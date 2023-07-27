@@ -11,14 +11,22 @@ namespace WeirdSpices{
         [SerializeField]
         private int hp;
 
+        protected Animator an;
+
+        public virtual void Start()
+        {
+            an = this.GetComponent<Animator>();
+        }
+
         public virtual Weapon getWeapon(){
             return weapon;
         }
 
         public virtual void ReduceHealth(int pointsToReduce){
             hp -= pointsToReduce;
+            an.SetTrigger("hit");
             if(hp <=0){
-                Destroy(this.gameObject);
+                Die();
             }
         }
 

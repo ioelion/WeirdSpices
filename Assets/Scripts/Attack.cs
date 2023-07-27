@@ -6,10 +6,12 @@ namespace WeirdSpices{
     public class Attack : StateMachineBehaviour
     {
         private GameObject weapon;
+        private Entity entity;
+
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            Entity entity = animator.GetComponentInParent<Entity>();
+            entity = animator.GetComponentInParent<Entity>();
             weapon = entity.getWeapon().gameObject;
         }
 

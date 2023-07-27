@@ -23,23 +23,24 @@ namespace WeirdSpices{
         [SerializeField]
         private float timeToWaitTillGrab = 0.5f;
 
-        private float lastItemDropTime;
+        private float lastItemDropTime = 0f;
         
 
         
-        void Start()
+        override public void Start()
         {
             rb = this.GetComponent<Rigidbody2D>();
             sr = this.GetComponent<SpriteRenderer>();
-            lastItemDropTime = Time.fixedTime + timeToWaitTillGrab;
+            base.Start();
         }
 
         // Update is called once per frame
-        void FixedUpdate()
+        void Update()
         {
-            Move();
             KeyDownActions();
+            Move();
         }
+
 
         void OnTriggerStay2D(Collider2D other)
         {
@@ -58,13 +59,13 @@ namespace WeirdSpices{
 
             if (_force != Vector2.zero)
             {
-                animator.SetBool("playerWalk", true);
+                animator.SetBool("walk", true);
                 rb.velocity = _force;
                 sr.flipX = Mathf.Sign(_force.x) < 0;
             }
             else
             {
-                animator.SetBool("playerWalk", false);
+                animator.SetBool("walk", false);
                 rb.velocity = Vector2.zero;
 
             }
@@ -72,8 +73,8 @@ namespace WeirdSpices{
 
         private void KeyDownActions(){
             
-            if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
-                if(hasIngredient){
+            if(hasIngredient){
+                if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
                     Transform tfchildren = ingredientContainer.transform.GetChild(0);
                     tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
                     ingredientContainer.transform.DetachChildren();
@@ -84,7 +85,7 @@ namespace WeirdSpices{
             }
 
             if(Input.GetKeyDown(KeyCode.Space)){
-                animator.SetTrigger("playerAttack");
+                animator.SetTrigger("attack");
                 base.getWeapon().gameObject.SetActive(true);
                 if(sr.flipX){
                     base.getWeapon().FlipPositionX();
@@ -92,7 +93,7 @@ namespace WeirdSpices{
             }
         }
 
-        override protected void Die(){
+      override protected void Die(){
             Debug.Log("he morido");
         }
 

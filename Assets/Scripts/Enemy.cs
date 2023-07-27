@@ -14,15 +14,20 @@ namespace WeirdSpices{
         private Vector2 moveDirection;
         private Vector2 _force;
         private SpriteRenderer sr;
-        private Animator an;
+
+        [SerializeField]
+        private float timeToWaitTillAttack = 0.5f;
+
+        private float lastAttackTime = 0f;
         
 
         // Start is called before the first frame update
-        void Start()
+        override public void Start()
         {
             rb = this.GetComponent<Rigidbody2D>();
             sr = this.GetComponent<SpriteRenderer>();
-            an = this.GetComponent<Animator>();
+            base.Start();
+            
         }
 
         void Awake() {
@@ -45,22 +50,21 @@ namespace WeirdSpices{
                 _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
                 if (_force != Vector2.zero)
                 {   
-                    an.SetBool("playerWalk", true);
+                    an.SetBool("walk", true);
                     rb.velocity = _force;
                     rb.SetRotation(0);
-                    sr.flipX = Mathf.Sign(_force.x) > 0;
+                    sr.flipX =Mathf.Sign(_force.x) > 0;
                 }
-                /*else
-                {
-                    an.SetBool("playerWalk", false);
-                    rb.velocity = Vector2.zero;
-                }*/
-
-                if((target.position - transform.position).magnitude < 1f){
-                    an.SetTrigger("playerAttack");
-
+                if(((target.position - transform.position).magnitude < 2f) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack){
+                    an.SetTrigger("attack");
+                    base.getWeapon().gameObject.SetActive(true);
+                    lastAttackTime = Time.fixedTime;
+                    if(sr.flipX){
+                        base.getWeapon().FlipPositionX();
+                    }
                 }
             }
+
 
         }
     }
