@@ -5,107 +5,150 @@ using UnityEngine;
 namespace WeirdSpices{
     public class Player : Entity
     {
-        [SerializeField]
-        private Animator animator;
+            [SerializeField]
+            private Animator animator;
 
-        [SerializeField]
-        private int movementSpeed;
+            [SerializeField]
+            private int movementSpeed;
 
-        private Rigidbody2D rb;
+            [SerializeField]
+            private GameObject ingredientContainer;
 
-        private SpriteRenderer sr;
+            [SerializeField]
+            private float timeToWaitTillGrab = 0.2f;
 
-        [SerializeField]
-        private GameObject ingredientContainer;
+            [SerializeField]
+            private GameManager gameManager;
 
-        private bool hasIngredient = false;
+            [SerializeField]
+            private float timeToWaitTillRemove = 1f;
 
-        [SerializeField]
-        private float timeToWaitTillGrab = 0.5f;
+            [SerializeField]
+            private Soil soil;
 
-        private float lastItemDropTime = 0f;
+            private Rigidbody2D rb;
 
-        [SerializeField]
-        private GameManager gameManager;
-        
+            private SpriteRenderer sr;
 
-        
-        override public void Start()
-        {
-            rb = this.GetComponent<Rigidbody2D>();
-            sr = this.GetComponent<SpriteRenderer>();
-            base.Start();
-        }
+            //TODO yoelpedemonte modificar hasSeed a hasItem asignando a cada item una clase diferente y forma de distinguirlo
+            private bool hasSeed = false;
 
-        // Update is called once per frame
-        void Update()
-        {
-            KeyDownActions();
-            Move();
-        }
+            private float lastSeedDropTime = 0f;
+            private float timeKeyToRemoveWasPressed = 0f;
 
 
-        void OnTriggerStay2D(Collider2D other)
-        {
-            if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Q) &&!hasIngredient && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
-            {
-                other.gameObject.transform.parent = ingredientContainer.transform;
-                other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
-                hasIngredient = true;
-            }
-        }
 
-        private void Move(){
-            float _x = Input.GetAxis("Horizontal") * movementSpeed;
-            float _y = Input.GetAxis("Vertical") * movementSpeed;
-            Vector2 _force = new Vector2(_x, _y);
-
-            if (_force != Vector2.zero)
-            {
-                animator.SetBool("walk", true);
-                rb.velocity = _force;
-                sr.flipX = Mathf.Sign(_force.x) < 0;
-            }
-            else
-            {
-                animator.SetBool("walk", false);
-                rb.velocity = Vector2.zero;
-
-            }
-        }
-
-        private void KeyDownActions(){
             
-            if(hasIngredient){
-                if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
-                    Transform tfchildren = ingredientContainer.transform.GetChild(0);
-                    tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
-                    ingredientContainer.transform.DetachChildren();
-                    hasIngredient = false;
-                    lastItemDropTime = Time.fixedTime; 
+            override public void Start()
+            {
+                rb = this.GetComponent<Rigidbody2D>();
+                sr = this.GetComponent<SpriteRenderer>();
+                base.Start();
+            }
+
+            // Update is called once per frame
+            void Update()
+            {
+                KeyDownActions();
+                Move();
+            }
+
+
+            void OnTriggerStay2D(Collider2D other)
+            {
+                if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.F) &&!hasSeed && (Time.fixedTime - lastSeedDropTime  > timeToWaitTillGrab))
+                {
+                    other.gameObject.transform.parent = ingredientContainer.transform;
+                    other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
+                    hasSeed = true;
+                }
+
+                //TODO yoelpedemonte verificar porque al pararse sobre vertices no funciona "bien" el agregar o remover seed 
+
+                /*if(other.tag.Equals("Soil")){
+
+                    
+                }*/
+            }
+
+            private void Move(){
+                float _x = Input.GetAxis("Horizontal") * movementSpeed;
+                float _y = Input.GetAxis("Vertical") * movementSpeed;
+                Vector2 _force = new Vector2(_x, _y);
+
+                if (_force != Vector2.zero)
+                {
+                    animator.SetBool("walk", true);
+                    rb.velocity = _force;
+                    sr.flipX = Mathf.Sign(_force.x) < 0;
+                }
+                else
+                {
+                    animator.SetBool("walk", false);
+                    rb.velocity = Vector2.zero;
+
+                }
+            }
+
+            private void KeyDownActions(){
+                
+                if(hasSeed){
+                    if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastSeedDropTime  > timeToWaitTillGrab)){
+                        DropSeed();
+                    }
+
+                }
+
+                if(Input.GetKeyDown(KeyCode.Space)){
+                    animator.SetTrigger("attack");
+                    base.getWeapon().gameObject.SetActive(true);
+                    if(sr.flipX){
+                        base.getWeapon().FlipPositionX();
+                    }
+                }
+                if(soil.IsOnSoil(this.transform.position)){
+                    if(Input.GetKeyDown(KeyCode.F)){
+                            timeKeyToRemoveWasPressed = Time.fixedTime;
+                            if(hasSeed){
+                                soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
+                                DropSeed();
+                            }
+                        }
+                    else if(Input.GetKey(KeyCode.F)){
+                        if(Time.fixedTime - timeKeyToRemoveWasPressed >  timeToWaitTillRemove){
+                            soil.RemoveSeed(this.transform.position);    
+                        }else if(hasSeed){
+                            soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
+                            DropSeed();
+                        }else{
+                            soil.IrrigateSoil(this.transform.position);
+                        }
+
+                    }
                 }
 
             }
 
-            if(Input.GetKeyDown(KeyCode.Space)){
-                animator.SetTrigger("attack");
-                base.getWeapon().gameObject.SetActive(true);
-                if(sr.flipX){
-                    base.getWeapon().FlipPositionX();
-                }
+            override protected void Die(){
+                gameManager.EndGame();
             }
-        }
 
-      override protected void Die(){
-            Debug.Log("he morido");
-            gameManager.EndGame();
-        }
+            public override void ReduceHealth(int pointsToReduce)
+            {
+                base.ReduceHealth(pointsToReduce);
+                gameManager.SetPlayerHp(base.GetHealth());
+            }
 
-        public override void ReduceHealth(int pointsToReduce)
+        private void DropSeed()
         {
-            base.ReduceHealth(pointsToReduce);
-            gameManager.SetPlayerHp(base.GetHealth());
+            Transform tfchildren = ingredientContainer.transform.GetChild(0);
+            tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
+            ingredientContainer.transform.DetachChildren();
+            hasSeed = false;
+            lastSeedDropTime = Time.fixedTime; 
         }
     }
 }
+
+
 
