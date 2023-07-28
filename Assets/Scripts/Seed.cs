@@ -12,10 +12,8 @@ namespace WeirdSpices{
             sr = GetComponent<SpriteRenderer>();
         }
 
-        public Tile getTile(){
-            Tile tile = new Tile();
-            tile.sprite = sr.sprite;
-            return tile;
+        public string getSpriteName(){
+            return sr.sprite.name;
         }
     }
 }

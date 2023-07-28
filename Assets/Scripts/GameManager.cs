@@ -10,13 +10,6 @@ namespace WeirdSpices{
         private TMP_Text playerLives;
         public TMP_Text endText;
         public GameObject endScreen;
-        // Start is called before the first frame update
-        void Start()
-        {
-            
-        }
-
-        // Update is called once per frame
         void Update()
         {
             if(Input.GetKeyDown(KeyCode.R)){
