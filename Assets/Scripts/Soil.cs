@@ -20,11 +20,11 @@ namespace WeirdSpices{
         [SerializeField]
         private GameManager gameManager;
         
-        private Dictionary<Vector3Int, GameObject> desactivatedSeeds;
+        private Dictionary<Vector3, GameObject> desactivatedSeeds;
 
         void Start()
         {
-            desactivatedSeeds = new Dictionary<Vector3Int, GameObject>();
+            desactivatedSeeds = new Dictionary<Vector3, GameObject>();
         }
 
         public void IrrigateSoil(Vector3 position){
@@ -35,21 +35,30 @@ namespace WeirdSpices{
 
         }
 
-        public void ManageSeed(Vector3 position, GameObject seed){
-            Vector3Int positionInt = Vector3Int.FloorToInt(position); 
+        public void PlantSeed(Vector3 position, GameObject seed){
+            Vector3Int positionInt = soil.WorldToCell(Vector3Int.FloorToInt(position)); 
             if(soil.GetSprite(positionInt) != null && foresoil.GetSprite(positionInt) == null){
                 Tile seedTile = ScriptableObject.CreateInstance<Tile>();
                 seedTile.sprite = seed.GetComponent<SpriteRenderer>().sprite;
                 foresoil.SetTile(positionInt,seedTile);
+                Debug.Log("Se guardo en: " + positionInt);
                 desactivatedSeeds.Add(positionInt, seed);
                 seed.SetActive(false);
-            };
+            }
         }
-        /*
+
         public void RemoveSeed(Vector3 position){
-            Vector3Int positionInt = Vector3Int.FloorToInt(position); 
-            TileBase tile = this.tilemap.GetTile(positionInt);
-            tilemap.SetTile(positionInt,wetTile);
-        }*/ 
+            Vector3Int positionInt = soil.WorldToCell(Vector3Int.FloorToInt(position));
+            if(soil.GetSprite(positionInt) != null && foresoil.GetSprite(positionInt) != null){
+                foresoil.SetTile(positionInt,null);
+                GameObject removedSeed = null;
+                Debug.Log("Removiendo en: " + positionInt);
+                bool hasItBeenRemoved = desactivatedSeeds.TryGetValue(positionInt,out removedSeed);
+                if(hasItBeenRemoved){
+                    removedSeed.SetActive(true);
+                    desactivatedSeeds.Remove(positionInt);
+                }
+            }
+        }
     }
 }

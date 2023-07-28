@@ -15,10 +15,13 @@ namespace WeirdSpices{
             private GameObject ingredientContainer;
 
             [SerializeField]
-            private float timeToWaitTillGrab = 0.5f;
+            private float timeToWaitTillGrab = 0.2f;
 
             [SerializeField]
             private GameManager gameManager;
+
+            [SerializeField]
+            private float timeToWaitTillRemove = 1f;
 
             private Rigidbody2D rb;
 
@@ -28,6 +31,7 @@ namespace WeirdSpices{
             private bool hasSeed = false;
 
             private float lastSeedDropTime = 0f;
+            private float timeKeyToRemoveWasPressed = 0f;
 
             
             override public void Start()
@@ -47,22 +51,36 @@ namespace WeirdSpices{
 
             void OnTriggerStay2D(Collider2D other)
             {
-                if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.Q) &&!hasSeed && (Time.fixedTime - lastSeedDropTime  > timeToWaitTillGrab))
+                if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.F) &&!hasSeed && (Time.fixedTime - lastSeedDropTime  > timeToWaitTillGrab))
                 {
                     other.gameObject.transform.parent = ingredientContainer.transform;
                     other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
                     hasSeed = true;
                 }
 
-                if(other.tag.Equals("Soil") && Input.GetKey(KeyCode.F)){
-                    Soil soil = other.gameObject.GetComponent<Soil>();
-                    if(hasSeed){
-                        soil.ManageSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
-                        DropSeed();
-                    }else{
-                        soil.IrrigateSoil(this.transform.position);
-                    }
+                //TODO yoelpedemonte verificar porque al pararse sobre vertices no funciona "bien" el agregar o remover seed 
 
+                if(other.tag.Equals("Soil")){
+                    Soil soil = other.gameObject.GetComponent<Soil>();
+                    if(Input.GetKeyDown(KeyCode.F)){
+                        timeKeyToRemoveWasPressed = Time.fixedTime;
+                        if(hasSeed){
+                            soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
+                            DropSeed();
+                        }
+                    }
+                    else if(Input.GetKey(KeyCode.F)){
+                        if(Time.fixedTime - timeKeyToRemoveWasPressed >  timeToWaitTillRemove){
+                            soil.RemoveSeed(this.transform.position);    
+                        }else if(hasSeed){
+                            soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
+                            DropSeed();
+                        }else{
+                            soil.IrrigateSoil(this.transform.position);
+                        }
+
+                    }
+                    
                 }
             }
 
@@ -104,7 +122,6 @@ namespace WeirdSpices{
             }
 
             override protected void Die(){
-                Debug.Log("he morido");
                 gameManager.EndGame();
             }
 
