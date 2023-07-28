@@ -23,6 +23,9 @@ namespace WeirdSpices{
             [SerializeField]
             private float timeToWaitTillRemove = 1f;
 
+            [SerializeField]
+            private Soil soil;
+
             private Rigidbody2D rb;
 
             private SpriteRenderer sr;
@@ -32,6 +35,8 @@ namespace WeirdSpices{
 
             private float lastSeedDropTime = 0f;
             private float timeKeyToRemoveWasPressed = 0f;
+
+
 
             
             override public void Start()
@@ -60,28 +65,10 @@ namespace WeirdSpices{
 
                 //TODO yoelpedemonte verificar porque al pararse sobre vertices no funciona "bien" el agregar o remover seed 
 
-                if(other.tag.Equals("Soil")){
-                    Soil soil = other.gameObject.GetComponent<Soil>();
-                    if(Input.GetKeyDown(KeyCode.F)){
-                        timeKeyToRemoveWasPressed = Time.fixedTime;
-                        if(hasSeed){
-                            soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
-                            DropSeed();
-                        }
-                    }
-                    else if(Input.GetKey(KeyCode.F)){
-                        if(Time.fixedTime - timeKeyToRemoveWasPressed >  timeToWaitTillRemove){
-                            soil.RemoveSeed(this.transform.position);    
-                        }else if(hasSeed){
-                            soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
-                            DropSeed();
-                        }else{
-                            soil.IrrigateSoil(this.transform.position);
-                        }
+                /*if(other.tag.Equals("Soil")){
 
-                    }
                     
-                }
+                }*/
             }
 
             private void Move(){
@@ -119,6 +106,27 @@ namespace WeirdSpices{
                         base.getWeapon().FlipPositionX();
                     }
                 }
+                if(soil.IsOnSoil(this.transform.position)){
+                    if(Input.GetKeyDown(KeyCode.F)){
+                            timeKeyToRemoveWasPressed = Time.fixedTime;
+                            if(hasSeed){
+                                soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
+                                DropSeed();
+                            }
+                        }
+                    else if(Input.GetKey(KeyCode.F)){
+                        if(Time.fixedTime - timeKeyToRemoveWasPressed >  timeToWaitTillRemove){
+                            soil.RemoveSeed(this.transform.position);    
+                        }else if(hasSeed){
+                            soil.PlantSeed(this.transform.position, ingredientContainer.transform.GetChild(0).gameObject);
+                            DropSeed();
+                        }else{
+                            soil.IrrigateSoil(this.transform.position);
+                        }
+
+                    }
+                }
+
             }
 
             override protected void Die(){

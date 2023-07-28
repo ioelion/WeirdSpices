@@ -60,5 +60,9 @@ namespace WeirdSpices{
                 }
             }
         }
+
+        public bool IsOnSoil(Vector3 position){
+            return soil.GetSprite(soil.WorldToCell(position)) != null ? true : false;
+        }
     }
 }
