@@ -13,36 +13,30 @@ public class SeedPickUp : MonoBehaviour
     bool itemPicked = false;
 
     public int itemAmount;
-    int itemCount;
+    private int itemCount;
+                
+    [SerializeField] private float timeToWaitTillSeedDrop = 1.5f;
+    private float lastSeedDropTime = 0f;
     
-    private void OnCollisionStay2D(Collision2D other)
+    public void DropSeed()
     {
-        if ((other.collider.GetComponent<Player>() != null) && (itemPicked == false))
-        {
-
-            if (Input.GetKeyDown(KeyCode.E))  // SI se usa GetKey te dropea todas las semillas a la vez, si se usa GetKeyDown a veces no funciona (LUCA)//
-            {
+        if((Time.fixedTime - lastSeedDropTime  > timeToWaitTillSeedDrop)){
+            lastSeedDropTime = Time.fixedTime;
+            if (itemCount < itemAmount && !itemPicked)
+            { 
+                Instantiate(Seed, Dispenser.position, Dispenser.rotation);
                 Debug.Log("Semilla dropeada");
-                soltarSemilla();
+
+                itemCount++;
+                Debug.Log(itemCount);
+            }
+            else
+            {
+                itemPicked = true;
+                Debug.Log("Maximo de semillas agarradas");
             }
         }
-    }
 
-    private void soltarSemilla()
-    {
-        if (itemCount < itemAmount)
-        { 
-            Instantiate(Seed, Dispenser.position, Dispenser.rotation);
-            
-
-            itemCount++;
-            Debug.Log(itemCount);
-        }
-        else
-        {
-            itemPicked = true;
-            Debug.Log("Maximo de semillas agarradas");
-        }
     }
 
 }
