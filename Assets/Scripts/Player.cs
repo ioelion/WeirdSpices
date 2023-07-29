@@ -1,24 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 namespace WeirdSpices{
     public class Player : Entity
-    {
-            [SerializeField]
-            private Animator animator;
+    {       
+            
+            //[Header("Warehouse Storage Rack")]
+            [SerializeField] private Animator animator;
+            
+            [SerializeField] private int movementSpeed;
+            
+            [SerializeField] private GameObject ingredientContainer;
 
-            [SerializeField]
-            private int movementSpeed;
+            [SerializeField] private float timeToWaitTillGrab = 0.2f;
 
-            [SerializeField]
-            private GameObject ingredientContainer;
-
-            [SerializeField]
-            private float timeToWaitTillGrab = 0.2f;
-
-            [SerializeField]
-            private GameManager gameManager;
+            [SerializeField] private GameManager gameManager;
 
             [SerializeField]
             private float timeToWaitTillRemove = 1f;
@@ -35,9 +33,6 @@ namespace WeirdSpices{
 
             private float lastSeedDropTime = 0f;
             private float timeKeyToRemoveWasPressed = 0f;
-
-
-
             
             override public void Start()
             {
@@ -53,6 +48,13 @@ namespace WeirdSpices{
                 Move();
             }
 
+            private void OnCollisionStay2D(Collision2D other)
+            {
+                if(other.gameObject.tag.Equals("SeedBox") && Input.GetKey(KeyCode.F)){
+                    SeedPickUp seedPickUp = other.gameObject.GetComponent<SeedPickUp>();
+                    seedPickUp.DropSeed();
+                }
+            }
 
             void OnTriggerStay2D(Collider2D other)
             {
@@ -62,13 +64,6 @@ namespace WeirdSpices{
                     other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
                     hasSeed = true;
                 }
-
-                //TODO yoelpedemonte verificar porque al pararse sobre vertices no funciona "bien" el agregar o remover seed 
-
-                /*if(other.tag.Equals("Soil")){
-
-                    
-                }*/
             }
 
             private void Move(){
@@ -96,7 +91,6 @@ namespace WeirdSpices{
                     if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastSeedDropTime  > timeToWaitTillGrab)){
                         DropSeed();
                     }
-
                 }
 
                 if(Input.GetKeyDown(KeyCode.Space)){
