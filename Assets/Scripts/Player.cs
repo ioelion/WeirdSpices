@@ -126,7 +126,7 @@ namespace WeirdSpices{
             }
 
             override protected void Die(){
-                gameManager.EndGame();
+                gameManager.EndGame("Apreta R para reiniciar el nivel.");
             }
 
             public override void ReduceHealth(int pointsToReduce)

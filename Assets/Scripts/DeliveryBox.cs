@@ -49,6 +49,7 @@ namespace WeirdSpices{
         public void AddRequestCardToWaitList(RequestCard requestCard){
             requestCardsWaitList.Add(requestCard);
             activeRequestCards -= 1;
+            timeLastCardSetted = Time.fixedTime;
         }
     }
 }

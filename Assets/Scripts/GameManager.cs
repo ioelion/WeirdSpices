@@ -31,11 +31,12 @@ namespace WeirdSpices{
             }
 
             if(currentDeliveries >= deliveriesRequiredToWin){
-                EndGame();
+                EndGame("GANASTE!");
             }
         }
 
-        public void EndGame(){
+        public void EndGame(string newEndText){
+            endText.text = newEndText;
             endText.gameObject.SetActive(true);
             endScreen.SetActive(true);
             PauseGame();
