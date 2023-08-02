@@ -16,7 +16,7 @@ namespace WeirdSpices{
 
             [SerializeField] private float timeToWaitTillGrab = 0.2f;
 
-            [SerializeField] private GameManager gameManager;
+            
 
             [SerializeField] private float timeToWaitTillRemove;
             
@@ -150,13 +150,13 @@ namespace WeirdSpices{
             }
 
             override protected void Die(){
-                gameManager.EndGame();
+                GameManager.Instance.EndGame();
             }
 
             public override void ReduceHealth(int pointsToReduce)
             {
                 base.ReduceHealth(pointsToReduce);
-                gameManager.SetPlayerHp(base.GetHealth());
+                GameManager.Instance.SetPlayerHp(base.GetHealth());
             }
 
         private void DropItem()
