@@ -47,15 +47,17 @@ namespace WeirdSpices{
         }
 
         private void ReduceFoodLeft(int quantity){
-            this.foodQuantity -= 1;
-            quantityText.text = "" + foodQuantity;
             if(foodQuantity == 0){
                 DeliverRequest();
             }
+            this.foodQuantity -= 1;
+            quantityText.text = "" + foodQuantity;
+
         }
 
         private void DeliverRequest(){
-
+            this.gameObject.SetActive(false);
+            timeLastDelivery = Time.fixedTime;
             gameManager.SuccessfulDelivery(1);
         }
 
