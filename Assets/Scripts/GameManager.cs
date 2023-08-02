@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 namespace WeirdSpices{
     public class GameManager : MonoBehaviour
     {
@@ -10,7 +11,8 @@ namespace WeirdSpices{
         [SerializeField] TMP_Text playerLives;
         [SerializeField] TMP_Text endText;
         [SerializeField] GameObject endScreen;
-
+        [SerializeField] Image recipeGuide;
+        [SerializeField] TMP_Text helpText;
         [SerializeField] int minGoldRewarded;
         [SerializeField] int maxGoldRewarded;
         [SerializeField] int minFoodRequired;
@@ -33,6 +35,23 @@ namespace WeirdSpices{
             if(currentDeliveries >= deliveriesRequiredToWin){
                 EndGame("GANASTE!");
             }
+
+            if(Input.GetKeyDown(KeyCode.C)){
+                if(!recipeGuide.gameObject.activeInHierarchy){
+                        recipeGuide.gameObject.SetActive(true);
+                }else{
+                        recipeGuide.gameObject.SetActive(false);
+                }
+            }
+
+            if(Input.GetKeyDown(KeyCode.H)){
+                if(!helpText.gameObject.activeInHierarchy){
+                        helpText.gameObject.SetActive(true);
+                }else{
+                        helpText.gameObject.SetActive(false);
+                }
+            }
+
         }
 
         public void EndGame(string newEndText){
