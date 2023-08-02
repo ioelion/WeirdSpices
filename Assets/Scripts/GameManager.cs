@@ -18,15 +18,20 @@ namespace WeirdSpices{
         [SerializeField] float minDeliverTime;
         [SerializeField] float maxDeliverTime;
         [SerializeField] float waitTimeBetweenCards;
+        [SerializeField] int deliveriesRequiredToWin;
 
-
+        int currentDeliveries;
 
         
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.R)){
+            if(Time.timeScale == 0 && Input.GetKeyDown(KeyCode.R)){
                 ResumeGame();
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex,LoadSceneMode.Single);
+            }
+
+            if(currentDeliveries >= deliveriesRequiredToWin){
+                EndGame();
             }
         }
 
@@ -59,7 +64,7 @@ namespace WeirdSpices{
             return minFoodRequired;
         }
         public int GetMaxFoodRequired(){
-            return maxGoldRewarded;
+            return maxFoodRequired;
         }
         public float GetMinDeliverTime(){
             return minDeliverTime;
@@ -72,5 +77,9 @@ namespace WeirdSpices{
             return waitTimeBetweenCards;
         }
 
+
+        public void SuccessfulDelivery(int number){
+            this.currentDeliveries += number;
+        }
     }
 }

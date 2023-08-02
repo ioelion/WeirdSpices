@@ -35,7 +35,7 @@ namespace WeirdSpices{
         {
             if(!rc.activeSelf && Time.fixedTime - timeLastCardSetted  > timeToWaitToSetCard){
                 rc.SetActive(true);
-                requestCard.SetCard(foodManager.GetRandomFood(), Random.Range(minGold,maxGold+1), Random.Range(minFood,maxFood+1), Random.Range(minTime, maxTime+1));
+                requestCard.SetCard(foodManager.GetRandomFood(), Random.Range(minFood,maxFood+1), Random.Range(minGold,maxGold+1), Random.Range(minTime, maxTime+1));
                 timeLastCardSetted = Time.fixedTime;
             }
             

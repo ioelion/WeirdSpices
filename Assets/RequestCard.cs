@@ -13,6 +13,7 @@ namespace WeirdSpices{
         [SerializeField] Image goldImage;
         [SerializeField] TMP_Text timerText;
         [SerializeField] Image timerImage;
+        [SerializeField] GameManager gameManager;
         GameObject foodRequired;
         int foodQuantity;
         int rewardGold;
@@ -23,7 +24,7 @@ namespace WeirdSpices{
         {
             timerText.text = "" + Mathf.RoundToInt(maxTimeToDeliver - (Time.fixedTime - timeLastDelivery));
             if(Time.fixedTime - timeLastDelivery  > maxTimeToDeliver){
-                DeliverRequest();
+                FailRequest();
             }
         }
         public void SetCard(GameObject foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
@@ -46,12 +47,19 @@ namespace WeirdSpices{
 
         private void ReduceFoodLeft(int quantity){
             this.foodQuantity -= 1;
+            quantityText.text = "" + foodQuantity;
             if(foodQuantity == 0){
                 DeliverRequest();
             }
         }
 
         private void DeliverRequest(){
+            this.gameObject.SetActive(false);
+            timeLastDelivery = Time.fixedTime;
+            gameManager.SuccessfulDelivery(1);
+        }
+
+        private void FailRequest(){
             this.gameObject.SetActive(false);
             timeLastDelivery = Time.fixedTime;
             //TODO dar oro

@@ -70,6 +70,11 @@ namespace WeirdSpices{
                     fertileSoil = other.GetComponent<FertileSoil>();
                     isOnSoil = true;
                  }
+
+                 if(other.tag.Equals("RequestCard") && hasItem && !hasSeed ){
+                    other.gameObject.GetComponent<RequestCard>().ReceiveFood(ingredientContainer.transform.GetChild(0).gameObject);
+                    DropItem();
+                 }
             }
 
             private void OnTriggerExit2D(Collider2D other) {
