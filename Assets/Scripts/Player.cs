@@ -73,7 +73,7 @@ namespace WeirdSpices{
 
                  if(other.tag.Equals("RequestCard") && hasItem && !hasSeed ){
                     other.gameObject.GetComponent<RequestCard>().ReceiveFood(ingredientContainer.transform.GetChild(0).gameObject);
-                    DropItem();
+                    Destroy(ingredientContainer.transform.GetChild(0));
                  }
             }
 

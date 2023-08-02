@@ -14,6 +14,7 @@ namespace WeirdSpices{
         [SerializeField] TMP_Text timerText;
         [SerializeField] Image timerImage;
         [SerializeField] GameManager gameManager;
+        [SerializeField] DeliveryBox deliveryBox;
         GameObject foodRequired;
         int foodQuantity;
         int rewardGold;
@@ -24,7 +25,7 @@ namespace WeirdSpices{
         {
             timerText.text = "" + Mathf.RoundToInt(maxTimeToDeliver - (Time.fixedTime - timeLastDelivery));
             if(Time.fixedTime - timeLastDelivery  > maxTimeToDeliver){
-                FailRequest();
+                PauseCard();
             }
         }
         public void SetCard(GameObject foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
@@ -54,15 +55,14 @@ namespace WeirdSpices{
         }
 
         private void DeliverRequest(){
-            this.gameObject.SetActive(false);
-            timeLastDelivery = Time.fixedTime;
+
             gameManager.SuccessfulDelivery(1);
         }
 
-        private void FailRequest(){
+        private void PauseCard(){
             this.gameObject.SetActive(false);
             timeLastDelivery = Time.fixedTime;
-            //TODO dar oro
+            deliveryBox.AddRequestCardToWaitList(this);
         }
     }
 }
