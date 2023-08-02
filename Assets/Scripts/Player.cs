@@ -18,21 +18,21 @@ namespace WeirdSpices{
 
             [SerializeField] private GameManager gameManager;
 
-            [SerializeField]
-            private float timeToWaitTillRemove = 1f;
-
-            [SerializeField]
-            private Soil soil;
+            [SerializeField] private float timeToWaitTillRemove = 1f;
+            
 
             private Rigidbody2D rb;
 
             private SpriteRenderer sr;
-
-            //TODO yoelpedemonte modificar hasSeed a hasItem asignando a cada item una clase diferente y forma de distinguirlo
+            private bool hasItem = false;
             private bool hasSeed = false;
 
-            private float lastSeedDropTime = 0f;
+            private float lastItemDropTime = 0f;
             private float timeKeyToRemoveWasPressed = 0f;
+
+            private bool isOnSoil = false;
+
+            private FertileSoil fertileSoil;
             
             override public void Start()
             {
@@ -58,12 +58,32 @@ namespace WeirdSpices{
 
             void OnTriggerStay2D(Collider2D other)
             {
-                if(other.tag.Equals("Ingredient") && Input.GetKey(KeyCode.F) &&!hasSeed && (Time.fixedTime - lastSeedDropTime  > timeToWaitTillGrab))
+                
+                if((other.tag.Equals("Seed") || other.tag.Equals("Food")) && Input.GetKey(KeyCode.F) &&!hasItem && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
                 {
                     other.gameObject.transform.parent = ingredientContainer.transform;
                     other.transform.position = new Vector2(ingredientContainer.transform.position.x, ingredientContainer.transform.position.y + 1);
-                    hasSeed = true;
+                    hasItem = true;
+                    if(other.tag.Equals("Seed")){
+                        hasSeed = true;
+                    }
+                    
                 }
+            }
+
+            private void OnTriggerEnter2D(Collider2D other)
+            {
+                 if(other.tag.Equals("FertileSoil")){
+                    fertileSoil = other.GetComponent<FertileSoil>();
+                    isOnSoil = true;
+                 }
+            }
+
+            private void OnTriggerExit2D(Collider2D other) {
+                if(other.tag.Equals("FertileSoil")){
+                    fertileSoil = null;
+                    isOnSoil = false;
+                 }
             }
 
             private void Move(){
@@ -87,9 +107,9 @@ namespace WeirdSpices{
 
             private void KeyDownActions(){
                 
-                if(hasSeed){
-                    if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastSeedDropTime  > timeToWaitTillGrab)){
-                        DropSeed();
+                if(hasItem){
+                    if(Input.GetKeyDown(KeyCode.Q) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab)){
+                        DropItem();
                     }
                 }
 
@@ -100,6 +120,12 @@ namespace WeirdSpices{
                         base.getWeapon().FlipPositionX();
                     }
                 }
+                
+                if(Input.GetKeyDown(KeyCode.F) && hasSeed && isOnSoil){
+                    fertileSoil.PlantSeed(ingredientContainer.transform.GetChild(0).gameObject);
+                    DropItem();
+                }
+                /*
                 if(soil.IsOnSoil(this.transform.position)){
                     if(Input.GetKeyDown(KeyCode.F)){
                             timeKeyToRemoveWasPressed = Time.fixedTime;
@@ -119,7 +145,7 @@ namespace WeirdSpices{
                         }
 
                     }
-                }
+                }*/
 
             }
 
@@ -133,14 +159,16 @@ namespace WeirdSpices{
                 gameManager.SetPlayerHp(base.GetHealth());
             }
 
-        private void DropSeed()
+        private void DropItem()
         {
             Transform tfchildren = ingredientContainer.transform.GetChild(0);
             tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
             ingredientContainer.transform.DetachChildren();
-            hasSeed = false;
-            lastSeedDropTime = Time.fixedTime; 
+            hasItem= false;
+            hasSeed= false;
+            lastItemDropTime = Time.fixedTime; 
         }
+
     }
 }
 
