@@ -4931,6 +4931,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: RPGpack_sheet_155
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d00b77b6fd35fa4ba9edcecc32d5f02
+      internalID: -1881251088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPGpack_sheet_157
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1548b4cbf5a60a342961966170b1e9db
+      internalID: 1199158191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -5005,7 +5047,9 @@ TextureImporter:
       RPGpack_sheet_152: 1816995029
       RPGpack_sheet_153: -1033440192
       RPGpack_sheet_154: -1150050905
+      RPGpack_sheet_155: -1881251088
       RPGpack_sheet_156: -549466769
+      RPGpack_sheet_157: 1199158191
       RPGpack_sheet_158: -490387827
       RPGpack_sheet_16: 1928274036
       RPGpack_sheet_160: -1100244928

@@ -18,7 +18,7 @@ namespace WeirdSpices{
 
             [SerializeField] private GameManager gameManager;
 
-            [SerializeField] private float timeToWaitTillRemove = 1f;
+            [SerializeField] private float timeToWaitTillRemove;
             
 
             private Rigidbody2D rb;
@@ -27,8 +27,8 @@ namespace WeirdSpices{
             private bool hasItem = false;
             private bool hasSeed = false;
 
-            private float lastItemDropTime = 0f;
-            private float timeKeyToRemoveWasPressed = 0f;
+            private float lastItemDropTime;
+            private float timeKeyToRemoveWasPressed;
 
             private bool isOnSoil = false;
 
