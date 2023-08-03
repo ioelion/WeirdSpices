@@ -11,6 +11,7 @@ namespace WeirdSpices{
         [SerializeField]
         private int hp;
 
+
         protected Animator an;
 
         public virtual void Start()
@@ -32,6 +33,10 @@ namespace WeirdSpices{
 
         protected virtual void Die(){
             Destroy(this.gameObject);
+            if (this.CompareTag("Enemy"))
+            {
+                GameManager.Instance.CreateCoin(transform.position);
+            }
         }
 
         public virtual int GetHealth(){

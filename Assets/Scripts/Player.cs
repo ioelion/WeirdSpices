@@ -13,12 +13,9 @@ namespace WeirdSpices{
             [SerializeField] private KeyCode dropKey;
             [SerializeField] private KeyCode attackKey;
             [SerializeField] private KeyCode interactKey;
-
             [Header("Objects")]
             [SerializeField] private Animator animator;
             [SerializeField] private GameObject ingredientContainer;
-            [SerializeField] private GameManager gameManager;
-
             private Rigidbody2D rb;
             private SpriteRenderer sr;
             private bool hasItem = false;
@@ -126,13 +123,13 @@ namespace WeirdSpices{
             }
 
             override protected void Die(){
-                gameManager.EndGame("Apreta R para reiniciar el nivel.");
+                GameManager.Instance.EndGame("Apreta R para reiniciar el nivel.");
             }
 
             public override void ReduceHealth(int pointsToReduce)
             {
                 base.ReduceHealth(pointsToReduce);
-                gameManager.SetPlayerHp(base.GetHealth());
+                GameManager.Instance.SetPlayerHp(base.GetHealth());
             }
 
         private void DropItem()
