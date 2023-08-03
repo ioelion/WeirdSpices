@@ -28,14 +28,22 @@ namespace WeirdSpices{
         public void DropSeed()
         {
             if((Time.fixedTime - lastSeedDropTime  > timeToWaitTillSeedDrop)){
-                lastSeedDropTime = Time.fixedTime;
-                if (currentSeeds > 0 )
-                { 
-                    Instantiate(Seed, Dispenser.position, Dispenser.rotation);
-                    Debug.Log("Semilla dropeada");
-                    currentSeeds--;
-                    Debug.Log(currentSeeds);
-                    quantityLeft.text = "" + (currentSeeds);
+                lastSeedDropTime = Time.fixedTime;                               
+                if (currentSeeds > 0 ) 
+                {
+                    Vector2 posS = Dispenser.transform.position;
+                    if ((Physics2D.OverlapPoint(posS) != null) && (Physics2D.OverlapPoint(posS).CompareTag("Seed") ) )
+                    {
+                        Debug.Log("Ya hay una semila");
+                    }
+                    else
+                    {                       
+                        Instantiate(Seed, Dispenser.position, Dispenser.rotation);
+                        Debug.Log("Semilla dropeada");
+                        currentSeeds--;
+                        Debug.Log(currentSeeds);
+                        quantityLeft.text = "" + (currentSeeds);
+                    }
                 }
                 else
                 {
