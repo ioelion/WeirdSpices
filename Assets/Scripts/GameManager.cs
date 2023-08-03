@@ -25,7 +25,6 @@ namespace WeirdSpices{
         [SerializeField] int deliveriesRequiredToWin;
         [SerializeField] public TMP_Text gold;
         public GameObject coin;
-
         public static GameManager Instance { get; private set; }    
         public int TotalGold { get { return totalGold; } }
         private int totalGold;
@@ -37,7 +36,7 @@ namespace WeirdSpices{
             {
                 Instance = this;
             } else {
-                Debug.Log("Mas de un GameManager en escena");
+                Debug.Log("Más de un GameManager en escena.");
             }
         }
 

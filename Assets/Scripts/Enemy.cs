@@ -5,20 +5,17 @@ using UnityEngine;
 namespace WeirdSpices{
     public class Enemy : Entity
     {
+        [SerializeField] private float timeToWaitTillAttack = 0.5f;
+        [SerializeField] private float moveSpeed;
+
         private Transform target;    
         private Rigidbody2D rb;
-
-        [SerializeField] private float moveSpeed;
         private Vector2 moveDirection;
         private Vector2 _force;
         private SpriteRenderer sr;
-        [SerializeField] private float timeToWaitTillAttack = 0.5f;
         private float lastAttackTime = 0f;
+        private EnemySpawner enemySpawner;
 
-        EnemySpawner enemySpawner;
-        
-
-        // Start is called before the first frame update
         override public void Start()
         {
             rb = this.GetComponent<Rigidbody2D>();
@@ -41,7 +38,6 @@ namespace WeirdSpices{
             }    
         }
 
-        // Update is called once per frame
         void FixedUpdate()
         {
             if(target){

@@ -7,14 +7,18 @@ using UnityEngine.UI;
 namespace WeirdSpices{
     public class RequestCard : MonoBehaviour
     {
-        [SerializeField] TMP_Text quantityText;
+        [Header("Food")]
+        [SerializeField] TMP_Text foodQuantityText;
         [SerializeField] Image foodImage; 
+
+        [Header("Gold")]
         [SerializeField] TMP_Text goldText;
         [SerializeField] Image goldImage;
+
+        [Header("Timer")]
         [SerializeField] TMP_Text timerText;
         [SerializeField] Image timerImage;
-        [SerializeField] GameManager gameManager;
-        [SerializeField] DeliveryBox deliveryBox;
+
         GameObject foodRequired;
         int foodQuantity;
         int rewardGold;
@@ -33,7 +37,7 @@ namespace WeirdSpices{
             this.foodQuantity = foodQuantity;
             this.rewardGold = rewardGold;
             this.maxTimeToDeliver = maxTimeToDeliver;
-            quantityText.text = "" + foodQuantity;
+            foodQuantityText.text = "" + foodQuantity;
             goldText.text = "" + rewardGold;
             foodImage.sprite = foodRequired.GetComponent<SpriteRenderer>().sprite;
             this.maxTimeToDeliver = maxTimeToDeliver;
@@ -51,20 +55,20 @@ namespace WeirdSpices{
                 DeliverRequest();
             }
             this.foodQuantity -= 1;
-            quantityText.text = "" + foodQuantity;
+            foodQuantityText.text = "" + foodQuantity;
 
         }
 
         private void DeliverRequest(){
             this.gameObject.SetActive(false);
             timeLastDelivery = Time.fixedTime;
-            gameManager.SuccessfulDelivery(1);
+            GameManager.Instance.SuccessfulDelivery(1);
         }
 
         private void PauseCard(){
             this.gameObject.SetActive(false);
             timeLastDelivery = Time.fixedTime;
-            deliveryBox.AddRequestCardToWaitList(this);
+            DeliveryBox.Instance.AddRequestCardToWaitList(this);
         }
     }
 }

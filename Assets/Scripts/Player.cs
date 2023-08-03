@@ -31,7 +31,6 @@ namespace WeirdSpices{
                 base.Start();
             }
 
-            // Update is called once per frame
             void Update()
             {
                 KeyDownActions();
