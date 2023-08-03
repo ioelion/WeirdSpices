@@ -8,17 +8,14 @@ namespace WeirdSpices{
         private Transform target;    
         private Rigidbody2D rb;
 
-        [SerializeField]
-        private float moveSpeed;
-
+        [SerializeField] private float moveSpeed;
         private Vector2 moveDirection;
         private Vector2 _force;
         private SpriteRenderer sr;
-
-        [SerializeField]
-        private float timeToWaitTillAttack = 0.5f;
-
+        [SerializeField] private float timeToWaitTillAttack = 0.5f;
         private float lastAttackTime = 0f;
+
+        EnemySpawner enemySpawner;
         
 
         // Start is called before the first frame update
@@ -26,6 +23,7 @@ namespace WeirdSpices{
         {
             rb = this.GetComponent<Rigidbody2D>();
             sr = this.GetComponent<SpriteRenderer>();
+            enemySpawner = FindObjectOfType<EnemySpawner>();
             base.Start();
             
         }
@@ -66,6 +64,11 @@ namespace WeirdSpices{
             }
 
 
+        }
+
+        override protected void Die(){
+            enemySpawner.EnemyDied();
+            base.Die();
         }
     }
 
