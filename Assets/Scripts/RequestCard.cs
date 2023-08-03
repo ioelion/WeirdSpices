@@ -8,22 +8,22 @@ namespace WeirdSpices{
     public class RequestCard : MonoBehaviour
     {
         [Header("Food")]
-        [SerializeField] TMP_Text foodQuantityText;
-        [SerializeField] Image foodImage; 
+        [SerializeField] private TMP_Text foodQuantityText;
+        [SerializeField] private Image foodImage; 
 
         [Header("Gold")]
-        [SerializeField] TMP_Text goldText;
-        [SerializeField] Image goldImage;
+        [SerializeField] private TMP_Text goldText;
+        [SerializeField] private Image goldImage;
 
         [Header("Timer")]
-        [SerializeField] TMP_Text timerText;
-        [SerializeField] Image timerImage;
+        [SerializeField] private TMP_Text timerText;
+        [SerializeField] private Image timerImage;
 
-        GameObject foodRequired;
-        int foodQuantity;
-        int rewardGold;
-        float maxTimeToDeliver;
-        float timeLastDelivery;
+        private GameObject foodRequired;
+        private int foodQuantity;
+        private int rewardGold;
+        private float maxTimeToDeliver;
+        private float timeLastDelivery;
 
         void FixedUpdate()
         {
@@ -37,11 +37,14 @@ namespace WeirdSpices{
             this.foodQuantity = foodQuantity;
             this.rewardGold = rewardGold;
             this.maxTimeToDeliver = maxTimeToDeliver;
+            SetCardUI();
+            timeLastDelivery = Time.fixedTime;
+        }
+
+        public void SetCardUI(){
             foodQuantityText.text = "" + foodQuantity;
             goldText.text = "" + rewardGold;
             foodImage.sprite = foodRequired.GetComponent<SpriteRenderer>().sprite;
-            this.maxTimeToDeliver = maxTimeToDeliver;
-            timeLastDelivery = Time.fixedTime;
         }
 
         public void ReceiveFood(GameObject food){
@@ -51,18 +54,19 @@ namespace WeirdSpices{
         }
 
         private void ReduceFoodLeft(int quantity){
+            this.foodQuantity -= 1;
+            foodQuantityText.text = "" + foodQuantity;
             if(foodQuantity == 0){
                 DeliverRequest();
             }
-            this.foodQuantity -= 1;
-            foodQuantityText.text = "" + foodQuantity;
+
 
         }
 
         private void DeliverRequest(){
             this.gameObject.SetActive(false);
             timeLastDelivery = Time.fixedTime;
-            GameManager.Instance.SuccessfulDelivery(1);
+            GameManager.Instance.SuccessfulDelivery(rewardGold);
         }
 
         private void PauseCard(){

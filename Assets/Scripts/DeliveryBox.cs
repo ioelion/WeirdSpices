@@ -6,14 +6,14 @@ namespace WeirdSpices{
     public class DeliveryBox : MonoBehaviour
     {
         [SerializeField] private List<RequestCard> requestCards;
-        private List<RequestCard> requestCardsWaitList;
+        private int minGold, maxGold, minFood, maxFood;
+        private float minTime, maxTime;
         private float timeToWaitToSetCard;
         private float timeLastCardSetted;
         private GameObject rc;
-        private int minGold, maxGold, minFood, maxFood;
-        private float minTime, maxTime;
         private RequestCard currentRequestCard;
         private int activeRequestCards =0;
+        private List<RequestCard> requestCardsWaitList;
         public static DeliveryBox Instance { get; private set; }    
 
         void Start()

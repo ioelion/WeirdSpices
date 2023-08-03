@@ -4,26 +4,24 @@ using UnityEngine;
 using TMPro;
 
 namespace WeirdSpices{
-    public class SeedPickUp : MonoBehaviour
+    public class SeedBox : MonoBehaviour
     {
-
-        [SerializeField] private Transform Dispenser;
-
-        [SerializeField] private GameObject Seed;
-
-        [SerializeField] private TMP_Text quantityLeft;
-
-        bool itemPicked = false;
-
-        public int maxItemAmount;
-        private int itemCount;
-                    
+        [Header("Parameters")]
+        [SerializeField] private TMP_Text quantityLeft; 
         [SerializeField] private float timeToWaitTillSeedDrop = 1.5f;
+        [SerializeField] private int initialSeeds = 50;
+        [SerializeField] private int currentSeeds;
+        
+        [Header("Objects")]
+        [SerializeField] private Transform Dispenser;
+        [SerializeField] private GameObject Seed;
+        
         private float lastSeedDropTime = 0f;
         
         void Start()
         {
-            quantityLeft.text = "" + maxItemAmount;
+            currentSeeds = initialSeeds;
+            quantityLeft.text = "" + currentSeeds;
         }
 
 
@@ -31,18 +29,16 @@ namespace WeirdSpices{
         {
             if((Time.fixedTime - lastSeedDropTime  > timeToWaitTillSeedDrop)){
                 lastSeedDropTime = Time.fixedTime;
-                if (itemCount < maxItemAmount && !itemPicked)
+                if (currentSeeds > 0 )
                 { 
                     Instantiate(Seed, Dispenser.position, Dispenser.rotation);
                     Debug.Log("Semilla dropeada");
-
-                    itemCount++;
-                    Debug.Log(itemCount);
-                    quantityLeft.text = "" + (maxItemAmount - itemCount);
+                    currentSeeds--;
+                    Debug.Log(currentSeeds);
+                    quantityLeft.text = "" + (currentSeeds);
                 }
                 else
                 {
-                    itemPicked = true;
                     Debug.Log("Maximo de semillas agarradas");
                 }
             }

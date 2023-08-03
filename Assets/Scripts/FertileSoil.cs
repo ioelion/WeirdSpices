@@ -6,22 +6,17 @@ using UnityEngine.Tilemaps;
 namespace WeirdSpices{
     public class FertileSoil : MonoBehaviour
     {
-        [SerializeField] int maxSeeds;
-        [SerializeField] Sprite notplantedSoil;
-        [SerializeField] Sprite plantedSoil;
-        [SerializeField] Sprite growingSoil;
-        [SerializeField] FoodManager foodManager;
-        [SerializeField] Tilemap soil;
-        [SerializeField] Tilemap foresoil;
-        [SerializeField] float timeToWaitFullGrowth = 5;
-        List<GameObject> seeds;
-        GameObject food;
-        float timeGrowStarted;
-
-        void Start()
-        {
-            seeds = new List<GameObject>();
-        }
+        [SerializeField] private int maxSeeds;
+        [SerializeField] private Sprite notplantedSoil;
+        [SerializeField] private Sprite plantedSoil;
+        [SerializeField] private Sprite growingSoil;
+        [SerializeField] private FoodManager foodManager;
+        [SerializeField] private Tilemap soil;
+        [SerializeField] private Tilemap foresoil;
+        [SerializeField] private float timeToWaitFullGrowth = 5;
+        private List<GameObject> seeds = new List<GameObject>();
+        private GameObject food;
+        private float timeGrowStarted;
 
         void Update(){
             if(food != null && (Time.fixedTime - timeGrowStarted  > timeToWaitFullGrowth)){

@@ -25,6 +25,7 @@ namespace WeirdSpices{
  
         void Start()
         {
+            //TODO rehacer sistema de recetas
             recipes = new Dictionary<string, GameObject>();
             recipes.Add("0-0", foodList[0]);
             recipes.Add("0-1", foodList[1]);
@@ -38,8 +39,8 @@ namespace WeirdSpices{
         }
 
         public GameObject GetFoodFromSeeds(GameObject seed1, GameObject seed2){
-            int seedNumber1 = seed1.GetComponent<Seed>().seedNumber;
-            int seedNumber2 = seed2.GetComponent<Seed>().seedNumber;
+            int seedNumber1 = seed1.GetComponent<Seed>().GetSeedNumber();
+            int seedNumber2 = seed2.GetComponent<Seed>().GetSeedNumber();
             return recipes[seedNumber1+"-"+seedNumber2];
         }
 

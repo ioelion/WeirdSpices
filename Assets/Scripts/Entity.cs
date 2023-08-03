@@ -5,12 +5,9 @@ using UnityEngine;
 namespace WeirdSpices{
     public abstract class Entity : MonoBehaviour
     {
-        [SerializeField]
-        private Weapon weapon;
+        [SerializeField] private Weapon weapon;
 
-        [SerializeField]
-        private int hp;
-
+        [SerializeField] private int healthPoints;
 
         protected Animator an;
 
@@ -19,14 +16,10 @@ namespace WeirdSpices{
             an = this.GetComponent<Animator>();
         }
 
-        public virtual Weapon getWeapon(){
-            return weapon;
-        }
-
         public virtual void ReduceHealth(int pointsToReduce){
-            hp -= pointsToReduce;
+            healthPoints -= pointsToReduce;
             an.SetTrigger("hit");
-            if(hp <=0){
+            if(healthPoints <=0){
                 Die();
             }
         }
@@ -39,8 +32,13 @@ namespace WeirdSpices{
             }
         }
 
-        public virtual int GetHealth(){
-            return hp;
+        public Weapon getWeapon(){
+            return weapon;
         }
+
+        public int GetHealthPoints(){
+            return healthPoints;
+        }
+
     }
 }

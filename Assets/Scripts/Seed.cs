@@ -5,12 +5,16 @@ using UnityEngine.Tilemaps;
 namespace WeirdSpices{
     public class Seed : MonoBehaviour
     {
-        [SerializeField] public int seedNumber {get; private set;}
+        [SerializeField] private int seedNumber;
         private SpriteRenderer sr;
         
         void Start()
         {
             sr = GetComponent<SpriteRenderer>();
+        }
+
+        public int GetSeedNumber(){
+            return seedNumber;
         }
     }
 }

@@ -5,15 +5,21 @@ using UnityEngine;
 namespace WeirdSpices{
     public class EnemySpawner : MonoBehaviour
     {
-        [SerializeField] List<GameObject> enemies;
-        [SerializeField] int maxEnemies;
+        [SerializeField] private List<GameObject> enemies;
+        [SerializeField] private int maxEnemies;
         [SerializeField] private float timeToWaitToSpawn;
-        int currentEnemies;
+        private int currentEnemies = 0;
         private float timeLastSpawn;
+        public static EnemySpawner Instance { get; private set; }    
 
-        void Start()
+        void Awake()
         {
-            currentEnemies = 0;
+            if (Instance == null)
+            {
+                Instance = this;
+            } else {
+                Debug.Log("Más de un EnemySpawner en escena.");
+            }
         }
 
         void Update()
