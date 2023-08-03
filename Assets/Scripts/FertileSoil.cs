@@ -13,11 +13,11 @@ namespace WeirdSpices{
         [SerializeField] FoodManager foodManager;
         [SerializeField] Tilemap soil;
         [SerializeField] Tilemap foresoil;
+        [SerializeField] float timeToWaitFullGrowth = 5;
         List<GameObject> seeds;
         GameObject food;
         float timeGrowStarted;
-        [SerializeField] float timeToWaitFullGrowth = 5;
-        
+
         void Start()
         {
             seeds = new List<GameObject>();
