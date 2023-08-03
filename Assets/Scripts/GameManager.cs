@@ -9,27 +9,42 @@ using Unity.Mathematics;
 namespace WeirdSpices{
     public class GameManager : MonoBehaviour
     {
-        
-        [SerializeField] TMP_Text playerLives;
-        [SerializeField] TMP_Text endText;
-        [SerializeField] GameObject endScreen;
-        [SerializeField] Image recipeGuide;
-        [SerializeField] TMP_Text helpText;
-        [SerializeField] int minGoldRewarded;
-        [SerializeField] int maxGoldRewarded;
-        [SerializeField] int minFoodRequired;
-        [SerializeField] int maxFoodRequired;
-        [SerializeField] float minDeliverTime;
-        [SerializeField] float maxDeliverTime;
-        [SerializeField] float waitTimeBetweenCards;
-        [SerializeField] int deliveriesRequiredToWin;
-        [SerializeField] public TMP_Text gold;
-        public GameObject coin;
+        #region UI
+            [Header("UI")]
+            [SerializeField] private TMP_Text playerLives;
+            [SerializeField] private TMP_Text endText;
+            [SerializeField] private GameObject greyScreen;
+            [SerializeField] private Image recipeGuide;
+            [SerializeField] private TMP_Text helpText;
+            [SerializeField] private TMP_Text goldText;
+        #endregion
 
+        #region GameParameters
+        [Header("Game Parameters")]
+        [SerializeField] private int minGoldRewarded;
+        [SerializeField] private int maxGoldRewarded;
+        [SerializeField] private int minFoodRequired;
+        [SerializeField] private int maxFoodRequired;
+        [SerializeField] private float minDeliverTime;
+        [SerializeField] private float maxDeliverTime;
+        [SerializeField] private float waitTimeBetweenCards;
+        [SerializeField] private int deliveriesRequiredToWin;
+        public string winText = "GANASTE!";
+        public string loseText = "Apreta R para reiniciar el nivel! "; 
+        [SerializeField] private KeyCode recipeKey;
+        [SerializeField] private KeyCode helpKey;
+        [SerializeField] private KeyCode resetKey;
+        [SerializeField] private KeyCode pauseKey;
+        #endregion
+        
+        #region Objects
+        [Header("Objects")]
+        [SerializeField] private GameObject coin;
+        [SerializeField] private Player player;
+        #endregion
+        public int totalGold {get; private set;}
         public static GameManager Instance { get; private set; }    
-        public int TotalGold { get { return totalGold; } }
-        private int totalGold;
-        int currentDeliveries;
+        private int currentDeliveries;
 
         void Awake()
         {
@@ -37,22 +52,18 @@ namespace WeirdSpices{
             {
                 Instance = this;
             } else {
-                Debug.Log("Mas de un GameManager en escena");
+                Debug.Log("Más de un GameManager en escena.");
             }
         }
 
         void Update()
         {
-            if(Time.timeScale == 0 && Input.GetKeyDown(KeyCode.R)){
+            if(Time.timeScale == 0 && Input.GetKeyDown(resetKey)){
                 ResumeGame();
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex,LoadSceneMode.Single);
             }
 
-            if(currentDeliveries >= deliveriesRequiredToWin){
-                EndGame("GANASTE!");
-            }
-
-            if(Input.GetKeyDown(KeyCode.C)){
+            if(Input.GetKeyDown(recipeKey)){
                 if(!recipeGuide.gameObject.activeInHierarchy){
                         recipeGuide.gameObject.SetActive(true);
                 }else{
@@ -60,7 +71,7 @@ namespace WeirdSpices{
                 }
             }
 
-            if(Input.GetKeyDown(KeyCode.H)){
+            if(Input.GetKeyDown(helpKey)){
                 if(!helpText.gameObject.activeInHierarchy){
                         helpText.gameObject.SetActive(true);
                 }else{
@@ -68,12 +79,24 @@ namespace WeirdSpices{
                 }
             }
 
+            if(Input.GetKeyDown(pauseKey)){
+                ToggleGameState();
+            }
         }
 
-        public void EndGame(string newEndText){
-            endText.text = newEndText;
+        void FixedUpdate()
+        {
+            if(currentDeliveries >= deliveriesRequiredToWin){
+                WinGame();
+            }
+        }
+
+        public void WinGame(){EndGame(winText);}
+        public void LoseGame(){EndGame(loseText);}
+
+        public void EndGame(string text){
+            endText.text = text;
             endText.gameObject.SetActive(true);
-            endScreen.SetActive(true);
             PauseGame();
         }
 
@@ -89,19 +112,29 @@ namespace WeirdSpices{
 
         public void SetPlayerGold(int gold)
         {
-            this.gold.SetText("Oro " + gold);
+            this.goldText.SetText("" + gold);
         }
 
         public void CreateCoin(Vector3 p)
         {
             Instantiate(coin, p, Quaternion.identity);
         }
+
+        public void ToggleGameState(){
+            if(Time.timeScale == 1){
+                PauseGame();
+            }else{
+                ResumeGame();
+            }
+        }
         public void PauseGame ()
         {
+            greyScreen.SetActive(true);
             Time.timeScale = 0;
         }
         public void ResumeGame ()
         {
+            greyScreen.SetActive(false);
             Time.timeScale = 1;
         }
 
@@ -128,8 +161,11 @@ namespace WeirdSpices{
             return waitTimeBetweenCards;
         }
 
-        public void SuccessfulDelivery(int number){
-            this.currentDeliveries += number;
+        public void SuccessfulDelivery(int coinQuantity){
+            this.currentDeliveries++;
+            for(int i = 0; i<coinQuantity;i++){
+                Instantiate(coin,player.transform.position,Quaternion.identity);
+            }
         }
     }
 }

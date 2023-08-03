@@ -10,12 +10,22 @@ namespace WeirdSpices{
         [SerializeField] GameObject[] seedList;
 
         Dictionary<string, GameObject> recipes;
+
+        public static FoodManager Instance { get; private set; }    
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            } else {
+                Debug.Log("Más de un FoodManager en escena.");
+            }
+        }
  
         void Start()
         {
-           /* for(int i = 0; i < seedList.Length; i++){
-                seedList[i].GetComponent<Seed>().SetSeedNumber(i+1);
-            }*/
+            //TODO rehacer sistema de recetas
             recipes = new Dictionary<string, GameObject>();
             recipes.Add("0-0", foodList[0]);
             recipes.Add("0-1", foodList[1]);

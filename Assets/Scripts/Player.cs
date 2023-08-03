@@ -6,7 +6,7 @@ using UnityEditor;
 namespace WeirdSpices{
     public class Player : Entity
     {       
-            [Header("PlayerSettings")]
+            [Header("Parameters")]
             [SerializeField] private int movementSpeed;
             [SerializeField] private float timeToWaitTillGrab = 0.2f; 
             [SerializeField] private float timeToWaitTillRemove;
@@ -31,7 +31,6 @@ namespace WeirdSpices{
                 base.Start();
             }
 
-            // Update is called once per frame
             void Update()
             {
                 KeyDownActions();
@@ -41,8 +40,7 @@ namespace WeirdSpices{
             private void OnCollisionStay2D(Collision2D other)
             {
                 if(other.gameObject.tag.Equals("SeedBox") && Input.GetKey(interactKey)){
-                    SeedPickUp seedPickUp = other.gameObject.GetComponent<SeedPickUp>();
-                    seedPickUp.DropSeed();
+                    other.gameObject.GetComponent<SeedBox>().DropSeed();
                 }
             }
 
@@ -71,6 +69,8 @@ namespace WeirdSpices{
                  if(other.tag.Equals("RequestCard") && hasItem && !hasSeed ){
                     other.gameObject.GetComponent<RequestCard>().ReceiveFood(ingredientContainer.transform.GetChild(0).gameObject);
                     Destroy(ingredientContainer.transform.GetChild(0).gameObject);
+                    ingredientContainer.transform.DetachChildren();
+                    hasItem = false;
                  }
             }
 
@@ -123,13 +123,13 @@ namespace WeirdSpices{
             }
 
             override protected void Die(){
-                GameManager.Instance.EndGame("Apreta R para reiniciar el nivel.");
+                GameManager.Instance.LoseGame();
             }
 
             public override void ReduceHealth(int pointsToReduce)
             {
                 base.ReduceHealth(pointsToReduce);
-                GameManager.Instance.SetPlayerHp(base.GetHealth());
+                GameManager.Instance.SetPlayerHp(base.GetHealthPoints());
             }
 
         private void DropItem()

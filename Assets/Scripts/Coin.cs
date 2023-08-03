@@ -5,8 +5,7 @@ using WeirdSpices;
 
 public class Coin : MonoBehaviour
 {
-    public int value = 1;
-
+    [SerializeField] private int value = 1;
 
     private void OnTriggerEnter2D(Collider2D col)
     {

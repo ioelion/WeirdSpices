@@ -5,20 +5,18 @@ using UnityEngine;
 namespace WeirdSpices{
     public class Enemy : Entity
     {
+        [SerializeField] private float timeToWaitTillAttack = 0.5f;
+        [SerializeField] private float moveSpeed;
+
+        [SerializeField] private float distanceToAttack = 2f;
         private Transform target;    
         private Rigidbody2D rb;
-
-        [SerializeField] private float moveSpeed;
         private Vector2 moveDirection;
         private Vector2 _force;
         private SpriteRenderer sr;
-        [SerializeField] private float timeToWaitTillAttack = 0.5f;
         private float lastAttackTime = 0f;
+        private EnemySpawner enemySpawner;
 
-        EnemySpawner enemySpawner;
-        
-
-        // Start is called before the first frame update
         override public void Start()
         {
             rb = this.GetComponent<Rigidbody2D>();
@@ -33,42 +31,47 @@ namespace WeirdSpices{
         }
 
         void Update() {
-            if(target){
-                Vector3 direction = (target.position - transform.position).normalized;
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                rb.rotation = angle;
-                moveDirection = direction;
-            }    
+            if(target){LookTowards(target);}    
         }
 
-        // Update is called once per frame
         void FixedUpdate()
         {
             if(target){
                 _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
                 if (_force != Vector2.zero)
                 {   
-                    an.SetBool("walk", true);
-                    rb.velocity = _force;
-                    rb.SetRotation(0);
+                    Walk(_force);
                     sr.flipX =Mathf.Sign(_force.x) > 0;
                 }
-                if(((target.position - transform.position).magnitude < 2f) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack){
-                    an.SetTrigger("attack");
-                    base.getWeapon().gameObject.SetActive(true);
-                    lastAttackTime = Time.fixedTime;
-                    if(sr.flipX){
-                        base.getWeapon().FlipPositionX();
-                    }
+                if(((target.position - transform.position).magnitude < distanceToAttack) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack){
+                    Attack();
+                    if(sr.flipX){ base.getWeapon().FlipPositionX();}
                 }
             }
-
-
         }
 
         override protected void Die(){
             enemySpawner.EnemyDied();
             base.Die();
+        }
+
+        private void LookTowards(Transform target){
+            Vector3 direction = (target.position - transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            rb.rotation = angle;
+            moveDirection = direction;
+        }
+
+        private void Walk(Vector2 force){
+            an.SetBool("walk", true);
+            rb.velocity = _force;
+            rb.SetRotation(0);
+        }
+
+        private void Attack(){
+            an.SetTrigger("attack");
+            base.getWeapon().gameObject.SetActive(true);
+            lastAttackTime = Time.fixedTime;
         }
     }
 
