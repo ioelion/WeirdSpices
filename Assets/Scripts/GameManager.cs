@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
-using Unity.Mathematics;
+using static UnityEditor.ShaderData;
 
 namespace WeirdSpices{
     public class GameManager : MonoBehaviour
@@ -117,7 +117,18 @@ namespace WeirdSpices{
 
         public void CreateCoin(Vector3 p)
         {
-            Instantiate(coin, p, Quaternion.identity);
+            if (Physics2D.OverlapPoint(p) != null)
+            {
+                if (!Physics2D.OverlapPoint(p).CompareTag("Coin"))
+                {
+                    Instantiate(coin, (p), Quaternion.identity);
+                }
+                else
+                {
+                    float r = Random.Range(-0.5f, 0.5f);
+                    Instantiate(coin, new Vector3(p.x + r, p.y + r, p.z), Quaternion.identity);
+                }
+            }
         }
 
         public void ToggleGameState(){
