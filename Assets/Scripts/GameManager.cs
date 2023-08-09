@@ -41,6 +41,7 @@ namespace WeirdSpices{
         [Header("Objects")]
         [SerializeField] private GameObject coin;
         [SerializeField] private Player player;
+        [SerializeField] private DeliveryBox deliveryBox;
         #endregion
         public int totalGold {get; private set;}
         public static GameManager Instance { get; private set; }    
@@ -149,34 +150,26 @@ namespace WeirdSpices{
             Time.timeScale = 1;
         }
 
-        public int GetMinGoldRewarded(){
-            return minGoldRewarded;
-        }
-        public int GetMaxGoldRewarded(){
-            return maxGoldRewarded;
-        }
-        public int GetMinFoodRequired(){
-            return minFoodRequired;
-        }
-        public int GetMaxFoodRequired(){
-            return maxFoodRequired;
-        }
-        public float GetMinDeliverTime(){
-            return minDeliverTime;
-        }
-        public float GetMaxDeliverTime(){
-            return maxDeliverTime;
-        }
-
-        public float GetWaitTimeBetweenCards(){
-            return waitTimeBetweenCards;
-        }
+        public int GetMinGoldRewarded(){return minGoldRewarded;}
+        public int GetMaxGoldRewarded(){return maxGoldRewarded;}
+        public int GetMinFoodRequired(){return minFoodRequired;}
+        public int GetMaxFoodRequired(){return maxFoodRequired;}
+        public float GetMinDeliverTime(){return minDeliverTime;}
+        public float GetMaxDeliverTime(){return maxDeliverTime;}
+        public float GetWaitTimeBetweenCards(){return waitTimeBetweenCards;}
 
         public void SuccessfulDelivery(int coinQuantity){
             this.currentDeliveries++;
             for(int i = 0; i<coinQuantity;i++){
                 Instantiate(coin,player.transform.position,Quaternion.identity);
             }
+        }
+
+        public void PickedUpFood(GameObject food){
+            deliveryBox.AnimateCardsWithFood(food);
+        }
+        public void PlayerDroppedFood(){
+            deliveryBox.StopAnimations();
         }
     }
 }

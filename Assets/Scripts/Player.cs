@@ -8,18 +8,22 @@ namespace WeirdSpices{
     {       
         [Header("Parameters")]
         [SerializeField] private int movementSpeed;
-        [SerializeField] private float timeToWaitTillGrab = 0.2f; 
-        [SerializeField] private float timeToWaitTillRemove;
+        [SerializeField] private float timeToWaitTillGrab = 0.5f; 
+        [SerializeField] private float xDropDistance;
+        [SerializeField] private float yDropDistance;
+
+        [Header("Keys")]
         [SerializeField] private KeyCode dropKey;
         [SerializeField] private KeyCode attackKey;
         [SerializeField] private KeyCode interactKey;
         [Header("Objects")]
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject inventory;
+        [SerializeField] private GameManager gameManager;
         private Rigidbody2D rb;
         private SpriteRenderer sr;
         private GameObject itemInInventory;
-        private float lastItemDropTime;
+        private float lastItemTime;
         private float timeKeyToRemoveWasPressed;
         private bool isOnSoil = false;
         private FertileSoil fertileSoil;
@@ -46,7 +50,7 @@ namespace WeirdSpices{
         void OnTriggerStay2D(Collider2D other)
         {
             
-            if(Input.GetKey(interactKey) && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab))
+            if(Input.GetKey(interactKey) && (Time.fixedTime - lastItemTime  > timeToWaitTillGrab))
             {
                 if(other.tag.Equals("Seed")){
                     DropItem();
@@ -55,6 +59,7 @@ namespace WeirdSpices{
                 else if(other.tag.Equals("Food")){
                     DropItem();
                     PickUpItem(other.gameObject);
+                    gameManager.PickedUpFood(other.gameObject);
                 }
             }
         }
@@ -68,7 +73,7 @@ namespace WeirdSpices{
 
             if(other.tag.Equals("RequestCard") && itemInInventory && itemInInventory.tag.Equals("Food")){
                 other.gameObject.GetComponent<RequestCard>().ReceiveFood(inventory.transform.GetChild(0).gameObject);
-                Destroy(inventory.transform.GetChild(0).gameObject, 1f);
+                Destroy(itemInInventory, 0.01f);
                 DropItem();
             }
         }
@@ -90,6 +95,7 @@ namespace WeirdSpices{
                 animator.SetBool("walk", true);
                 rb.velocity = _force;
                 sr.flipX = Mathf.Sign(_force.x) < 0;
+
             }
             else
             {
@@ -101,7 +107,7 @@ namespace WeirdSpices{
 
         private void KeyDownActions(){
             
-            if(Input.GetKeyDown(dropKey) && itemInInventory && (Time.fixedTime - lastItemDropTime  > timeToWaitTillGrab) ){
+            if(Input.GetKeyDown(dropKey) && itemInInventory && (Time.fixedTime - lastItemTime  > timeToWaitTillGrab) ){
                 DropItem();
             }
 
@@ -128,11 +134,13 @@ namespace WeirdSpices{
         private void DropItem()
         {
             if(itemInInventory != null){
+                if(itemInInventory.tag.Equals("Food")) gameManager.PlayerDroppedFood();
                 Transform tfchildren = inventory.transform.GetChild(0);
-                tfchildren.position = new Vector2(this.transform.position.x, this.transform.position.y);
+                
+                tfchildren.position = GetDropPosition();
                 inventory.transform.DetachChildren();
                 itemInInventory = null;
-                lastItemDropTime = Time.fixedTime; 
+                lastItemTime = Time.fixedTime; 
             }
         }
 
@@ -141,12 +149,18 @@ namespace WeirdSpices{
             itemInInventory = newItem;
             newItem.gameObject.transform.parent = inventory.transform;
             newItem.transform.position = new Vector2(inventory.transform.position.x, inventory.transform.position.y + 1);
+            lastItemTime = Time.fixedTime; 
         }
 
         private void Attack(){
             animator.SetTrigger("attack");
             base.getWeapon().gameObject.SetActive(true);
             if(sr.flipX) base.getWeapon().FlipPositionX();
+        }
+
+        private Vector2 GetDropPosition(){
+            float x = sr.flipX ? -xDropDistance : xDropDistance;
+            return new Vector2(this.transform.position.x+x,this.transform.position.y+yDropDistance);
         }
     }
 }
