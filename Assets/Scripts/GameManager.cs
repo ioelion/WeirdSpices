@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
-using static UnityEditor.ShaderData;
 
 namespace WeirdSpices{
     public class GameManager : MonoBehaviour

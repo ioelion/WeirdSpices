@@ -26,7 +26,7 @@ namespace WeirdSpices{
         private float lastItemTime;
         private float timeKeyToRemoveWasPressed;
         private bool isOnSoil = false;
-        private FertileSoil fertileSoil;
+        private Soil soil;
         override public void Start()
         {
             rb = this.GetComponent<Rigidbody2D>();
@@ -38,6 +38,16 @@ namespace WeirdSpices{
         {
             KeyDownActions();
             Move();
+        }
+        private void FixedUpdate() {
+            /*
+            if is on soil
+            gameManager im on soil
+                soil highlight wherePlayerHasACollision
+                    if playerLastColisionPosition != newPosition
+                        foresoil2.settile playerLastColisionPositionToCell null
+                        foresoil2.settile playerCollisionPositionToCell highlightTile
+            */
         }
 
         private void OnCollisionStay2D(Collision2D other)
@@ -66,23 +76,23 @@ namespace WeirdSpices{
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if(other.tag.Equals("FertileSoil")){
-                fertileSoil = other.GetComponent<FertileSoil>();
+            if(other.tag.Equals("Soil")){
+                soil = other.GetComponent<Soil>();
                 isOnSoil = true;
             }
 
             if(other.tag.Equals("RequestCard") && itemInInventory && itemInInventory.tag.Equals("Food")){
-                other.gameObject.GetComponent<RequestCard>().ReceiveFood(inventory.transform.GetChild(0).gameObject);
+                other.gameObject.GetComponent<RequestCard>().ReceiveFood(itemInInventory);
                 Destroy(itemInInventory, 0.01f);
                 DropItem();
             }
         }
 
         private void OnTriggerExit2D(Collider2D other) {
-            if(other.tag.Equals("FertileSoil")){
-                fertileSoil = null;
+            if(other.tag.Equals("Soil")){
+                soil = null;
                 isOnSoil = false;
-                }
+            }
         }
 
         private void Move(){
@@ -116,7 +126,7 @@ namespace WeirdSpices{
             }
             
             if(Input.GetKeyDown(interactKey) && itemInInventory && itemInInventory.tag.Equals("Seed") && isOnSoil){
-                fertileSoil.PlantSeed(inventory.transform.GetChild(0).gameObject);
+                soil.PlantSeed(itemInInventory, this.transform.position);
                 DropItem();
             }
         }
