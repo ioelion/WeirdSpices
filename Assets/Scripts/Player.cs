@@ -39,7 +39,7 @@ namespace WeirdSpices{
 
             private void OnCollisionStay2D(Collision2D other)
             {
-                if(other.gameObject.tag.Equals("SeedBox") && Input.GetKey(interactKey)){
+                if(other.gameObject.tag.Equals("SeedBox") && Input.GetKey(attackKey)){
                     other.gameObject.GetComponent<SeedBox>().DropSeed();
                 }
             }

@@ -12,10 +12,13 @@ namespace WeirdSpices{
         [SerializeField] private int initialSeeds = 50;
         [SerializeField] private int currentSeeds;
 
+
+
         [Header("Objects")]
         [SerializeField] private Transform dispenser;
-        [SerializeField] private GameObject seed;
+        [SerializeField] private GameObject seedPrefab;
         [SerializeField] private SpriteRenderer iconSr;
+        [SerializeField] private Animator animator;
         
         private float lastSeedDropTime = 0f;
         
@@ -23,7 +26,7 @@ namespace WeirdSpices{
         {
             currentSeeds = initialSeeds;
             quantityLeft.text = "" + currentSeeds;
-            iconSr.sprite = seed.GetComponent<SpriteRenderer>().sprite;
+            iconSr.sprite = seedPrefab.GetComponent<SpriteRenderer>().sprite;
         }
 
 
@@ -39,12 +42,12 @@ namespace WeirdSpices{
                         Debug.Log("Ya hay una semila");
                     }
                     else
-                    {                       
-                        Instantiate(seed, dispenser.position, dispenser.rotation);
-                        Debug.Log("Semilla dropeada");
+                    {                 
+                        animator.SetTrigger("wasHit");
+                        Instantiate(seedPrefab, dispenser.transform.position, Quaternion.identity);
                         currentSeeds--;
-                        Debug.Log(currentSeeds);
                         quantityLeft.text = "" + (currentSeeds);
+                    
                     }
                 }
                 else
@@ -52,8 +55,7 @@ namespace WeirdSpices{
                     Debug.Log("Maximo de semillas agarradas");
                 }
             }
-
         }
-
+        
     }
 }
