@@ -6,20 +6,27 @@ using UnityEditor;
 namespace WeirdSpices{
     public class Player : Entity
     {       
+        #region Parameters
         [Header("Parameters")]
         [SerializeField] private int movementSpeed;
         [SerializeField] private float timeToWaitTillGrab = 0.5f; 
         [SerializeField] private float xDropDistance;
         [SerializeField] private float yDropDistance;
+        #endregion
 
+        #region Keys
         [Header("Keys")]
         [SerializeField] private KeyCode dropKey;
         [SerializeField] private KeyCode attackKey;
         [SerializeField] private KeyCode interactKey;
         [Header("Objects")]
+        #endregion
+        
+        #region Objects
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject inventory;
         [SerializeField] private GameManager gameManager;
+        #endregion
         private Rigidbody2D rb;
         private SpriteRenderer sr;
         private GameObject itemInInventory;
@@ -39,15 +46,10 @@ namespace WeirdSpices{
             KeyDownActions();
             Move();
         }
-        private void FixedUpdate() {
-            /*
-            if is on soil
-            gameManager im on soil
-                soil highlight wherePlayerHasACollision
-                    if playerLastColisionPosition != newPosition
-                        foresoil2.settile playerLastColisionPositionToCell null
-                        foresoil2.settile playerCollisionPositionToCell highlightTile
-            */
+        private void FixedUpdate() { 
+            if(isOnSoil && itemInInventory && itemInInventory.CompareTag("Seed")){
+                soil.Highlight(transform.position);
+            }
         }
 
         private void OnCollisionStay2D(Collision2D other)
@@ -90,7 +92,7 @@ namespace WeirdSpices{
 
         private void OnTriggerExit2D(Collider2D other) {
             if(other.tag.Equals("Soil")){
-                soil = null;
+                soil.ClearLastPositionHighlighted();
                 isOnSoil = false;
             }
         }

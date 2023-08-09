@@ -41,6 +41,7 @@ namespace WeirdSpices{
         [SerializeField] private GameObject coin;
         [SerializeField] private Player player;
         [SerializeField] private DeliveryBox deliveryBox;
+        [SerializeField] private Soil soil;
         #endregion
         public int totalGold {get; private set;}
         public static GameManager Instance { get; private set; }    
@@ -170,5 +171,6 @@ namespace WeirdSpices{
         public void PlayerDroppedFood(){
             deliveryBox.StopAnimations();
         }
+
     }
 }

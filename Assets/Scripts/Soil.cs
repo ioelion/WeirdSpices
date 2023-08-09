@@ -6,14 +6,26 @@ using UnityEngine.Tilemaps;
 namespace WeirdSpices{
     public class Soil : MonoBehaviour
     {
+        #region Parameters
+        [Header("Parameters")]
+        [SerializeField] private int maxSeeds;
+        #endregion Parameters
+        
+        #region Objects
+        [Header("Objects")]
         [SerializeField] private FoodManager foodManager;
+        [SerializeField] private GameObject cropPrefab;
         [SerializeField] private Tilemap soil;
         [SerializeField] private Tilemap foresoil;
-        [SerializeField] private int maxSeeds;
-        [SerializeField] private GameObject cropPrefab;
+        [SerializeField] private Tilemap highlights;
+        [SerializeField] private Sprite highlight;
+        #endregion
+       
         private Dictionary<Vector3Int,List<GameObject>> seeds = new Dictionary<Vector3Int, List<GameObject>>();
         private GameObject foodToPlant;
         private GameObject currentCrop;
+
+        private Vector3Int lastHighlightPosition;
 
         public void PlantSeed(GameObject seed, Vector3 positionToPlant){
             Vector3Int position = Vector3Int.FloorToInt(positionToPlant);
@@ -58,5 +70,18 @@ namespace WeirdSpices{
             tile.sprite = sprite;
             return tile;
         }
+
+        public void Highlight(Vector3 newPosition){
+            if(lastHighlightPosition != newPosition && soil.GetTile(soil.WorldToCell(newPosition)) != null){
+                ClearLastPositionHighlighted();
+                lastHighlightPosition = highlights.WorldToCell(newPosition);
+                highlights.SetTile(lastHighlightPosition, CreateTile(highlight));
+            }
+        }
+
+        public void ClearLastPositionHighlighted(){
+            highlights.SetTile(lastHighlightPosition, null);
+        }
+
     }
 }
