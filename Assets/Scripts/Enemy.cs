@@ -45,7 +45,7 @@ namespace WeirdSpices{
                 }
                 if(((target.position - transform.position).magnitude < distanceToAttack) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack){
                     Attack();
-                    if(sr.flipX){ base.getWeapon().FlipPositionX();}
+                    base.getWeapon().FlipPositionX(!sr.flipX);
                 }
             }
         }
@@ -73,6 +73,7 @@ namespace WeirdSpices{
             base.getWeapon().gameObject.SetActive(true);
             lastAttackTime = Time.fixedTime;
         }
+
     }
 
 

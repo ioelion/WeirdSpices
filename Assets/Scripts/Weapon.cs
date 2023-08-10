@@ -7,9 +7,21 @@ namespace WeirdSpices{
     {
         [SerializeField] protected int damage;
         private BoxCollider2D bc;
-        void Awake(){bc = this.GetComponent<BoxCollider2D>();}
+        private Vector2 original;
+        private Vector2 negated;
+        void Awake(){
+            bc = this.GetComponent<BoxCollider2D>();
+            original = new Vector2(this.transform.localPosition.x, transform.localPosition.y);
+            negated = new Vector2(original.x *-1, original.y);
+            }
 
-        public void FlipPositionX(){bc.offset = new Vector2(bc.offset.x*-1, bc.offset.y);}
+        public void FlipPositionX(bool flipPosition){
+            if(flipPosition){
+                transform.localPosition = negated;
+            }else{
+                transform.localPosition = original;
+            }
+        }
 
         
     }
