@@ -107,7 +107,6 @@ namespace WeirdSpices{
                 animator.SetBool("walk", true);
                 rb.velocity = _force;
                 sr.flipX = Mathf.Sign(_force.x) < 0;
-
             }
             else
             {
@@ -167,13 +166,14 @@ namespace WeirdSpices{
         private void Attack(){
             animator.SetTrigger("attack");
             base.getWeapon().gameObject.SetActive(true);
-            if(sr.flipX) base.getWeapon().FlipPositionX();
+            base.getWeapon().FlipPositionX(sr.flipX);
         }
 
         private Vector2 GetDropPosition(){
             float x = sr.flipX ? -xDropDistance : xDropDistance;
             return new Vector2(this.transform.position.x+x,this.transform.position.y+yDropDistance);
         }
+
     }
 }
 
