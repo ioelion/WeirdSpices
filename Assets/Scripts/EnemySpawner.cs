@@ -20,6 +20,7 @@ namespace WeirdSpices{
             } else {
                 Debug.Log("Más de un EnemySpawner en escena.");
             }
+            timeLastSpawn = Time.fixedTime;
         }
 
         void Update()

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
-using static UnityEditor.ShaderData;
 
 namespace WeirdSpices{
     public class GameManager : MonoBehaviour
@@ -41,6 +40,8 @@ namespace WeirdSpices{
         [Header("Objects")]
         [SerializeField] private GameObject coin;
         [SerializeField] private Player player;
+        [SerializeField] private DeliveryBox deliveryBox;
+        [SerializeField] private Soil soil;
         #endregion
         public int totalGold {get; private set;}
         public static GameManager Instance { get; private set; }    
@@ -149,28 +150,13 @@ namespace WeirdSpices{
             Time.timeScale = 1;
         }
 
-        public int GetMinGoldRewarded(){
-            return minGoldRewarded;
-        }
-        public int GetMaxGoldRewarded(){
-            return maxGoldRewarded;
-        }
-        public int GetMinFoodRequired(){
-            return minFoodRequired;
-        }
-        public int GetMaxFoodRequired(){
-            return maxFoodRequired;
-        }
-        public float GetMinDeliverTime(){
-            return minDeliverTime;
-        }
-        public float GetMaxDeliverTime(){
-            return maxDeliverTime;
-        }
-
-        public float GetWaitTimeBetweenCards(){
-            return waitTimeBetweenCards;
-        }
+        public int GetMinGoldRewarded(){return minGoldRewarded;}
+        public int GetMaxGoldRewarded(){return maxGoldRewarded;}
+        public int GetMinFoodRequired(){return minFoodRequired;}
+        public int GetMaxFoodRequired(){return maxFoodRequired;}
+        public float GetMinDeliverTime(){return minDeliverTime;}
+        public float GetMaxDeliverTime(){return maxDeliverTime;}
+        public float GetWaitTimeBetweenCards(){return waitTimeBetweenCards;}
 
         public void SuccessfulDelivery(int coinQuantity){
             this.currentDeliveries++;
@@ -178,5 +164,13 @@ namespace WeirdSpices{
                 Instantiate(coin,player.transform.position,Quaternion.identity);
             }
         }
+
+        public void PickedUpFood(GameObject food){
+            deliveryBox.AnimateCardsWithFood(food);
+        }
+        public void PlayerDroppedFood(){
+            deliveryBox.StopAnimations();
+        }
+
     }
 }

@@ -68,5 +68,23 @@ namespace WeirdSpices{
             this.maxTime = GameManager.Instance.GetMaxDeliverTime();
             this.timeToWaitToSetCard = GameManager.Instance.GetWaitTimeBetweenCards();
         }
+
+        public void AnimateCardsWithFood(GameObject food){
+            foreach(RequestCard requestCard in requestCards){
+                requestCard.StopAnimation();
+                if(requestCard.GetFoodRequiredSprite() == food.GetComponent<SpriteRenderer>().sprite) {
+                    requestCard.PlayAnimation();
+                }
+
+            }
+        }
+
+        public void StopAnimations(){
+            foreach(RequestCard requestCard in requestCards){
+                requestCard.StopAnimation();
+            }
+        }
+
+        
     }
 }
