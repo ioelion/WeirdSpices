@@ -122,12 +122,16 @@ namespace WeirdSpices{
             {
                 if (!Physics2D.OverlapPoint(p).CompareTag("Coin"))
                 {
-                    Instantiate(coin, (p), Quaternion.identity);
+                    GameObject clone;
+                    clone = Instantiate(coin, p, Quaternion.identity);
+                    EnemySpawner.Instance.AddToList(clone);
                 }
                 else
                 {
                     float r = Random.Range(-0.5f, 0.5f);
-                    Instantiate(coin, new Vector3(p.x + r, p.y + r, p.z), Quaternion.identity);
+                    GameObject clone;
+                    clone = Instantiate(coin, new Vector3(p.x + r, p.y + r, p.z), Quaternion.identity);
+                    EnemySpawner.Instance.AddToList(clone);
                 }
             }
         }

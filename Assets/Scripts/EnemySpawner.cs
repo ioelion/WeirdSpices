@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace WeirdSpices{
     public class EnemySpawner : MonoBehaviour
     {
         [SerializeField] private List<GameObject> enemies;
+        [SerializeField] private List<GameObject> waypoints;
+        public List<GameObject> items;
         [SerializeField] private int maxEnemies;
         [SerializeField] private float timeToWaitToSpawn;
         private int currentEnemies = 0;
         private float timeLastSpawn;
-        public static EnemySpawner Instance { get; private set; }    
+        public static EnemySpawner Instance { get; private set; }
+
+        public 
 
         void Awake()
         {
@@ -27,7 +32,17 @@ namespace WeirdSpices{
         {
             if(currentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
                 currentEnemies++;
-                Instantiate(enemies[Random.Range(0, enemies.Count)]);
+                GameObject clone;
+                Enemy enemy;
+                clone = Instantiate(enemies[Random.Range(0, enemies.Count)]);
+                if (items.Count > 0)
+                {
+                    enemy = clone.GetComponent<Enemy>();
+                    int r = Random.Range(0, items.Count);
+                    enemy._item = items[r];
+                    enemy._itemTarget = items[r].transform;
+                    enemy.waypoint = waypoints[Random.Range(0,waypoints.Count)].transform;
+                }            
                 timeLastSpawn = Time.fixedTime;
             }
         }
@@ -35,6 +50,18 @@ namespace WeirdSpices{
         public void EnemyDied(){
             currentEnemies--;
             timeLastSpawn = Time.fixedTime;
+        }
+
+        public void AddToList(GameObject item)
+        {
+            items.Add(item);
+            Debug.Log("item Agregado =" + item.name);
+        }
+
+        public void RemoveToList(GameObject item)
+        {
+            Debug.Log("Remover item= " + item.name);
+            items.Remove(item);
         }
 
     }

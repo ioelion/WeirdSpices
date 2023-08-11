@@ -13,6 +13,7 @@ public class Coin : MonoBehaviour
         {
             Destroy(this.gameObject);
             GameManager.Instance.GainGold(value);
+            EnemySpawner.Instance.RemoveToList(this.gameObject);
         }
     }
 
