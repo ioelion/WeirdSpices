@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 namespace WeirdSpices{
-    public class Seed : MonoBehaviour
+    public class Seed : Dropable
     {
         [SerializeField] private int seedNumber;
         private SpriteRenderer sr;

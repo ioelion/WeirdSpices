@@ -52,16 +52,11 @@ namespace WeirdSpices{
             timeLastSpawn = Time.fixedTime;
         }
 
-        public void AddToList(GameObject item)
-        {
-            items.Add(item);
-            Debug.Log("item Agregado =" + item.name);
-        }
 
-        public void RemoveToList(GameObject item)
+
+        private void GetNextDropable()
         {
-            Debug.Log("Remover item= " + item.name);
-            items.Remove(item);
+
         }
 
     }

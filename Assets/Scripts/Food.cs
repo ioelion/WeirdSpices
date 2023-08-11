@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WeirdSpices{
-    public class Food : MonoBehaviour
+    public class Food : Dropable
     {
         [SerializeField] private float timeNeededToGrow;
         [SerializeField] private SpriteRenderer spriteRenderer;
