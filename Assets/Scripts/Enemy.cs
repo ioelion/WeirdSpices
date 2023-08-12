@@ -41,11 +41,11 @@ namespace WeirdSpices{
                 if (_force != Vector2.zero)
                 {   
                     Walk(_force);
-                    sr.flipX =Mathf.Sign(_force.x) > 0;
+                    sr.flipX =Mathf.Sign(_force.x) < 0;
                 }
                 if(((target.position - transform.position).magnitude < distanceToAttack) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack){
                     Attack();
-                    base.getWeapon().FlipPositionX(!sr.flipX);
+                    base.getWeapon().FlipPositionX(sr.flipX);
                 }
             }
         }
