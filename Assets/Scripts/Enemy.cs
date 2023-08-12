@@ -49,6 +49,10 @@ namespace WeirdSpices {
 
         void Awake() {
             target = GameObject.Find("Player").transform;
+            _item = EnemySpawner.Instance.GetNextDropable();
+            if (_item != null) { _itemTarget = _item.transform; Debug.Log("Encontre Item"); } //this
+
+            waypoint = EnemySpawner.Instance.GetWaypoint();
         }
         /*
         void Update() {
@@ -58,24 +62,33 @@ namespace WeirdSpices {
         void FixedUpdate()
         {
 
+            if (_item == null)
+            {
+                //Debug.Log("Buscando Item");
+                runToWaypoint = false;
+                _item = EnemySpawner.Instance.GetNextDropable();
+                if (_item != null) { _itemTarget = _item.transform; Debug.Log("Encontre item"); }
+            }
+
             if (runToWaypoint)
             {
                 if (transform.position != waypoint.position)
                 {
                     transform.position = Vector2.MoveTowards(transform.position, waypoint.position, moveSpeed * Time.deltaTime);
-                    Debug.Log("Running");
+                    //Debug.Log("Running");
                     if (_item != null)
                     {
                         _item.transform.position = Vector2.MoveTowards(_item.transform.position, transform.position, moveSpeed * Time.deltaTime);
                     }
                 }
-
-                else if (!destroying)
+                else
                 {
-                    Debug.Log("Destroy");
-                    StartCoroutine(DestroyItem());
+                    if (!destroying)
+                    {
+                        Debug.Log("Destroy");
+                        StartCoroutine(DestroyItem());
+                    }
                 }
-
             }
             else
             {
@@ -170,25 +183,27 @@ namespace WeirdSpices {
         {
             destroying = true;
             Debug.Log("Destroying item");
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(1);
             if (_item != null)
             {
                 Destroy(_item.gameObject);
                 Debug.Log("Destroyed");
             }
+            destroying = false;
             runToWaypoint = false;
-            Debug.Log(runToWaypoint);
+            touched = false;
         }
 
         private void OnTriggerStay2D(Collider2D col)
         {
 
-            if ((col.gameObject.tag.Equals("Coin")) || (col.gameObject.tag.Equals("Seed")))
+            if ((col.gameObject.tag.Equals("Coin")) || (col.gameObject.tag.Equals("Seed")) || (col.gameObject.tag.Equals("Food")))
             {
+                inTouch = true;
                 if (!touched)
                 {
                     Debug.Log("Picking up");
-                    inTouch = true;
+                    //inTouch = true;
                     touched = true;
                     StartCoroutine(PickObj());
                 }
@@ -196,7 +211,7 @@ namespace WeirdSpices {
             }
             else
             {
-                //inTouch = false;  FUNCIONA MAL LA COLISION
+                //inTouch = false;  //FUNCIONA MAL LA COLISION
                 //Debug.Log("No Tocando");
             }
 

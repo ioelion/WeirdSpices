@@ -142,14 +142,14 @@ namespace WeirdSpices
                 {
                     GameObject clone;
                     clone = Instantiate(coin, p, Quaternion.identity);
-                    EnemySpawner.Instance.AddToList(clone);
+                    AddToList(clone);
                 }
                 else
                 {
                     float r = Random.Range(-0.5f, 0.5f);
                     GameObject clone;
                     clone = Instantiate(coin, new Vector3(p.x + r, p.y + r, p.z), Quaternion.identity);
-                    EnemySpawner.Instance.AddToList(clone);
+                    AddToList(clone);
                 }
             }
         }
@@ -203,29 +203,44 @@ namespace WeirdSpices
         }
 
         public void AddToList(GameObject item)
-        {
-            dropables.Add(item);
-            Debug.Log("item Agregado =" + item.name);
+        {   
+            if (item.GetComponent<Dropable>() != null)
+            {
+                Dropable itemD = item.GetComponent<Dropable>();
+                dropables.Add(itemD);
+                //Debug.Log("item Agregado =" + itemD.name);
+            }
         }
 
         public void RemoveToList(GameObject item)
         {
-            Debug.Log("Remover item= " + item.name);
-            dropables.Remove(item);
+            
+            //dropables.Remove(itemD);
+            
+            if (item.GetComponent<Dropable>() != null)
+            {
+                Dropable itemD = item.GetComponent<Dropable>();
+                itemD.gameObject.SetActive(false);
+                //Debug.Log("Remover item= " + itemD.name);
+            }
+            
+            
+
         }
 
-        /*
         public Dropable RandomParentlessActiveDropable()
         {
             foreach (Dropable dropable in dropables)
             {
-                //if (dropable.gameObject.IsActive && dropable.obtener padres == null o 0 )
-                    {
+
+                if (dropable != null && dropable.gameObject.activeSelf && (dropable.GetComponentInParent<Dropable>() != null))
+                {
                     return dropable;
-                    break;
                 }
+                
             }
+            return null;
         }
-        */
+        
     }
 }

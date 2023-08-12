@@ -30,8 +30,10 @@ namespace WeirdSpices{
 
         void Update()
         {
+
             if(currentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
                 currentEnemies++;
+                /*
                 GameObject clone;
                 Enemy enemy;
                 clone = Instantiate(enemies[Random.Range(0, enemies.Count)]);
@@ -39,10 +41,11 @@ namespace WeirdSpices{
                 {
                     enemy = clone.GetComponent<Enemy>();
                     int r = Random.Range(0, items.Count);
-                    enemy._item = items[r];
+                    enemy._item = G;
                     enemy._itemTarget = items[r].transform;
                     enemy.waypoint = waypoints[Random.Range(0,waypoints.Count)].transform;
-                }            
+                }            */
+                Instantiate(enemies[Random.Range(0, enemies.Count)]);
                 timeLastSpawn = Time.fixedTime;
             }
         }
@@ -54,10 +57,19 @@ namespace WeirdSpices{
 
 
 
-        private void GetNextDropable()
+        public GameObject GetNextDropable()
         {
-
+            if (GameManager.Instance.RandomParentlessActiveDropable() != null)
+            {
+                return GameManager.Instance.RandomParentlessActiveDropable().gameObject;
+            }
+            else { return null; }
         }
 
+        public Transform GetWaypoint()
+        {
+            Transform waypoint = waypoints[Random.Range(0, waypoints.Count)].transform;
+            return waypoint;
+        }
     }
 }

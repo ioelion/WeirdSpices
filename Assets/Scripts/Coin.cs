@@ -13,7 +13,7 @@ public class Coin : Dropable
         {
             Destroy(this.gameObject);
             GameManager.Instance.GainGold(value);
-            //GameManager.Instance.RemoveToList(this.gameObject);
+            GameManager.Instance.RemoveToList(this.gameObject);
         }
     }
 
