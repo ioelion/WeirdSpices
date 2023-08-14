@@ -35,6 +35,7 @@ namespace WeirdSpices {
         private bool touched = false;
 
         public Transform waypoint;
+        [SerializeField] private float distanceThresholdWaypoint;
         private bool runToWaypoint = false;
         private bool destroying = false;
 
@@ -72,14 +73,12 @@ namespace WeirdSpices {
 
             if (runToWaypoint)
             {
-                if (transform.position != waypoint.position)
+                float distanceToWaypoint = Vector2.Distance(transform.position, waypoint.position);
+                if (distanceToWaypoint > distanceThresholdWaypoint)
                 {
                     transform.position = Vector2.MoveTowards(transform.position, waypoint.position, moveSpeed * Time.deltaTime);
-                    //Debug.Log("Running");
-                    if (_item != null)
-                    {
-                        _item.transform.position = Vector2.MoveTowards(_item.transform.position, transform.position, moveSpeed * Time.deltaTime);
-                    }
+                    _item.transform.position = Vector2.MoveTowards(_item.transform.position, transform.position, moveSpeed * Time.deltaTime);
+                    
                 }
                 else
                 {
@@ -163,11 +162,11 @@ namespace WeirdSpices {
                         {
                             if (distanceCoin < 0)
                             {
-                                transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                                transform.rotation = Quaternion.Euler(0f, 0f, 0f);
                             }
                             if (distanceCoin > 0)                                          // Gira el cuerpo para derecha o izquierda
                             {
-                                transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                                transform.rotation = Quaternion.Euler(0f, 180f, 0f);
                             }
 
                             transform.position = Vector2.MoveTowards(transform.position, _itemTarget.position, moveSpeed * Time.deltaTime);
@@ -219,8 +218,8 @@ namespace WeirdSpices {
 
         private void PickUp()
         {
-            Transform miTransform = _itemTarget.GetComponent<Transform>();
-            miTransform.position = new Vector3(miTransform.position.x, (miTransform.position.y) + 1, miTransform.position.z);
+            //Transform miTransform = _itemTarget.GetComponent<Transform>();
+            _itemTarget.position = new Vector3(_itemTarget.position.x, (_itemTarget.position.y) + 1, _itemTarget.position.z);
             runToWaypoint = true;
             Debug.Log("Running to waypoint");
         }
@@ -249,6 +248,8 @@ namespace WeirdSpices {
             Gizmos.DrawWireSphere(transform.position, distanceToFollow);
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, distanceCoinToFollow);
+            Gizmos.color= Color.blue;
+            Gizmos.DrawWireCube(waypoint.position,new Vector3 (distanceThresholdWaypoint, distanceThresholdWaypoint, distanceThresholdWaypoint));
         }
 
     

@@ -233,7 +233,7 @@ namespace WeirdSpices
             foreach (Dropable dropable in dropables)
             {
                 i++;
-                if (dropable != null && dropable.gameObject.activeSelf && (dropable.GetComponentInParent<Dropable>() != null))
+                if (dropable != null /*&& dropable.gameObject.activeSelf*/ && (dropable.GetComponentInParent<Dropable>() != null))
                 {
                     return dropable;
                 }
