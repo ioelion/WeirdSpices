@@ -29,7 +29,7 @@ namespace WeirdSpices{
             if (this.CompareTag("Enemy"))
             {
                 GameManager.Instance.CreateCoin(transform.position);
-                GameManager.Instance.CreateCoin(transform.position); // si se ponen mas monedas el jugador las agarra al toque y genera error la lista de items del enemyspawner
+                GameManager.Instance.CreateCoin(transform.position); 
             }
         }
 

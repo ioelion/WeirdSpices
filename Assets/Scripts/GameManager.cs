@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 namespace WeirdSpices
 {
@@ -208,7 +207,7 @@ namespace WeirdSpices
             {
                 Dropable itemD = item.GetComponent<Dropable>();
                 dropables.Add(itemD);
-                //Debug.Log("item Agregado =" + itemD.name);
+                Debug.Log("item Agregado =" + itemD.name);
             }
         }
 
@@ -230,9 +229,10 @@ namespace WeirdSpices
 
         public Dropable RandomParentlessActiveDropable()
         {
+            int i = -1;
             foreach (Dropable dropable in dropables)
             {
-
+                i++;
                 if (dropable != null && dropable.gameObject.activeSelf && (dropable.GetComponentInParent<Dropable>() != null))
                 {
                     return dropable;

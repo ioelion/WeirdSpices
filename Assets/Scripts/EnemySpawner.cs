@@ -8,7 +8,6 @@ namespace WeirdSpices{
     {
         [SerializeField] private List<GameObject> enemies;
         [SerializeField] private List<GameObject> waypoints;
-        public List<GameObject> items;
         [SerializeField] private int maxEnemies;
         [SerializeField] private float timeToWaitToSpawn;
         private int currentEnemies = 0;
@@ -33,18 +32,6 @@ namespace WeirdSpices{
 
             if(currentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
                 currentEnemies++;
-                /*
-                GameObject clone;
-                Enemy enemy;
-                clone = Instantiate(enemies[Random.Range(0, enemies.Count)]);
-                if (items.Count > 0)
-                {
-                    enemy = clone.GetComponent<Enemy>();
-                    int r = Random.Range(0, items.Count);
-                    enemy._item = G;
-                    enemy._itemTarget = items[r].transform;
-                    enemy.waypoint = waypoints[Random.Range(0,waypoints.Count)].transform;
-                }            */
                 Instantiate(enemies[Random.Range(0, enemies.Count)]);
                 timeLastSpawn = Time.fixedTime;
             }
