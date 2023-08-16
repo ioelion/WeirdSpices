@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace WeirdSpices {
@@ -62,8 +61,11 @@ namespace WeirdSpices {
             else
             {
                 if (follow) { LookTowards(target); }
-                else { 
-                if (followItem) { LookTowards(_itemTarget); }
+                else
+                {
+                    if (followItem) { LookTowards(_itemTarget); }
+
+                    else { rb.velocity = Vector3.zero; rb.SetRotation(0); an.SetBool("walk", false); }
                 }
             }
             
@@ -180,6 +182,7 @@ namespace WeirdSpices {
         {
             destroying = true;
             Debug.Log("Destroying item");
+             //           Agregar animacion de destruyendo
             yield return new WaitForSeconds(2);
             if (_item != null)
             {
@@ -222,7 +225,9 @@ namespace WeirdSpices {
 
         IEnumerator PickObj()
         {
-            rb.velocity = Vector3.zero;
+            rb.velocity = Vector2.zero; //          Desactivar
+            an.SetBool("walk", false); //           Agregar animacion de agarrando
+            rb.SetRotation(0);
             yield return new WaitForSeconds(2);
             if (inTouch)
             {
