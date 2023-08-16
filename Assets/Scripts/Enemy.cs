@@ -25,7 +25,7 @@ namespace WeirdSpices {
 
         public Transform _itemTarget;
 
-        [SerializeField] private bool followCoin;
+        [SerializeField] private bool followItem;
 
         [SerializeField] private float distanceCoin;
         [SerializeField] private float distanceCoinAbsolute;
@@ -36,7 +36,7 @@ namespace WeirdSpices {
 
         public Transform waypoint;
         [SerializeField] private float distanceThresholdWaypoint;
-        private bool runToWaypoint = false;
+        [SerializeField] private bool runToWaypoint = false;
         private bool destroying = false;
 
         override public void Start()
@@ -55,10 +55,19 @@ namespace WeirdSpices {
 
             waypoint = EnemySpawner.Instance.GetWaypoint();
         }
-        /*
+        
         void Update() {
-            if(target){LookTowards(target);}    
-        }*/
+
+            if (runToWaypoint) { LookTowards(waypoint); }
+            else
+            {
+                if (follow) { LookTowards(target); }
+                else { 
+                if (followItem) { LookTowards(_itemTarget); }
+                }
+            }
+            
+        }
 
         void FixedUpdate()
         {
@@ -73,10 +82,16 @@ namespace WeirdSpices {
 
             if (runToWaypoint)
             {
+                followItem = false;
                 float distanceToWaypoint = Vector2.Distance(transform.position, waypoint.position);
                 if (distanceToWaypoint > distanceThresholdWaypoint)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, waypoint.position, moveSpeed * Time.deltaTime);
+                    _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
+                    if (_force != Vector2.zero)
+                    {
+                        Walk(_force);
+                        sr.flipX = Mathf.Sign(_force.x) < 0;
+                    }
                     _item.transform.position = Vector2.MoveTowards(_item.transform.position, transform.position, moveSpeed * Time.deltaTime);
                     
                 }
@@ -114,30 +129,14 @@ namespace WeirdSpices {
                 if (follow)
                 {
 
-                    if (((target.position - transform.position).magnitude < distanceToAttack) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack)
-                    {
-                        Attack();
-                        base.getWeapon().FlipPositionX(!sr.flipX);
-                    }
-
-                    if (distanceToPlayer < 0)
-                    {
-                        transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-                    }
-                    if (distanceToPlayer > 0)                                // Gira el cuerpo para derecha o izquierda
-                    {
-                        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                    }
-
-                    transform.position = Vector2.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
-                    /*
+                    
                     _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
                     if (_force != Vector2.zero)
                     {
                         Walk(_force);
-                        sr.flipX = Mathf.Sign(_force.x) > 0;
+                        sr.flipX = Mathf.Sign(_force.x) < 0;
                     }
-                    */
+                    
 
 
                 }
@@ -149,27 +148,26 @@ namespace WeirdSpices {
                         float sqrDistanceCoin = (_itemTarget.position - transform.position).sqrMagnitude;
                         float sqrDistanceCoinToFollow = distanceCoinToFollow * distanceCoinToFollow;
 
-                        if (sqrDistanceCoin < sqrDistanceCoinToFollow) // Si esta cerca de la moneda activa followCoin
+                        if (sqrDistanceCoin < sqrDistanceCoinToFollow) // Si esta cerca de la moneda activa followItem
                         {
-                            followCoin = true;
+                            followItem = true;
                         }
                         else
                         {
-                            followCoin = false;
+                            followItem = false;
                         }
 
-                        if (followCoin)
+                        if (followItem)
                         {
-                            if (distanceCoin < 0)
+                            if (sqrDistanceCoin > distanceThresholdWaypoint)
                             {
-                                transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                                _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
+                                if (_force != Vector2.zero)
+                                {
+                                    Walk(_force);
+                                    sr.flipX = Mathf.Sign(_force.x) < 0;
+                                }
                             }
-                            if (distanceCoin > 0)                                          // Gira el cuerpo para derecha o izquierda
-                            {
-                                transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-                            }
-
-                            transform.position = Vector2.MoveTowards(transform.position, _itemTarget.position, moveSpeed * Time.deltaTime);
                         }
 
                     }
@@ -182,7 +180,7 @@ namespace WeirdSpices {
         {
             destroying = true;
             Debug.Log("Destroying item");
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2);
             if (_item != null)
             {
                 Destroy(_item.gameObject);
@@ -202,16 +200,13 @@ namespace WeirdSpices {
                 if (!touched)
                 {
                     Debug.Log("Picking up");
-                    //inTouch = true;
                     touched = true;
                     StartCoroutine(PickObj());
                 }
-                //Debug.Log("Tocando");
             }
             else
             {
-                //inTouch = false;  //FUNCIONA MAL LA COLISION
-                //Debug.Log("No Tocando");
+                inTouch = false;  
             }
 
         }
@@ -227,6 +222,7 @@ namespace WeirdSpices {
 
         IEnumerator PickObj()
         {
+            rb.velocity = Vector3.zero;
             yield return new WaitForSeconds(2);
             if (inTouch)
             {

@@ -207,7 +207,6 @@ namespace WeirdSpices
             {
                 Dropable itemD = item.GetComponent<Dropable>();
                 dropables.Add(itemD);
-                Debug.Log("item Agregado =" + itemD.name);
             }
         }
 
@@ -233,7 +232,7 @@ namespace WeirdSpices
             foreach (Dropable dropable in dropables)
             {
                 i++;
-                if (dropable != null /*&& dropable.gameObject.activeSelf*/ && (dropable.GetComponentInParent<Dropable>() != null))
+                if (dropable != null && dropable.gameObject.activeSelf && (dropable.GetComponentInParent<Dropable>() != null))
                 {
                     return dropable;
                 }
