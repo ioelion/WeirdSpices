@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WeirdSpices;
 
-public class Coin : MonoBehaviour
+public class Coin : Dropable
 {
     [SerializeField] private int value = 1;
 
@@ -13,6 +13,7 @@ public class Coin : MonoBehaviour
         {
             Destroy(this.gameObject);
             GameManager.Instance.GainGold(value);
+            GameManager.Instance.RemoveToList(this.gameObject);
         }
     }
 

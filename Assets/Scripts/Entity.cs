@@ -29,8 +29,7 @@ namespace WeirdSpices{
             if (this.CompareTag("Enemy"))
             {
                 GameManager.Instance.CreateCoin(transform.position);
-                GameManager.Instance.CreateCoin(transform.position);
-                GameManager.Instance.CreateCoin(transform.position);
+                GameManager.Instance.CreateCoin(transform.position); 
             }
         }
 

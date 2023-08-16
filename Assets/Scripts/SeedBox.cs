@@ -44,7 +44,8 @@ namespace WeirdSpices{
                     else
                     {                 
                         animator.SetTrigger("wasHit");
-                        Instantiate(seedPrefab, dispenser.transform.position, Quaternion.identity);
+                        GameObject clone = Instantiate(seedPrefab, dispenser.transform.position, Quaternion.identity);
+                        GameManager.Instance.AddToList(clone);
                         currentSeeds--;
                         quantityLeft.text = "" + (currentSeeds);
                     
