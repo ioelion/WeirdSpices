@@ -7,8 +7,7 @@ namespace WeirdSpices {
         [SerializeField] private float timeToWaitTillAttack = 0.5f;
         [SerializeField] private float moveSpeed;
 
-        [SerializeField] private float distanceToFollow;
-        [SerializeField] private float distanceToPlayer;            //new
+        [SerializeField] private float distanceToFollowPlayer;           //new
         [SerializeField] private bool follow;
 
         [SerializeField] private float distanceToAttack = 2f;
@@ -26,9 +25,7 @@ namespace WeirdSpices {
 
         [SerializeField] private bool followItem;
 
-        [SerializeField] private float distanceCoin;
-        [SerializeField] private float distanceCoinAbsolute;
-        [SerializeField] private float distanceCoinToFollow;
+        [SerializeField] private float distanceToFollowItem;
 
         private bool inTouch = false;
         private bool touched = false;
@@ -37,6 +34,8 @@ namespace WeirdSpices {
         [SerializeField] private float distanceThresholdWaypoint;
         [SerializeField] private bool runToWaypoint = false;
         private bool destroying = false;
+
+        [SerializeField] private bool preferCoin;
 
         override public void Start()
         {
@@ -53,6 +52,13 @@ namespace WeirdSpices {
             if (_item != null) { _itemTarget = _item.transform; Debug.Log("Encontre Item"); } //this
 
             waypoint = EnemySpawner.Instance.GetWaypoint();
+            int x = Random.Range(1, 5);
+            Debug.Log(x);
+            if (x == 0)
+            {
+                preferCoin = true;
+            }
+            else { preferCoin = false; }
         }
         
         void Update() {
@@ -88,12 +94,7 @@ namespace WeirdSpices {
                 float distanceToWaypoint = Vector2.Distance(transform.position, waypoint.position);
                 if (distanceToWaypoint > distanceThresholdWaypoint)
                 {
-                    _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
-                    if (_force != Vector2.zero)
-                    {
-                        Walk(_force);
-                        sr.flipX = Mathf.Sign(_force.x) < 0;
-                    }
+                    FollowFunction();
                     _item.transform.position = Vector2.MoveTowards(_item.transform.position, transform.position, moveSpeed * Time.deltaTime);
                     
                 }
@@ -115,68 +116,70 @@ namespace WeirdSpices {
                     base.getWeapon().FlipPositionX(!sr.flipX);
                 }
 
-                distanceToPlayer = target.position.x - transform.position.x;
-                float sqrDistanceToPlayer = (target.position - transform.position).sqrMagnitude;
-                float sqrDistanceToFollow = distanceToFollow * distanceToFollow;
-
-                if (sqrDistanceToPlayer < sqrDistanceToFollow) // Si esta cerca del player activa follow
+                if(DistanceFunction( target.position, distanceToFollowPlayer))
                 {
                     follow = true;
                 }
-                else
-                {
-                    follow = false;
-                }
+                else {  follow = false; }
 
-                if (follow)
+                if (!preferCoin)
                 {
-
-                    
-                    _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
-                    if (_force != Vector2.zero)
+                    if (follow)
                     {
-                        Walk(_force);
-                        sr.flipX = Mathf.Sign(_force.x) < 0;
+                        FollowFunction();
                     }
-                    
-
-
-                }
-                else
-                {
-                    if (_itemTarget != null)
+                    else
                     {
-                        distanceCoin = _itemTarget.position.x - transform.position.x;
-                        float sqrDistanceCoin = (_itemTarget.position - transform.position).sqrMagnitude;
-                        float sqrDistanceCoinToFollow = distanceCoinToFollow * distanceCoinToFollow;
-
-                        if (sqrDistanceCoin < sqrDistanceCoinToFollow) // Si esta cerca de la moneda activa followItem
+                        if (_itemTarget != null)
                         {
-                            followItem = true;
-                        }
-                        else
-                        {
-                            followItem = false;
-                        }
-
-                        if (followItem)
-                        {
-                            if (sqrDistanceCoin > distanceThresholdWaypoint)
+                            if(DistanceFunction(_itemTarget.position, distanceToFollowItem))
                             {
-                                _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
-                                if (_force != Vector2.zero)
-                                {
-                                    Walk(_force);
-                                    sr.flipX = Mathf.Sign(_force.x) < 0;
-                                }
+                                followItem = true;
                             }
-                        }
+                            else {  followItem = false; }
 
-                    }
+                            if (followItem)
+                            {
+                                FollowFunction();                              
+                            }
+
+                        }
+                    }                   
+                }
+                else
+                {
+                    Debug.Log(preferCoin);
                 }
 
             }
         }
+
+        private void FollowFunction()
+        {
+            _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
+            if (_force != Vector2.zero)
+            {
+                Walk(_force);
+                sr.flipX = Mathf.Sign(_force.x) < 0;
+            }
+        }
+
+        private bool DistanceFunction( Vector3 _targetPos, float _distanceToFollow)
+        {
+            float sqrDistanceTo = (_targetPos - transform.position).sqrMagnitude;
+            float sqrDistanceToFollow = _distanceToFollow * _distanceToFollow;
+
+            if (sqrDistanceTo < sqrDistanceToFollow)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
 
         IEnumerator DestroyItem()
         {
@@ -192,6 +195,7 @@ namespace WeirdSpices {
             destroying = false;
             runToWaypoint = false;
             touched = false;
+            GoToCenter();
         }
 
         private void OnTriggerStay2D(Collider2D col)
@@ -246,9 +250,9 @@ namespace WeirdSpices {
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, distanceToFollow);
+            Gizmos.DrawWireSphere(transform.position, distanceToFollowPlayer);
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, distanceCoinToFollow);
+            Gizmos.DrawWireSphere(transform.position, distanceToFollowItem);
             Gizmos.color= Color.blue;
             Gizmos.DrawWireCube(waypoint.position,new Vector3 (distanceThresholdWaypoint, distanceThresholdWaypoint, distanceThresholdWaypoint));
         }
@@ -260,7 +264,7 @@ namespace WeirdSpices {
             base.Die();
         }
 
-        private void LookTowards(Transform target){
+        private void LookTowards(Transform target){                         //Modifique esto para que me acepte un punto en particular
             Vector3 direction = (target.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             rb.rotation = angle;
