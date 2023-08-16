@@ -195,7 +195,6 @@ namespace WeirdSpices {
             destroying = false;
             runToWaypoint = false;
             touched = false;
-            GoToCenter();
         }
 
         private void OnTriggerStay2D(Collider2D col)
