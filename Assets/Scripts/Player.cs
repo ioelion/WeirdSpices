@@ -10,8 +10,10 @@ namespace WeirdSpices{
         [Header("Parameters")]
         [SerializeField] private int movementSpeed;
         [SerializeField] private float timeToWaitTillGrab = 0.5f; 
+        [SerializeField] private float timeToEnableBeingHit = 1.2f;
         [SerializeField] private float xDropDistance;
         [SerializeField] private float yDropDistance;
+
         #endregion
 
         #region Keys
@@ -19,26 +21,31 @@ namespace WeirdSpices{
         [SerializeField] private KeyCode dropKey;
         [SerializeField] private KeyCode attackKey;
         [SerializeField] private KeyCode interactKey;
-        [Header("Objects")]
+        
         #endregion
         
         #region Objects
+        [Header("Objects")]
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject inventory;
         [SerializeField] private GameManager gameManager;
+        [SerializeField] private BoxCollider2D hitbox;
+
         #endregion
-        private Rigidbody2D rb;
         private SpriteRenderer sr;
         private GameObject itemInInventory;
         private float lastItemTime;
         private float timeKeyToRemoveWasPressed;
         private bool isOnSoil = false;
         private Soil soil;
+        private bool wasHit = false;
+        private float timePlayerWasHitted;
+
         override public void Start()
         {
-            rb = this.GetComponent<Rigidbody2D>();
             sr = this.GetComponent<SpriteRenderer>();
             base.Start();
+            
         }
 
         void Update()
@@ -50,6 +57,10 @@ namespace WeirdSpices{
             if(isOnSoil && itemInInventory && itemInInventory.CompareTag("Seed")){
                 soil.Highlight(transform.position);
             }
+            if(wasHit && Time.fixedTime - timePlayerWasHitted > timeToEnableBeingHit){
+                wasHit = false;
+                hitbox.gameObject.SetActive(true);
+            }
         }
 
         private void OnCollisionStay2D(Collision2D other)
@@ -57,6 +68,7 @@ namespace WeirdSpices{
             if(other.gameObject.tag.Equals("SeedBox") && (Input.GetKey(attackKey) || Input.GetKey(interactKey))){
                 other.gameObject.GetComponent<SeedBox>().DropSeed();
             }
+
         }
 
         void OnTriggerStay2D(Collider2D other)
@@ -112,7 +124,6 @@ namespace WeirdSpices{
             {
                 animator.SetBool("walk", false);
                 rb.velocity = Vector2.zero;
-
             }
         }
 
@@ -140,6 +151,9 @@ namespace WeirdSpices{
         {
             base.ReduceHealth(pointsToReduce);
             GameManager.Instance.SetPlayerHp(base.GetHealthPoints());
+            wasHit = true;
+            hitbox.gameObject.SetActive(false);
+            timePlayerWasHitted = Time.fixedTime;
         }
 
         private void DropItem()

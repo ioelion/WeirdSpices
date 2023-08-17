@@ -8,14 +8,17 @@ namespace WeirdSpices{
         #region General Status
         [Header("General Status")]
         [SerializeField] private int healthPoints;
-        [Range(0, 10f)] [SerializeField] private float knockback;
+        [SerializeField] private float knockback;
         #endregion
-        [SerializeField] private Weapon weapon;
+        [SerializeField] protected Weapon weapon;
+        [SerializeField] protected Rigidbody2D rb;
         protected Animator an;
+
 
         public virtual void Start()
         {
             an = this.GetComponent<Animator>();
+            rb = this.GetComponent<Rigidbody2D>();
         }
 
         public virtual void ReduceHealth(int pointsToReduce){
@@ -44,7 +47,8 @@ namespace WeirdSpices{
         }
 
         public virtual void Knockback(Vector3 hitterPosition){
-             this.gameObject.transform.position = transform.position + (transform.position - hitterPosition).normalized *knockback;
+
+           transform.position = transform.position + (transform.position - hitterPosition).normalized *knockback;
         }
 
     }

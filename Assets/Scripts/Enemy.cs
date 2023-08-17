@@ -37,13 +37,11 @@ namespace WeirdSpices {
         private Vector2 moveDirection;
         private Vector2 _force;
         private Transform target;
-        private Rigidbody2D rb;
         private SpriteRenderer sr;
         private EnemySpawner enemySpawner;
 
         override public void Start()
         {
-            rb = this.GetComponent<Rigidbody2D>();
             sr = this.GetComponent<SpriteRenderer>();
             base.Start();          
         }
@@ -292,6 +290,15 @@ namespace WeirdSpices {
         private void GetStunned(){
             isStunned = true;
             lastStunTime = Time.fixedTime;
+        }
+
+        private void OnTriggerStay2D(Collision2D other)
+        {
+            if(other.gameObject.CompareTag("PlayerHitbox")){
+                Player player = other.gameObject.GetComponentInParent<Player>();
+                player.Knockback(this.transform.position);
+                player.ReduceHealth(weapon.GetDamage());
+            }
         }
 
     }
