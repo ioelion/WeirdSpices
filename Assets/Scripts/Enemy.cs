@@ -4,60 +4,61 @@ using UnityEngine;
 namespace WeirdSpices {
     public class Enemy : Entity
     {
+        #region Attack
+        [Header("Attack")]
+        [SerializeField] private float distanceToAttack = 1f;
         [SerializeField] private float timeToWaitTillAttack = 0.5f;
+        #endregion Attack
+        #region EnemyStatus
+        [Header("Status")]
+        [SerializeField] private float timeToRecoverFromStun = 0.5f;
+        #endregion Status
+        #region Movement
+        [Header("Movement")]
         [SerializeField] private float moveSpeed;
-
-        [SerializeField] private float distanceToFollowPlayer;           //new
+        [SerializeField] private float distanceToFollowPlayer;
         [SerializeField] private bool follow;
-
-        [SerializeField] private float distanceToAttack = 2f;
-        private Transform target;
-        private Rigidbody2D rb;
-        private Vector2 moveDirection;
-        private Vector2 _force;
-        private SpriteRenderer sr;
-        private float lastAttackTime = 0f;
-        private EnemySpawner enemySpawner;
-
-        public GameObject _item;
-
-        public Transform _itemTarget;
-
+        [SerializeField] private bool preferCoin;
         [SerializeField] private bool followItem;
-
         [SerializeField] private float distanceToFollowItem;
-
-        private bool inTouch = false;
-        private bool touched = false;
-
-        public Transform waypoint;
         [SerializeField] private float distanceThresholdWaypoint;
         [SerializeField] private bool runToWaypoint = false;
+        public Transform waypoint;
+        public GameObject _item;
+        public Transform _itemTarget;
+        #endregion Movement
+        private bool inTouch = false;
+        private bool touched = false;
         private bool destroying = false;
-
-        [SerializeField] private bool preferCoin;
+        private bool isStunned = false;
+        private bool targetInAttackRange = false;
+        private float lastAttackTime = 0f;
+        private float lastStunTime = 0f;
+        private Vector2 moveDirection;
+        private Vector2 _force;
+        private Transform target;
+        private Rigidbody2D rb;
+        private SpriteRenderer sr;
+        private EnemySpawner enemySpawner;
 
         override public void Start()
         {
             rb = this.GetComponent<Rigidbody2D>();
             sr = this.GetComponent<SpriteRenderer>();
-            enemySpawner = FindObjectOfType<EnemySpawner>();
             base.Start();          
+        }
 
+        public void SetEnemySpawner(EnemySpawner enemySpawner){
+            this.enemySpawner = enemySpawner;
         }
 
         void Awake() {
             target = GameObject.Find("Player").transform;
             _item = EnemySpawner.Instance.GetNextDropable();
-            if (_item != null) { _itemTarget = _item.transform; Debug.Log("Encontre Item"); } //this
-
+            if (_item != null) { _itemTarget = _item.transform; Debug.Log("Encontre Item"); }
             waypoint = EnemySpawner.Instance.GetWaypoint();
             int x = Random.Range(1, 5);
-            Debug.Log(x);
-            if (x == 0)
-            {
-                preferCoin = true;
-            }
+            if (x == 0){preferCoin = true;}
             else { preferCoin = false; }
         }
         
@@ -79,82 +80,84 @@ namespace WeirdSpices {
 
         void FixedUpdate()
         {
-
-            if (_item == null)
-            {
-                //Debug.Log("Buscando Item");
-                runToWaypoint = false;
-                _item = EnemySpawner.Instance.GetNextDropable();
-                if (_item != null) { _itemTarget = _item.transform; Debug.Log("Encontre item"); }
-            }
-
-            if (runToWaypoint)
-            {
-                followItem = false;
-                float distanceToWaypoint = Vector2.Distance(transform.position, waypoint.position);
-                if (distanceToWaypoint > distanceThresholdWaypoint)
+            if(!isStunned){
+                if (_item == null)
                 {
-                    FollowFunction();
-                    _item.transform.position = Vector2.MoveTowards(_item.transform.position, transform.position, moveSpeed * Time.deltaTime);
-                    
+                    runToWaypoint = false;
+                    _item = EnemySpawner.Instance.GetNextDropable();
+                    if (_item != null) { _itemTarget = _item.transform; Debug.Log("Encontre item"); }
                 }
-                else
+
+                if (runToWaypoint)
                 {
-                    if (!destroying)
+                    followItem = false;
+                    float distanceToWaypoint = Vector2.Distance(transform.position, waypoint.position);
+                    if (distanceToWaypoint > distanceThresholdWaypoint)
                     {
-                        Debug.Log("Destroy");
-                        StartCoroutine(DestroyItem());
-                    }
-                }
-            }
-            else
-            {
-
-                if (((target.position - transform.position).magnitude < distanceToAttack) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack)
-                {
-                    Attack();
-                    base.getWeapon().FlipPositionX(!sr.flipX);
-                }
-
-                if(DistanceFunction( target.position, distanceToFollowPlayer))
-                {
-                    follow = true;
-                }
-                else {  follow = false; }
-
-                if (!preferCoin)
-                {
-                    if (follow)
-                    {
-                        FollowFunction();
+                        Move();
+                        _item.transform.position = Vector2.MoveTowards(_item.transform.position, transform.position, moveSpeed * Time.deltaTime);
+                        
                     }
                     else
                     {
-                        if (_itemTarget != null)
+                        if (!destroying)
                         {
-                            if(DistanceFunction(_itemTarget.position, distanceToFollowItem))
-                            {
-                                followItem = true;
-                            }
-                            else {  followItem = false; }
-
-                            if (followItem)
-                            {
-                                FollowFunction();                              
-                            }
-
+                            Debug.Log("Destroy");
+                            StartCoroutine(DestroyItem());
                         }
-                    }                   
+                    }
                 }
                 else
                 {
-                    Debug.Log(preferCoin);
-                }
+                    targetInAttackRange = TargetInAttackRange(target.position,distanceToAttack);
+                    if (targetInAttackRange && Time.fixedTime - lastAttackTime > timeToWaitTillAttack)
+                    {
+                        Attack();
+                        base.getWeapon().FlipPositionX(sr.flipX);
+                        
+                    }
+                    if(!targetInAttackRange && ImNearTarget( target.position, distanceToFollowPlayer) )
+                    {
+                        follow = true;
+                    }
+                    else {  follow = false; }
 
+                    if (!preferCoin)
+                    {
+                        if (follow)
+                        {
+                            Move();
+                        }
+                        else
+                        {
+                            if (_itemTarget != null)
+                            {
+                                if(ImNearTarget(_itemTarget.position, distanceToFollowItem))
+                                {
+                                    followItem = true;
+                                }
+                                else {  followItem = false; }
+
+                                if (followItem)
+                                {
+                                    Move();                              
+                                }
+
+                            }
+                        }                   
+                    }
+                    else
+                    {
+                        Debug.Log(preferCoin);
+                    }
+
+                }
+            }else if (Time.fixedTime - lastStunTime > timeToRecoverFromStun){
+                isStunned = false;
             }
         }
 
-        private void FollowFunction()
+        private void Move()
         {
             _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
             if (_force != Vector2.zero)
@@ -164,22 +167,16 @@ namespace WeirdSpices {
             }
         }
 
-        private bool DistanceFunction( Vector3 _targetPos, float _distanceToFollow)
+        private bool ImNearTarget( Vector3 _targetPos, float maximumDistance)
         {
-            float sqrDistanceTo = (_targetPos - transform.position).sqrMagnitude;
-            float sqrDistanceToFollow = _distanceToFollow * _distanceToFollow;
-
-            if (sqrDistanceTo < sqrDistanceToFollow)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            float sqrDistanceToTarget = (_targetPos - transform.position).sqrMagnitude;
+            float sqrMaximumDistance = maximumDistance * maximumDistance;
+            return sqrDistanceToTarget < sqrMaximumDistance;
         }
 
-
+        private bool TargetInAttackRange(Vector3 _targetPos, float minimumDistance){
+            return (target.position - transform.position).magnitude < minimumDistance;
+        }
 
         IEnumerator DestroyItem()
         {
@@ -244,8 +241,6 @@ namespace WeirdSpices {
             }
         }
 
-
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
@@ -255,10 +250,9 @@ namespace WeirdSpices {
             Gizmos.color= Color.blue;
             Gizmos.DrawWireCube(waypoint.position,new Vector3 (distanceThresholdWaypoint, distanceThresholdWaypoint, distanceThresholdWaypoint));
         }
-
     
 
-    override protected void Die(){
+        override protected void Die(){
             enemySpawner.EnemyDied();
             base.Die();
         }
@@ -280,6 +274,24 @@ namespace WeirdSpices {
             an.SetTrigger("attack");
             base.getWeapon().gameObject.SetActive(true);
             lastAttackTime = Time.fixedTime;
+        }
+
+        public override void ReduceHealth(int pointsToReduce)
+        {
+            base.ReduceHealth(pointsToReduce);
+            lastAttackTime = Time.fixedTime;
+            StopWalking();
+            GetStunned();
+        }
+
+        private void StopWalking(){
+            an.SetBool("walk", false);
+            rb.velocity = Vector2.zero;
+        }
+
+        private void GetStunned(){
+            isStunned = true;
+            lastStunTime = Time.fixedTime;
         }
 
     }

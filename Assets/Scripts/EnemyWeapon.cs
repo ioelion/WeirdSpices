@@ -9,6 +9,7 @@ namespace WeirdSpices{
             if(other.gameObject.CompareTag("Player")){
                 Player player = other.gameObject.GetComponent<Player>();
                 player.ReduceHealth(damage);
+                player.Knockback(this.gameObject.gameObject.transform.position);
             }
         }
     }

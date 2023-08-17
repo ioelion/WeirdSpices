@@ -32,7 +32,8 @@ namespace WeirdSpices{
 
             if(currentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
                 currentEnemies++;
-                Instantiate(enemies[Random.Range(0, enemies.Count)]);
+                Enemy enemy = Instantiate(enemies[Random.Range(0, enemies.Count)]).GetComponent<Enemy>();
+                enemy.SetEnemySpawner(this);
                 timeLastSpawn = Time.fixedTime;
             }
         }

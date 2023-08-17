@@ -5,10 +5,12 @@ using UnityEngine;
 namespace WeirdSpices{
     public abstract class Entity : MonoBehaviour
     {
-        [SerializeField] private Weapon weapon;
-
+        #region General Status
+        [Header("General Status")]
         [SerializeField] private int healthPoints;
-
+        [Range(0, 10f)] [SerializeField] private float knockback;
+        #endregion
+        [SerializeField] private Weapon weapon;
         protected Animator an;
 
         public virtual void Start()
@@ -39,6 +41,10 @@ namespace WeirdSpices{
 
         public int GetHealthPoints(){
             return healthPoints;
+        }
+
+        public virtual void Knockback(Vector3 hitterPosition){
+             this.gameObject.transform.position = transform.position + (transform.position - hitterPosition).normalized *knockback;
         }
 
     }
