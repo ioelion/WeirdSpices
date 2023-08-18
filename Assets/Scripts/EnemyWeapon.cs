@@ -8,7 +8,7 @@ namespace WeirdSpices{
         private void OnTriggerEnter2D(Collider2D other) {
             if(other.gameObject.CompareTag("PlayerHitbox")){
                 Player player = other.gameObject.GetComponentInParent<Player>();
-                player.ReduceHealth(damage);
+                player.ReduceHP(damage);
                 player.Knockback(this.gameObject.gameObject.transform.position);
             }
         }

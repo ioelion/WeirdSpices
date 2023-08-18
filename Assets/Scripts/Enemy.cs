@@ -274,9 +274,9 @@ namespace WeirdSpices {
             lastAttackTime = Time.fixedTime;
         }
 
-        public override void ReduceHealth(int pointsToReduce)
+        public override void ReduceHP(int pointsToReduce)
         {
-            base.ReduceHealth(pointsToReduce);
+            base.ReduceHP(pointsToReduce);
             lastAttackTime = Time.fixedTime;
             StopWalking();
             GetStunned();
@@ -297,7 +297,7 @@ namespace WeirdSpices {
             if(other.gameObject.CompareTag("PlayerHitbox")){
                 Player player = other.gameObject.GetComponentInParent<Player>();
                 player.Knockback(this.transform.position);
-                player.ReduceHealth(weapon.GetDamage());
+                player.ReduceHP(weapon.GetDamage());
             }
         }
 

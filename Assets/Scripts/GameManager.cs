@@ -2,25 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
-using UnityEngine.UI;
+
 
 namespace WeirdSpices
 {
     public class GameManager : MonoBehaviour
     {
-        #region UI
-        [Header("UI")]
-        [SerializeField] private TMP_Text playerLives;
-        [SerializeField] private TMP_Text endText;
-        [SerializeField] private GameObject greyScreen;
-        [SerializeField] private Image recipeGuide;
-        [SerializeField] private TMP_Text helpText;
-        [SerializeField] private TMP_Text goldText;
-        #endregion
-
         #region GameParameters
-        [Header("Game Parameters")]
+        [Header("Requests")]
         [SerializeField] private int minGoldRewarded;
         [SerializeField] private int maxGoldRewarded;
         [SerializeField] private int minFoodRequired;
@@ -29,8 +18,17 @@ namespace WeirdSpices
         [SerializeField] private float maxDeliverTime;
         [SerializeField] private float waitTimeBetweenCards;
         [SerializeField] private int deliveriesRequiredToWin;
+
+        [Header("Player")]
+        [SerializeField] private int initialPlayerHP;
+        [SerializeField] private int initialMaxPlayerHP;
+        [ReadOnly] public int maxPlayerHP;
+
+        [Header("End")]
         public string winText = "GANASTE!";
         public string loseText = "Apreta R para reiniciar el nivel! ";
+
+        [Header("Keys")]
         [SerializeField] private KeyCode recipeKey;
         [SerializeField] private KeyCode helpKey;
         [SerializeField] private KeyCode resetKey;
@@ -42,7 +40,7 @@ namespace WeirdSpices
         [SerializeField] private GameObject coin;
         [SerializeField] private Player player;
         [SerializeField] private DeliveryBox deliveryBox;
-        [SerializeField] private Soil soil;
+        [SerializeField] private UIManager uiManager;
         [SerializeField] private List<Dropable> dropables;
         #endregion
         public int totalGold { get; private set; }
@@ -61,36 +59,23 @@ namespace WeirdSpices
             }
         }
 
+        void Start()
+        {
+            player.SetHP(initialPlayerHP);
+            player.SetMaxHP(initialMaxPlayerHP);
+            maxPlayerHP = uiManager.GetHeartQuantity();
+            uiManager.SetHelpKey(helpKey);
+            uiManager.SetRecipeKey(recipeKey);
+            uiManager.SetHPParameters(initialPlayerHP, initialMaxPlayerHP);
+            uiManager.SetUIGold(totalGold);
+        }
+
         void Update()
         {
             if (Time.timeScale == 0 && Input.GetKeyDown(resetKey))
             {
                 ResumeGame();
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-            }
-
-            if (Input.GetKeyDown(recipeKey))
-            {
-                if (!recipeGuide.gameObject.activeInHierarchy)
-                {
-                    recipeGuide.gameObject.SetActive(true);
-                }
-                else
-                {
-                    recipeGuide.gameObject.SetActive(false);
-                }
-            }
-
-            if (Input.GetKeyDown(helpKey))
-            {
-                if (!helpText.gameObject.activeInHierarchy)
-                {
-                    helpText.gameObject.SetActive(true);
-                }
-                else
-                {
-                    helpText.gameObject.SetActive(false);
-                }
             }
 
             if (Input.GetKeyDown(pauseKey))
@@ -112,14 +97,13 @@ namespace WeirdSpices
 
         public void EndGame(string text)
         {
-            endText.text = text;
-            endText.gameObject.SetActive(true);
+            uiManager.ShowEndScreen(text);
             PauseGame();
         }
 
-        public void SetPlayerHp(int hp)
+        public void SetPlayerHP(int hp)
         {
-            this.playerLives.SetText("" + hp);
+            uiManager.SetUIHP(hp);
         }
 
         public void GainGold(int goldWon)
@@ -130,7 +114,7 @@ namespace WeirdSpices
 
         public void SetPlayerGold(int gold)
         {
-            this.goldText.SetText("" + gold);
+            uiManager.SetUIGold(gold);
         }
 
         public void CreateCoin(Vector3 p)
@@ -166,12 +150,12 @@ namespace WeirdSpices
         }
         public void PauseGame()
         {
-            greyScreen.SetActive(true);
+            uiManager.SetPauseScreen(true);
             Time.timeScale = 0;
         }
         public void ResumeGame()
         {
-            greyScreen.SetActive(false);
+            uiManager.SetPauseScreen(false);
             Time.timeScale = 1;
         }
 

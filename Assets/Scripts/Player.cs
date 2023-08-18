@@ -100,6 +100,12 @@ namespace WeirdSpices{
                 Destroy(itemInInventory, 0.01f);
                 DropItem();
             }
+
+            if(other.tag.Equals("Heart")){
+                Heart heart = other.gameObject.GetComponent<Heart>();
+                RecoverHP(heart.GetHP());
+                heart.Destroy();
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other) {
@@ -147,13 +153,18 @@ namespace WeirdSpices{
             GameManager.Instance.LoseGame();
         }
 
-        public override void ReduceHealth(int pointsToReduce)
+        public override void ReduceHP(int pointsToReduce)
         {
-            base.ReduceHealth(pointsToReduce);
-            GameManager.Instance.SetPlayerHp(base.GetHealthPoints());
+            base.ReduceHP(pointsToReduce);
+            GameManager.Instance.SetPlayerHP(base.GetHP());
             wasHit = true;
             hitbox.gameObject.SetActive(false);
             timePlayerWasHitted = Time.fixedTime;
+        }
+
+        public void RecoverHP(int pointsToAdd){
+            base.AddHP(pointsToAdd);
+            GameManager.Instance.SetPlayerHP(base.GetHP());
         }
 
         private void DropItem()
