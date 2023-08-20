@@ -17,7 +17,12 @@ namespace WeirdSpices
         [SerializeField] private float minDeliverTime;
         [SerializeField] private float maxDeliverTime;
         [SerializeField] private float waitTimeBetweenCards;
-        [SerializeField] private int deliveriesRequiredToWin;
+        [SerializeField] private int objectivePointsSuccessfulDelivery = 10;
+        [SerializeField] private int objectivePointsFailedDelivery = -5;
+        [SerializeField] private int objectivePointsToWin = 100;
+        [SerializeField] private int objectivePointsToLose = -10;
+        [ReadOnly]private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
+        [ReadOnly]private int currentObjectivePoints = 10;
 
         [Header("Player")]
         [SerializeField] private int initialPlayerHP;
@@ -43,9 +48,9 @@ namespace WeirdSpices
         [SerializeField] private UIManager uiManager;
         [SerializeField] private List<Dropable> dropables;
         #endregion
-        public int totalGold { get; private set; }
+        public int currentPlayerGold { get; private set; }
         public static GameManager Instance { get; private set; }
-        private int currentDeliveries;
+
 
         void Awake()
         {
@@ -67,7 +72,9 @@ namespace WeirdSpices
             uiManager.SetHelpKey(helpKey);
             uiManager.SetRecipeKey(recipeKey);
             uiManager.SetHPParameters(initialPlayerHP, initialMaxPlayerHP);
-            uiManager.SetUIGold(totalGold);
+            uiManager.SetUIGold(currentPlayerGold);
+            uiManager.SetObjectivePoints(currentObjectivePoints);
+            uiManager.SetObjectivePointsToWin(objectivePointsToWin);
         }
 
         void Update()
@@ -86,7 +93,7 @@ namespace WeirdSpices
 
         void FixedUpdate()
         {
-            if (currentDeliveries >= deliveriesRequiredToWin)
+            if (currentObjectivePoints >= objectivePointsToWin )
             {
                 WinGame();
             }
@@ -108,8 +115,8 @@ namespace WeirdSpices
 
         public void GainGold(int goldWon)
         {
-            totalGold += goldWon;
-            SetPlayerGold(totalGold);
+            currentPlayerGold += goldWon;
+            SetPlayerGold(currentPlayerGold);
         }
 
         public void SetPlayerGold(int gold)
@@ -169,11 +176,28 @@ namespace WeirdSpices
 
         public void SuccessfulDelivery(int coinQuantity)
         {
-            this.currentDeliveries++;
-            for (int i = 0; i < coinQuantity; i++)
-            {
-                Instantiate(coin, player.transform.position, Quaternion.identity);
+            if(currentDeliveries == 0){
+                uiManager.ShowObjectiveProgress();
             }
+            currentDeliveries++;
+            successfulDeliveries++;
+            currentObjectivePoints +=objectivePointsSuccessfulDelivery;
+            GainGold(coinQuantity);
+            uiManager.SetObjectivePoints(currentObjectivePoints);
+
+        }
+
+        public void FailedDelivery(int coinQuantity)
+        {
+            currentDeliveries++;
+            failedDeliveries++;
+            currentObjectivePoints -=objectivePointsFailedDelivery;
+            if(currentObjectivePoints > 0){
+                uiManager.SetObjectivePoints(currentObjectivePoints);
+            }else if (currentObjectivePoints < objectivePointsToLose){
+                EndGame(loseText);
+            }
+
         }
 
         public void PickedUpFood(GameObject food)
