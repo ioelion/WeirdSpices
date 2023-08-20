@@ -34,7 +34,7 @@ namespace WeirdSpices{
                 if(!seeds.TryGetValue(position, out seedList)){
                     seed.SetActive(false);
                     seeds.Add(position, new List<GameObject>(){seed});
-                    foresoil.SetTile(position, CreateTile(seed.GetComponent<SpriteRenderer>().sprite));
+                    foresoil.SetTile(position, CreateTile(seed.GetComponent<Seed>().GetSoilSprite()));
                 } else if(seeds[position].Count == 1){
                     seed.SetActive(false);
                     seeds[position].Add(seed);
