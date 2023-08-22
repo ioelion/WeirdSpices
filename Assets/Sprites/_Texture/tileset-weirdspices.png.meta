@@ -2945,7 +2945,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -2953,6 +2953,27 @@ TextureImporter:
       bones: []
       spriteID: e08eaf30bf855b44b8f2e0c891f1eff6
       internalID: 107327271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset-weirdspices_131
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 65
+        width: 26
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eaa02a37adbd1d942a079fb16c2446e6
+      internalID: -1636463548
       vertices: []
       indices: 
       edges: []
