@@ -142,6 +142,12 @@ namespace WeirdSpices{
             GameManager.Instance.SetPlayerHp(base.GetHealthPoints());
         }
 
+        public override void Heal(int pointsToHeal)
+        {
+            base.Heal(pointsToHeal);
+            GameManager.Instance.SetPlayerHp(base.GetHealthPoints());
+        }
+
         private void DropItem()
         {
             if(itemInInventory != null){

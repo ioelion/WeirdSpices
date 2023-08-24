@@ -128,6 +128,12 @@ namespace WeirdSpices
             SetPlayerGold(totalGold);
         }
 
+        public void LoseGold(int goldLost)
+        {
+            totalGold -= goldLost;
+            SetPlayerGold(totalGold);
+        }
+
         public void SetPlayerGold(int gold)
         {
             this.goldText.SetText("" + gold);
@@ -241,5 +247,16 @@ namespace WeirdSpices
             return null;
         }
         
+        public void Heal(int pointsToHeal, int price)
+        {
+            player.Heal(pointsToHeal);
+            LoseGold(price);
+        }
+
+        public int GetHealth()
+        {
+            int a = player.GetHealthPoints();
+            return a;
+        }
     }
 }

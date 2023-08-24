@@ -24,6 +24,15 @@ namespace WeirdSpices{
             }
         }
 
+        public virtual void Heal(int pointsToHeal)
+        {
+            if (healthPoints < 10)
+            {
+                healthPoints += pointsToHeal;
+            }
+            
+        }
+
         protected virtual void Die(){
             Destroy(this.gameObject);
             if (this.CompareTag("Enemy"))
