@@ -26,6 +26,7 @@ namespace WeirdSpices{
         
         #region Objects
         [Header("Objects")]
+        [SerializeField] private AnimationClip walkClip;
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject inventory;
         [SerializeField] private GameManager gameManager;
@@ -123,6 +124,7 @@ namespace WeirdSpices{
             if (_force != Vector2.zero)
             {
                 animator.SetBool("walk", true);
+                animator.SetFloat("walkSpeed", walkClip.averageDuration*movementSpeed*0.5f);
                 rb.velocity = _force;
                 sr.flipX = Mathf.Sign(_force.x) < 0;
             }
