@@ -19,15 +19,22 @@ namespace WeirdSpices{
         [SerializeField] private TMP_Text timerText;
         [SerializeField] private Image timerImage;
 
+        [Header("Recipe")]
+        [SerializeField] private Image ingredient1Img;
+        [SerializeField] private Image ingredient2Img;
+
         [Header("Objects")]
         [SerializeField] private Animator animator;
 
-        private GameObject foodRequired;
+        private Seed ingredient1;
+        private Seed ingredient2;
+        private Food foodRequired;
         private Sprite foodRequiredSprite;
         private int foodQuantity;
         private int rewardGold;
         private float maxTimeToDeliver;
         private float timeLastDelivery;
+
 
 
         void FixedUpdate()
@@ -37,21 +44,26 @@ namespace WeirdSpices{
                 PauseCard();
             }
         }
-        public void SetCard(GameObject foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
+        public void SetCard(Food foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
             this.foodRequired = foodRequired;
-            this.foodRequiredSprite = foodRequired.GetComponent<SpriteRenderer>().sprite;
+            this.foodRequiredSprite = foodRequired.GetSprite();
             this.foodQuantity = foodQuantity;
             this.rewardGold = rewardGold;
             this.maxTimeToDeliver = maxTimeToDeliver;
+            List<Seed> seedsNeeded = foodRequired.GetSeedsNeeded();
+            this.ingredient1 = seedsNeeded[0];
+            this.ingredient2 = seedsNeeded[1];
             SetCardUI();
             timeLastDelivery = Time.fixedTime;
 
         }
 
         public void SetCardUI(){
-            foodText.text = "" + foodQuantity;
+            //foodText.text = "" + foodQuantity;
             goldText.text = "" + rewardGold;
             foodImage.sprite = foodRequiredSprite;
+            ingredient1Img.sprite = ingredient1.GetSprite();
+            ingredient2Img.sprite = ingredient2.GetSprite();
         }
 
         public void ReceiveFood(GameObject food){
@@ -60,7 +72,7 @@ namespace WeirdSpices{
             }
         }
 
-        public GameObject GetFoodRequired(){
+        public Food GetFoodRequired(){
             return foodRequired;
         }
 
@@ -78,7 +90,7 @@ namespace WeirdSpices{
 
         private void ReduceFoodLeft(int quantity){
             this.foodQuantity -= 1;
-            foodText.text = "" + foodQuantity;
+            //foodText.text = "" + foodQuantity;
             if(foodQuantity == 0){
                 DeliverRequest();
             }

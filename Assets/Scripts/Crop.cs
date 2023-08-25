@@ -17,8 +17,8 @@ namespace WeirdSpices{
             this.foodPrefab = foodPrefab;
             this.soil = soil;
             Food food = foodPrefab.GetComponent<Food>();
-            spriteRenderer.sprite = food.GetSpriteRenderer().sprite;
-            timeToWaitFullGrowth = food.getTimeNeededToGrow();
+            spriteRenderer.sprite = food.GetSprite();
+            timeToWaitFullGrowth = food.GetTimeNeededToGrow();
             animator.SetBool("isGrowing", true);
             animator.SetFloat("growSpeed", growAnimationClip.averageDuration/timeToWaitFullGrowth);
             timeGrowStarted = Time.fixedTime;

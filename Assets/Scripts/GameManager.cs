@@ -12,8 +12,8 @@ namespace WeirdSpices
         [Header("Requests")]
         [SerializeField] private int minGoldRewarded;
         [SerializeField] private int maxGoldRewarded;
-        [SerializeField] private int minFoodRequired;
-        [SerializeField] private int maxFoodRequired;
+        [ReadOnly] private int minFoodRequired = 1;
+        [ReadOnly] private int maxFoodRequired = 1;
         [SerializeField] private float minDeliverTime;
         [SerializeField] private float maxDeliverTime;
         [SerializeField] private float waitTimeBetweenCards;

@@ -5,11 +5,11 @@ using UnityEngine;
 namespace WeirdSpices{
     public class FoodManager : MonoBehaviour
     {
-        [SerializeField] GameObject[] foodList;
+        [SerializeField] Food[] foodList;
 
         [SerializeField] GameObject[] seedList;
 
-        Dictionary<string, GameObject> recipes;
+        Dictionary<string, Food> recipes;
 
         public static FoodManager Instance { get; private set; }    
 
@@ -26,7 +26,7 @@ namespace WeirdSpices{
         void Start()
         {
             //TODO rehacer sistema de recetas
-            recipes = new Dictionary<string, GameObject>();
+            recipes = new Dictionary<string, Food>();
             recipes.Add("0-0", foodList[0]);
             recipes.Add("0-1", foodList[1]);
             recipes.Add("0-2", foodList[2]);
@@ -41,10 +41,10 @@ namespace WeirdSpices{
         public GameObject GetFoodFromSeeds(GameObject seed1, GameObject seed2){
             int seedNumber1 = seed1.GetComponent<Seed>().GetSeedNumber();
             int seedNumber2 = seed2.GetComponent<Seed>().GetSeedNumber();
-            return recipes[seedNumber1+"-"+seedNumber2];
+            return recipes[seedNumber1+"-"+seedNumber2].gameObject;
         }
 
-        public GameObject GetRandomFood(){
+        public Food GetRandomFood(){
             return recipes[Random.Range(0,3)+"-"+Random.Range(0,3)];
         }
     }

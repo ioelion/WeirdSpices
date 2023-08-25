@@ -7,19 +7,18 @@ namespace WeirdSpices{
     {
         [SerializeField] private int seedNumber;
         [SerializeField] private Sprite soilSprite;
-        private SpriteRenderer sr;
+        [SerializeField] private SpriteRenderer spriteRenderer;
         
-        void Start()
-        {
-            sr = GetComponent<SpriteRenderer>();
-        }
-
         public int GetSeedNumber(){
             return seedNumber;
         }
 
         public Sprite GetSoilSprite(){
             return soilSprite;
+        }
+
+        public Sprite GetSprite(){
+            return spriteRenderer.sprite;
         }
     }
 }
