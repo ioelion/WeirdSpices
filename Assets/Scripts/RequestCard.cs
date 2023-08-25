@@ -26,9 +26,9 @@ namespace WeirdSpices{
         [Header("Objects")]
         [SerializeField] private Animator animator;
 
-        private Seed ingredient1;
-        private Seed ingredient2;
-        private Food foodRequired;
+        [ReadOnly] private Seed ingredient1;
+        [ReadOnly] private Seed ingredient2;
+        [ReadOnly] private Food foodRequired;
         private Sprite foodRequiredSprite;
         private int foodQuantity;
         private int rewardGold;

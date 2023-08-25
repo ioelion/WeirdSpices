@@ -5,12 +5,9 @@ using UnityEngine;
 namespace WeirdSpices{
     public class FoodManager : MonoBehaviour
     {
-        [SerializeField] Food[] foodList;
-
-        [SerializeField] GameObject[] seedList;
-
-        Dictionary<string, Food> recipes;
-
+        [SerializeField] Food[] foods;
+        Dictionary<string,Food> recipes;
+        [SerializeField] Food badFood;
         public static FoodManager Instance { get; private set; }    
 
         void Awake()
@@ -25,27 +22,38 @@ namespace WeirdSpices{
  
         void Start()
         {
-            //TODO rehacer sistema de recetas
             recipes = new Dictionary<string, Food>();
-            recipes.Add("0-0", foodList[0]);
-            recipes.Add("0-1", foodList[1]);
-            recipes.Add("0-2", foodList[2]);
-            recipes.Add("1-0", foodList[3]);
-            recipes.Add("1-1", foodList[4]);
-            recipes.Add("1-2", foodList[5]);
-            recipes.Add("2-0", foodList[6]);
-            recipes.Add("2-1", foodList[7]);
-            recipes.Add("2-2", foodList[8]);
+            foreach(Food food in foods){
+                List<Seed>  seeds = food.GetSeedsNeeded();
+                List<int> numbers = new List<int>();
+                foreach(Seed seed in seeds){
+                    numbers.Add(seed.GetSeedNumber());
+                }
+                numbers.Sort();
+                string code = string.Join(" ", numbers);
+                Debug.Log(code);
+                recipes.Add(code, food);
+            }
+
         }
 
-        public GameObject GetFoodFromSeeds(GameObject seed1, GameObject seed2){
-            int seedNumber1 = seed1.GetComponent<Seed>().GetSeedNumber();
-            int seedNumber2 = seed2.GetComponent<Seed>().GetSeedNumber();
-            return recipes[seedNumber1+"-"+seedNumber2].gameObject;
+        public Food GetFoodFromSeeds(List<Seed> seeds){
+            List<int> numbers = new List<int>();
+            foreach(Seed seed in seeds){
+                numbers.Add(seed.GetSeedNumber());
+            }
+            numbers.Sort();
+            string code = string.Join(" ", numbers);
+            Food food = null;
+            recipes.TryGetValue(code, out food);
+            if(food == null){
+                return badFood;
+            }
+            return food;
         }
 
         public Food GetRandomFood(){
-            return recipes[Random.Range(0,3)+"-"+Random.Range(0,3)];
+            return foods[Random.Range(0, foods.Length)];
         }
     }
 }

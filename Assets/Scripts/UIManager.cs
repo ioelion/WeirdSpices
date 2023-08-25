@@ -11,7 +11,6 @@ namespace WeirdSpices
         [Header("UI")]
         [SerializeField] private TMP_Text endText;
         [SerializeField] private GameObject greyScreen;
-        [SerializeField] private Image recipeGuide;
         [SerializeField] private TMP_Text helpText;
         [SerializeField] private TMP_Text goldText;
         [SerializeField] private HPManager hpManager;
@@ -19,24 +18,12 @@ namespace WeirdSpices
         [SerializeField] private RectTransform playerPoint;
         [SerializeField] private RectTransform enemyPoint;
 
-        private KeyCode recipeKey;
         private KeyCode helpKey;
 
         private float _velocitySmoothDamp = 0;
         
         void Update() {
             //TODO mover este comportamiento al player llamando al gamemanager
-             if (Input.GetKeyDown(recipeKey))
-            {
-                if (!recipeGuide.gameObject.activeInHierarchy)
-                {
-                    recipeGuide.gameObject.SetActive(true);
-                }
-                else
-                {
-                    recipeGuide.gameObject.SetActive(false);
-                }
-            }
 
             if (Input.GetKeyDown(helpKey))
             {
@@ -51,9 +38,6 @@ namespace WeirdSpices
             }
         }
 
-        public void SetRecipeKey(KeyCode recipeKey){
-            this.recipeKey = recipeKey; 
-        }
         public void SetHelpKey(KeyCode helpKey){
             this.helpKey = helpKey; 
         }

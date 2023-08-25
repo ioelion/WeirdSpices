@@ -146,7 +146,8 @@ namespace WeirdSpices{
             }
             
             if(Input.GetKeyDown(interactKey) && itemInInventory && itemInInventory.tag.Equals("Seed") && isOnSoil){
-                soil.PlantSeed(itemInInventory, this.transform.position);
+                Seed seed = itemInInventory.GetComponent<Seed>();
+                soil.PlantSeed(seed, this.transform.position);
                 DropItem();
             }
         }

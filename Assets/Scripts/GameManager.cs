@@ -12,8 +12,8 @@ namespace WeirdSpices
         [Header("Requests")]
         [SerializeField] private int minGoldRewarded;
         [SerializeField] private int maxGoldRewarded;
-        [ReadOnly] private int minFoodRequired = 1;
-        [ReadOnly] private int maxFoodRequired = 1;
+        private int minFoodRequired = 1;
+        private int maxFoodRequired = 1;
         [SerializeField] private float minDeliverTime;
         [SerializeField] private float maxDeliverTime;
         [SerializeField] private float waitTimeBetweenCards;
@@ -21,20 +21,19 @@ namespace WeirdSpices
         [SerializeField] private int objectivePointsFailedDelivery = -5;
         [SerializeField] private int objectivePointsToWin = 100;
         [SerializeField] private int objectivePointsToLose = -10;
-        [ReadOnly]private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
-        [ReadOnly]private int currentObjectivePoints = 10;
+        private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
+        private int currentObjectivePoints = 10;
 
         [Header("Player")]
         [SerializeField] private int initialPlayerHP;
         [SerializeField] private int initialMaxPlayerHP;
-        [ReadOnly] public int maxPlayerHP;
+        private int maxPlayerHP;
 
         [Header("End")]
         public string winText = "GANASTE!";
         public string loseText = "Apreta R para reiniciar el nivel! ";
 
         [Header("Keys")]
-        [SerializeField] private KeyCode recipeKey;
         [SerializeField] private KeyCode helpKey;
         [SerializeField] private KeyCode resetKey;
         [SerializeField] private KeyCode pauseKey;
@@ -70,7 +69,6 @@ namespace WeirdSpices
             player.SetMaxHP(initialMaxPlayerHP);
             maxPlayerHP = uiManager.GetHeartQuantity();
             uiManager.SetHelpKey(helpKey);
-            uiManager.SetRecipeKey(recipeKey);
             uiManager.SetHPParameters(initialPlayerHP, initialMaxPlayerHP);
             uiManager.SetUIGold(currentPlayerGold);
             uiManager.SetObjectivePoints(currentObjectivePoints);

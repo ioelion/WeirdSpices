@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 namespace WeirdSpices{
-    public class Seed : Dropable
+    public class Seed : Dropable, IComparable<Seed>
     {
         [SerializeField] private int seedNumber;
         [SerializeField] private Sprite soilSprite;
@@ -19,6 +17,11 @@ namespace WeirdSpices{
 
         public Sprite GetSprite(){
             return spriteRenderer.sprite;
+        }
+
+        int IComparable<Seed>.CompareTo(Seed other)
+        {
+            return other.GetSprite() == this.GetSprite() ? 0 :1;
         }
     }
 }
