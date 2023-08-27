@@ -20,6 +20,7 @@ namespace WeirdSpices{
         {
             requestCardsWaitList = new List<RequestCard>();
             GetGameManagerVariables();
+            requestCardsWaitList.AddRange(requestCards);
         }
 
         void Awake()

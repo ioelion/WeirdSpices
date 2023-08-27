@@ -17,12 +17,17 @@ namespace WeirdSpices
         [SerializeField] private float minDeliverTime;
         [SerializeField] private float maxDeliverTime;
         [SerializeField] private float waitTimeBetweenCards;
-        [SerializeField] private int objectivePointsSuccessfulDelivery = 10;
-        [SerializeField] private int objectivePointsFailedDelivery = -5;
-        [SerializeField] private int objectivePointsToWin = 100;
-        [SerializeField] private int objectivePointsToLose = -10;
+        [SerializeField] private float velocitySuccesfulDelivery = 0.05f;
+        [SerializeField] private float velocityFailedDelivery = -0.02f;
+        [SerializeField] private float objectivePointsToWin = 100f;
+        [SerializeField] private float objectivePointsToLose = -10f;
+        [SerializeField] private float initialObjectivePoints = 40f;
+        [SerializeField] float fadingVelocityFactor = 0.1f;
         private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
-        private int currentObjectivePoints = 10;
+        private float currentObjectivePoints;
+        private float currentObjectiveVelocity = 0f;
+
+        private float fadeVelocity = 0f;
 
         [Header("Player")]
         [SerializeField] private int initialPlayerHP;
@@ -64,7 +69,8 @@ namespace WeirdSpices
         }
 
         void Start()
-        {
+        {   
+            currentObjectivePoints = initialObjectivePoints;
             player.SetHP(initialPlayerHP);
             player.SetMaxHP(initialMaxPlayerHP);
             maxPlayerHP = uiManager.GetHeartQuantity();
@@ -87,6 +93,7 @@ namespace WeirdSpices
             {
                 ToggleGameState();
             }
+
         }
 
         void FixedUpdate()
@@ -95,7 +102,13 @@ namespace WeirdSpices
             {
                 WinGame();
             }
+
+            currentObjectivePoints = currentObjectivePoints + currentObjectiveVelocity;
+            uiManager.SetObjectivePoints(currentObjectivePoints);
+            currentObjectiveVelocity += fadeVelocity;
+            fadeVelocity = currentObjectiveVelocity != 0 ? (currentObjectiveVelocity*-1)*fadingVelocityFactor : 0;
         }
+
 
         public void WinGame() { EndGame(winText); }
         public void LoseGame() { EndGame(loseText); }
@@ -179,20 +192,17 @@ namespace WeirdSpices
             }
             currentDeliveries++;
             successfulDeliveries++;
-            currentObjectivePoints +=objectivePointsSuccessfulDelivery;
+            currentObjectiveVelocity += velocitySuccesfulDelivery;
             GainGold(coinQuantity);
-            uiManager.SetObjectivePoints(currentObjectivePoints);
-
         }
 
         public void FailedDelivery()
         {
             currentDeliveries++;
             failedDeliveries++;
-            currentObjectivePoints +=objectivePointsFailedDelivery;
-            if(currentObjectivePoints > 0){
-                uiManager.SetObjectivePoints(currentObjectivePoints);
-            }else if (currentObjectivePoints < objectivePointsToLose){
+            currentObjectiveVelocity += velocityFailedDelivery;
+            if(currentObjectivePoints < objectivePointsToLose)
+            {
                 EndGame(loseText);
             }
 

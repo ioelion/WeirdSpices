@@ -36,6 +36,11 @@ namespace WeirdSpices{
         private float timeLastDelivery;
 
 
+        void Start()
+        {
+            timeLastDelivery = Time.fixedTime;
+            gameObject.SetActive(false);
+        }
 
         void FixedUpdate()
         {
@@ -69,7 +74,7 @@ namespace WeirdSpices{
         public void ReceiveFood(GameObject food){
             if(food.GetComponent<SpriteRenderer>().sprite == foodImage.sprite){
                 ReduceFoodLeft(1);
-            }else{
+            }else if(food.GetComponent<SpriteRenderer>().sprite != foodImage.sprite){
                 Fail();
             }
         }

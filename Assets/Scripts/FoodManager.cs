@@ -23,37 +23,25 @@ namespace WeirdSpices{
         void Start()
         {
             recipes = new Dictionary<string, Food>();
-            foreach(Food food in foods){
-                List<Seed>  seeds = food.GetSeedsNeeded();
-                List<int> numbers = new List<int>();
-                foreach(Seed seed in seeds){
-                    numbers.Add(seed.GetSeedNumber());
-                }
-                numbers.Sort();
-                string code = string.Join(" ", numbers);
-                Debug.Log(code);
-                recipes.Add(code, food);
-            }
-
+            foreach(Food food in foods) recipes.Add(GetFoodCode(food.GetSeedsNeeded()), food);
         }
 
         public Food GetFoodFromSeeds(List<Seed> seeds){
-            List<int> numbers = new List<int>();
-            foreach(Seed seed in seeds){
-                numbers.Add(seed.GetSeedNumber());
-            }
-            numbers.Sort();
-            string code = string.Join(" ", numbers);
             Food food = null;
-            recipes.TryGetValue(code, out food);
-            if(food == null){
-                return badFood;
-            }
+            recipes.TryGetValue(GetFoodCode(seeds), out food);
+            if(food == null) return badFood;
             return food;
         }
 
         public Food GetRandomFood(){
             return foods[Random.Range(0, foods.Length)];
+        }
+
+        private string GetFoodCode(List<Seed> seeds){
+            List<int> numbers = new List<int>();
+            foreach(Seed seed in seeds) numbers.Add(seed.GetSeedNumber());
+            numbers.Sort();
+            return string.Join(" ", numbers);
         }
     }
 }

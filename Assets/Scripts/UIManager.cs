@@ -15,12 +15,9 @@ namespace WeirdSpices
         [SerializeField] private TMP_Text goldText;
         [SerializeField] private HPManager hpManager;
         [SerializeField] private Slider objectiveSlider;
-        [SerializeField] private RectTransform playerPoint;
-        [SerializeField] private RectTransform enemyPoint;
 
         private KeyCode helpKey;
 
-        private float velocityPoints = 0;
 
         void Update() {
             //TODO mover este comportamiento al player llamando al gamemanager
@@ -36,11 +33,6 @@ namespace WeirdSpices
                     helpText.gameObject.SetActive(false);
                 }
             }
-        }
-
-        void FixedUpdate()
-        {
-            SetObjectivePoints(0);
         }
 
         public void SetHelpKey(KeyCode helpKey){
@@ -72,11 +64,10 @@ namespace WeirdSpices
             return hpManager.GetHeartQuantity();
         }
 
-        public void SetObjectivePoints(int objectivePoints){
+        public void SetObjectivePoints(float objectivePoints){
             objectiveSlider.SetValueWithoutNotify(objectivePoints);
         }
-
-        public void SetObjectivePointsToWin(int maxValue){
+        public void SetObjectivePointsToWin(float maxValue){
             objectiveSlider.maxValue = maxValue;
         }
 
