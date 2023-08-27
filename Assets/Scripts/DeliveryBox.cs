@@ -42,12 +42,14 @@ namespace WeirdSpices{
 
         public void AddRequestCardToWaitList(RequestCard requestCard){
             requestCardsWaitList.Add(requestCard);
+            requestCard.gameObject.SetActive(false);
             activeRequestCards -= 1;
             timeLastCardSetted = Time.fixedTime;
         }
 
         private void RemoveRequestCardFromWaitList(RequestCard requestCard){
             requestCardsWaitList.Remove(requestCard);
+            requestCard.gameObject.SetActive(true);
             activeRequestCards += 1;
             timeLastCardSetted = Time.fixedTime;
         }

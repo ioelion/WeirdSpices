@@ -41,7 +41,7 @@ namespace WeirdSpices{
         {
             timerText.text = "" + Mathf.RoundToInt(maxTimeToDeliver - (Time.fixedTime - timeLastDelivery));
             if(Time.fixedTime - timeLastDelivery  > maxTimeToDeliver){
-                PauseCard();
+                Deactivate();
             }
         }
         public void SetCard(Food foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
@@ -99,13 +99,12 @@ namespace WeirdSpices{
         }
 
         private void DeliverRequest(){
-            this.gameObject.SetActive(false);
             timeLastDelivery = Time.fixedTime;
             GameManager.Instance.SuccessfulDelivery(rewardGold);
+            Deactivate();
         }
 
-        private void PauseCard(){
-            this.gameObject.SetActive(false);
+        private void Deactivate(){
             timeLastDelivery = Time.fixedTime;
             DeliveryBox.Instance.AddRequestCardToWaitList(this);
         }
