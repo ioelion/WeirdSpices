@@ -20,8 +20,8 @@ namespace WeirdSpices
 
         private KeyCode helpKey;
 
-        private float _velocitySmoothDamp = 0;
-        
+        private float velocityPoints = 0;
+
         void Update() {
             //TODO mover este comportamiento al player llamando al gamemanager
 
@@ -36,6 +36,11 @@ namespace WeirdSpices
                     helpText.gameObject.SetActive(false);
                 }
             }
+        }
+
+        void FixedUpdate()
+        {
+            SetObjectivePoints(0);
         }
 
         public void SetHelpKey(KeyCode helpKey){
@@ -68,8 +73,7 @@ namespace WeirdSpices
         }
 
         public void SetObjectivePoints(int objectivePoints){
-            float transientValue = Mathf.SmoothDamp(objectiveSlider.value, objectivePoints, ref _velocitySmoothDamp, 0.2f);
-            objectiveSlider.SetValueWithoutNotify(transientValue);
+            objectiveSlider.SetValueWithoutNotify(objectivePoints);
         }
 
         public void SetObjectivePointsToWin(int maxValue){

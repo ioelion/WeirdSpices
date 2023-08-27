@@ -185,11 +185,11 @@ namespace WeirdSpices
 
         }
 
-        public void FailedDelivery(int coinQuantity)
+        public void FailedDelivery()
         {
             currentDeliveries++;
             failedDeliveries++;
-            currentObjectivePoints -=objectivePointsFailedDelivery;
+            currentObjectivePoints +=objectivePointsFailedDelivery;
             if(currentObjectivePoints > 0){
                 uiManager.SetObjectivePoints(currentObjectivePoints);
             }else if (currentObjectivePoints < objectivePointsToLose){

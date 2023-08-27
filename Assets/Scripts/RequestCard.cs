@@ -41,7 +41,7 @@ namespace WeirdSpices{
         {
             timerText.text = "" + Mathf.RoundToInt(maxTimeToDeliver - (Time.fixedTime - timeLastDelivery));
             if(Time.fixedTime - timeLastDelivery  > maxTimeToDeliver){
-                Deactivate();
+                Fail();
             }
         }
         public void SetCard(Food foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
@@ -69,6 +69,8 @@ namespace WeirdSpices{
         public void ReceiveFood(GameObject food){
             if(food.GetComponent<SpriteRenderer>().sprite == foodImage.sprite){
                 ReduceFoodLeft(1);
+            }else{
+                Fail();
             }
         }
 
@@ -107,6 +109,11 @@ namespace WeirdSpices{
         private void Deactivate(){
             timeLastDelivery = Time.fixedTime;
             DeliveryBox.Instance.AddRequestCardToWaitList(this);
+        }
+
+        private void Fail(){
+            GameManager.Instance.FailedDelivery();
+            Deactivate();
         }
     }
 }
