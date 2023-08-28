@@ -155,7 +155,7 @@ namespace WeirdSpices{
         public override void ReduceHP(int pointsToReduce)
         {
             base.ReduceHP(pointsToReduce);
-            GameManager.Instance.SetPlayerHP(base.GetHP());
+            GameManager.Instance.SetPlayerHealthPoints(base.GetHealthPoints());
             wasHit = true;
             hitbox.gameObject.SetActive(false);
             timePlayerWasHitted = Time.fixedTime;
@@ -163,13 +163,13 @@ namespace WeirdSpices{
 
         public void RecoverHP(int pointsToAdd){
             base.AddHP(pointsToAdd);
-            GameManager.Instance.SetPlayerHP(base.GetHP());
+            GameManager.Instance.SetPlayerHealthPoints(base.GetHealthPoints());
         }
 
         public override void Heal(int pointsToHeal)
         {
             base.Heal(pointsToHeal);
-            GameManager.Instance.SetPlayerHp(base.GetHealthPoints());
+            GameManager.Instance.SetPlayerHealthPoints(base.GetHealthPoints());
         }
 
         private void DropItem()

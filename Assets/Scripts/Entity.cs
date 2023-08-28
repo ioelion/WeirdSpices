@@ -7,7 +7,7 @@ namespace WeirdSpices{
     {
         #region General Status
         [Header("General Status")]
-        [SerializeField] private int hp;
+        [SerializeField] private int healthPoints;
         [SerializeField] private int maxHP;
         [SerializeField] private float knockback;
         #endregion
@@ -21,9 +21,9 @@ namespace WeirdSpices{
         }
 
         public virtual void ReduceHP(int pointsToReduce){
-            hp -= pointsToReduce;
+            healthPoints -= pointsToReduce;
             an.SetTrigger("hit");
-            if(hp <=0){
+            if(healthPoints <=0){
                 Die();
             }
         }
@@ -35,10 +35,10 @@ namespace WeirdSpices{
                 healthPoints += pointsToHeal;
             }
             
-
+        }
         public virtual void AddHP(int pointsToAdd){
-            if(hp+pointsToAdd<= maxHP){
-                hp += pointsToAdd;
+            if(healthPoints+pointsToAdd<= maxHP){
+                healthPoints += pointsToAdd;
             }else{
                 Debug.Log("Ya tiene vida maxima (actual)");
             }
@@ -62,12 +62,12 @@ namespace WeirdSpices{
             return weapon;
         }
 
-        public int GetHP(){
-            return hp;
+        public int GetHealthPoints(){
+            return healthPoints;
         }
 
         public void SetHP(int hp){
-            this.hp = hp;
+            this.healthPoints = hp;
         }
 
         public virtual void Knockback(Vector3 hitterPosition){

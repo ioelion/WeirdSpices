@@ -47,7 +47,7 @@ public class HealScript : MonoBehaviour
             {
                 if (canHeal && Input.GetKey(KeyCode.E))
                 {
-                    if ((GameManager.Instance.totalGold >= price) && (GameManager.Instance.GetHealth() < 10))
+                    if ((GameManager.Instance.currentPlayerGold >= price) && (GameManager.Instance.GetHealth() < 10))
                     {
                         GameManager.Instance.Heal(pointsToHeal, price);
                         Debug.Log("Curado");

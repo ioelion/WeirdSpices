@@ -119,9 +119,9 @@ namespace WeirdSpices
             PauseGame();
         }
 
-        public void SetPlayerHP(int hp)
+        public void SetPlayerHealthPoints(int healthPoints)
         {
-            uiManager.SetUIHP(hp);
+            uiManager.SetUIHP(healthPoints);
         }
 
         public void GainGold(int goldWon)
@@ -132,8 +132,8 @@ namespace WeirdSpices
 
         public void LoseGold(int goldLost)
         {
-            totalGold -= goldLost;
-            SetPlayerGold(totalGold);
+            currentPlayerGold -= goldLost;
+            SetPlayerGold(currentPlayerGold);
         }
 
         public void SetPlayerGold(int gold)
