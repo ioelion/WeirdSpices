@@ -59,5 +59,17 @@ namespace WeirdSpices{
             Transform waypoint = waypoints[Random.Range(0, waypoints.Count)].transform;
             return waypoint;
         }
+
+        public void SpawnGrowingEnemy(string name, Vector2 position){
+            foreach(GameObject enemyGameObject in enemies){
+                Debug.Log("enemyObjectname: " +enemyGameObject.name + " | name: " + name);
+                if(enemyGameObject.name == name){
+                    Enemy enemySpawned = Instantiate(enemyGameObject, position, Quaternion.identity).GetComponent<Enemy>();
+                    enemySpawned.SetEnemySpawner(this);
+                    enemySpawned.PlayGrowAnimation();
+                }
+            }
+
+        }
     }
 }

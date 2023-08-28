@@ -238,8 +238,6 @@ namespace WeirdSpices
                 //Debug.Log("Remover item= " + itemD.name);
             }
             
-            
-
         }
 
         public Dropable RandomParentlessActiveDropable()
@@ -255,6 +253,10 @@ namespace WeirdSpices
                 
             }
             return null;
+        }
+
+        public void IncorrectCombinationDone(Vector2 position){
+            EnemySpawner.Instance.SpawnGrowingEnemy("Zombie",position);
         }
         
     }

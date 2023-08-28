@@ -46,7 +46,7 @@ namespace WeirdSpices{
         {
             sr = this.GetComponent<SpriteRenderer>();
             base.Start();
-            
+            soil = Soil.Instance;
         }
 
         void Update()
@@ -91,8 +91,7 @@ namespace WeirdSpices{
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if(other.tag.Equals("Soil")){
-                soil = other.GetComponent<Soil>();
+            if(other.tag.Equals("Soil") ){
                 isOnSoil = true;
             }
 
@@ -109,13 +108,9 @@ namespace WeirdSpices{
             }
         }
 
-        private void OnTriggerExit2D(Collider2D other) {
-            if(other.tag.Equals("Soil")){
-                soil.ClearLastPositionHighlighted();
-                isOnSoil = false;
-            }
+        public void IsOnSoil(bool isOnSoil){
+            this.isOnSoil = isOnSoil;
         }
-
         private void Move(){
             float _x = Input.GetAxis("Horizontal") * movementSpeed;
             float _y = Input.GetAxis("Vertical") * movementSpeed;
@@ -148,6 +143,7 @@ namespace WeirdSpices{
             if(Input.GetKeyDown(interactKey) && itemInInventory && itemInInventory.tag.Equals("Seed") && isOnSoil){
                 Seed seed = itemInInventory.GetComponent<Seed>();
                 soil.PlantSeed(seed, this.transform.position);
+                soil.ClearLastPositionHighlighted();
                 DropItem();
             }
         }

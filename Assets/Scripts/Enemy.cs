@@ -9,10 +9,13 @@ namespace WeirdSpices {
         [SerializeField] private float distanceToAttack = 1f;
         [SerializeField] private float timeToWaitTillAttack = 0.5f;
         #endregion Attack
-        #region EnemyStatus
+        #region Status
         [Header("Status")]
         [SerializeField] private float timeToRecoverFromStun = 0.5f;
+
+
         #endregion Status
+      
         #region Movement
         [Header("Movement")]
         [SerializeField] private float moveSpeed;
@@ -27,6 +30,10 @@ namespace WeirdSpices {
         public GameObject _item;
         public Transform _itemTarget;
         #endregion Movement
+        #region Animation
+        [Header("Animation")]
+        [SerializeField] private float growSpeedMultiplier = 0.2f;
+        #endregion Animation
         private bool inTouch = false;
         private bool touched = false;
         private bool destroying = false;
@@ -288,8 +295,11 @@ namespace WeirdSpices {
         }
 
         private void GetStunned(){
+            GetStunned(timeToRecoverFromStun);
+        }
+        private void GetStunned(float timeToRecover){
             isStunned = true;
-            lastStunTime = Time.fixedTime;
+            lastStunTime = Time.fixedTime + timeToRecover;
         }
 
         private void OnTriggerStay2D(Collision2D other)
@@ -301,7 +311,12 @@ namespace WeirdSpices {
             }
         }
 
-    }
+        public void PlayGrowAnimation(){
+            an.SetFloat("growSpeed",growSpeedMultiplier);
+            an.SetTrigger("grow");
+            GetStunned(an.GetCurrentAnimatorClipInfo(0)[0].clip.length);
 
+        }
+    }
 
 }

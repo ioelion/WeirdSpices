@@ -13,9 +13,13 @@ namespace WeirdSpices{
         private GameObject foodPrefab;
         private float timeGrowStarted;
     
-        public void SetSoilAndFood(GameObject foodPrefab, Soil soil){
+        void Start()
+        {
+            soil = Soil.Instance;
+        }
+
+        public void StartToGrow(GameObject foodPrefab){
             this.foodPrefab = foodPrefab;
-            this.soil = soil;
             Food food = foodPrefab.GetComponent<Food>();
             spriteRenderer.sprite = food.GetSprite();
             timeToWaitFullGrowth = food.GetTimeNeededToGrow();

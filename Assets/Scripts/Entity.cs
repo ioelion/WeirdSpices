@@ -13,13 +13,11 @@ namespace WeirdSpices{
         #endregion
         [SerializeField] protected Weapon weapon;
         [SerializeField] protected Rigidbody2D rb;
-        protected Animator an;
+        [SerializeField] protected Animator an;
 
 
         public virtual void Start()
         {
-            an = this.GetComponent<Animator>();
-            rb = this.GetComponent<Rigidbody2D>();
         }
 
         public virtual void ReduceHP(int pointsToReduce){

@@ -22,10 +22,24 @@ namespace WeirdSpices{
         #endregion
        
         private Dictionary<Vector3Int,List<Seed>> seeds = new Dictionary<Vector3Int, List<Seed>>();
-        private GameObject foodToPlant;
+        private Food foodToPlant;
         private GameObject currentCrop;
 
         private Vector3Int lastHighlightPosition;
+        public static Soil Instance { get; private set; }
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Debug.Log("Más de un Soil en escena.");
+            }
+        }
+
 
         public void PlantSeed(Seed seed, Vector3 positionToPlant){
             Vector3Int position = Vector3Int.FloorToInt(positionToPlant);
@@ -39,9 +53,14 @@ namespace WeirdSpices{
                     seed.gameObject.SetActive(false);
                     seeds[position].Add(seed);
                     foresoil.SetTile(position, null);
-                    foodToPlant = foodManager.GetFoodFromSeeds(seeds[position]).gameObject;
-                    currentCrop = Instantiate(cropPrefab, new Vector2(position.x + 0.5f, position.y +0.5f), Quaternion.identity);
-                    currentCrop.GetComponent<Crop>().SetSoilAndFood(foodToPlant,this);
+                    foodToPlant = foodManager.GetFoodFromSeeds(seeds[position]);
+                    if(foodToPlant != null){
+                        currentCrop = Instantiate(cropPrefab, new Vector2(position.x + 0.5f, position.y +0.5f), Quaternion.identity);
+                        currentCrop.GetComponent<Crop>().StartToGrow(foodToPlant.gameObject);
+                    }else{
+                        RemoveSeeds(position);
+                        GameManager.Instance.IncorrectCombinationDone(new Vector2(position.x + 0.5f, position.y +0.5f));
+                    }
                 }
             }
         }
@@ -83,5 +102,17 @@ namespace WeirdSpices{
             highlights.SetTile(lastHighlightPosition, null);
         }
 
+
+        public GameObject GetCropPrefab(){
+            return cropPrefab;
+        }
+
+        void OnTriggerExit2D(Collider2D other)
+        {
+            if(other.gameObject.CompareTag("Player")){
+                ClearLastPositionHighlighted();
+                other.gameObject.GetComponent<Player>().IsOnSoil(false); 
+            }
+        }
     }
 }

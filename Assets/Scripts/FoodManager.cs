@@ -29,7 +29,6 @@ namespace WeirdSpices{
         public Food GetFoodFromSeeds(List<Seed> seeds){
             Food food = null;
             recipes.TryGetValue(GetFoodCode(seeds), out food);
-            if(food == null) return badFood;
             return food;
         }
 
@@ -42,6 +41,10 @@ namespace WeirdSpices{
             foreach(Seed seed in seeds) numbers.Add(seed.GetSeedNumber());
             numbers.Sort();
             return string.Join(" ", numbers);
+        }
+
+        public Food GetBadFood(){
+            return badFood;
         }
     }
 }
