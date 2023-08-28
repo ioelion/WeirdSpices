@@ -6,9 +6,10 @@ namespace WeirdSpices{
     public class EnemyWeapon : Weapon
     {
         private void OnTriggerEnter2D(Collider2D other) {
-            if(other.gameObject.CompareTag("Player")){
-                Player player = other.gameObject.GetComponent<Player>();
-                player.ReduceHealth(damage);
+            if(other.gameObject.CompareTag("PlayerHitbox")){
+                Player player = other.gameObject.GetComponentInParent<Player>();
+                player.ReduceHP(damage);
+                player.Knockback(this.gameObject.gameObject.transform.position);
             }
         }
     }

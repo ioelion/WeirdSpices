@@ -7,8 +7,9 @@ namespace WeirdSpices{
     {
         private void OnTriggerEnter2D(Collider2D other) {
             if(other.gameObject.CompareTag("Enemy")){
-                Enemy player = other.gameObject.GetComponent<Enemy>();
-                player.ReduceHealth(damage);
+                Enemy enemy = other.gameObject.GetComponent<Enemy>();
+                enemy.ReduceHP(damage);
+                enemy.Knockback(this.gameObject.gameObject.transform.position);
             }
         }
     }

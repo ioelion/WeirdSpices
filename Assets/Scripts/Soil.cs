@@ -21,27 +21,46 @@ namespace WeirdSpices{
         [SerializeField] private Sprite highlight;
         #endregion
        
-        private Dictionary<Vector3Int,List<GameObject>> seeds = new Dictionary<Vector3Int, List<GameObject>>();
-        private GameObject foodToPlant;
+        private Dictionary<Vector3Int,List<Seed>> seeds = new Dictionary<Vector3Int, List<Seed>>();
+        private Food foodToPlant;
         private GameObject currentCrop;
 
         private Vector3Int lastHighlightPosition;
+        public static Soil Instance { get; private set; }
 
-        public void PlantSeed(GameObject seed, Vector3 positionToPlant){
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Debug.Log("Más de un Soil en escena.");
+            }
+        }
+
+
+        public void PlantSeed(Seed seed, Vector3 positionToPlant){
             Vector3Int position = Vector3Int.FloorToInt(positionToPlant);
-            List<GameObject> seedList = null; 
+            List<Seed> seedList = null; 
             if(soil.GetTile(position) != null){
                 if(!seeds.TryGetValue(position, out seedList)){
-                    seed.SetActive(false);
-                    seeds.Add(position, new List<GameObject>(){seed});
-                    foresoil.SetTile(position, CreateTile(seed.GetComponent<SpriteRenderer>().sprite));
+                    seed.gameObject.SetActive(false);
+                    seeds.Add(position, new List<Seed>(){seed});
+                    foresoil.SetTile(position, CreateTile(seed.GetComponent<Seed>().GetSoilSprite()));
                 } else if(seeds[position].Count == 1){
-                    seed.SetActive(false);
+                    seed.gameObject.SetActive(false);
                     seeds[position].Add(seed);
                     foresoil.SetTile(position, null);
-                    foodToPlant = foodManager.GetFoodFromSeeds(seeds[position][0],seeds[position][1]);
-                    currentCrop = Instantiate(cropPrefab, new Vector2(position.x + 0.5f, position.y +0.5f), Quaternion.identity);
-                    currentCrop.GetComponent<Crop>().SetSoilAndFood(foodToPlant,this);
+                    foodToPlant = foodManager.GetFoodFromSeeds(seeds[position]);
+                    if(foodToPlant != null){
+                        currentCrop = Instantiate(cropPrefab, new Vector2(position.x + 0.5f, position.y +0.5f), Quaternion.identity);
+                        currentCrop.GetComponent<Crop>().StartToGrow(foodToPlant.gameObject);
+                    }else{
+                        RemoveSeeds(position);
+                        GameManager.Instance.IncorrectCombinationDone(new Vector2(position.x + 0.5f, position.y +0.5f));
+                    }
                 }
             }
         }
@@ -49,10 +68,10 @@ namespace WeirdSpices{
         public void RemoveSeeds(Vector3 seedPosition){
             Vector3Int position = Vector3Int.FloorToInt(seedPosition);
             if(seeds[position] != null){
-                foreach(GameObject seed in seeds[position]){
-                    Destroy(seed);
+                foreach(Seed seed in seeds[position]){
+                    Destroy(seed.gameObject);
                 }
-                Destroy(seeds[position][1]);
+                seeds[position] = null;
                 seeds.Remove(position);
             }
         }
@@ -60,7 +79,7 @@ namespace WeirdSpices{
         public void RetrieveSeed(Vector3 seedPosition){
             Vector3Int position = Vector3Int.FloorToInt(seedPosition);
             if(seeds[position] != null){
-                seeds[position][0].SetActive(true);
+                seeds[position][0].gameObject.SetActive(true);
                 seeds.Remove(position);
             }
         }
@@ -83,5 +102,17 @@ namespace WeirdSpices{
             highlights.SetTile(lastHighlightPosition, null);
         }
 
+
+        public GameObject GetCropPrefab(){
+            return cropPrefab;
+        }
+
+        void OnTriggerExit2D(Collider2D other)
+        {
+            if(other.gameObject.CompareTag("Player")){
+                ClearLastPositionHighlighted();
+                other.gameObject.GetComponent<Player>().IsOnSoil(false); 
+            }
+        }
     }
 }

@@ -7,13 +7,26 @@ namespace WeirdSpices{
     {
         [SerializeField] private float timeNeededToGrow;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private List<Seed> seedsNeeded;
+
+
+        private void Start()
+        {
+            seedsNeeded.Sort();
+        }
+
         //de ser necesario se puede crear el cropPrefab para cada morfi y asignarlo aca
-        public float getTimeNeededToGrow(){
+        public float GetTimeNeededToGrow(){
             return this.timeNeededToGrow;
         }  
 
-        public SpriteRenderer GetSpriteRenderer(){
-            return this.spriteRenderer;
+        public Sprite GetSprite(){
+            return spriteRenderer.sprite;
         }
+
+        public List<Seed> GetSeedsNeeded(){
+            return this.seedsNeeded;
+        }
+
     }
 }
