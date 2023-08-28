@@ -28,6 +28,14 @@ namespace WeirdSpices{
             }
         }
 
+        public virtual void Heal(int pointsToHeal)
+        {
+            if (healthPoints < 10)
+            {
+                healthPoints += pointsToHeal;
+            }
+            
+
         public virtual void AddHP(int pointsToAdd){
             if(hp+pointsToAdd<= maxHP){
                 hp += pointsToAdd;

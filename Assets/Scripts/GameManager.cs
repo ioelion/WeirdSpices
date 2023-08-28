@@ -130,6 +130,12 @@ namespace WeirdSpices
             SetPlayerGold(currentPlayerGold);
         }
 
+        public void LoseGold(int goldLost)
+        {
+            totalGold -= goldLost;
+            SetPlayerGold(totalGold);
+        }
+
         public void SetPlayerGold(int gold)
         {
             uiManager.SetUIGold(gold);
@@ -259,5 +265,16 @@ namespace WeirdSpices
             EnemySpawner.Instance.SpawnGrowingEnemy("Zombie",position);
         }
         
+        public void Heal(int pointsToHeal, int price)
+        {
+            player.Heal(pointsToHeal);
+            LoseGold(price);
+        }
+
+        public int GetHealth()
+        {
+            int a = player.GetHealthPoints();
+            return a;
+        }
     }
 }
