@@ -17,7 +17,6 @@ namespace WeirdSpices{
         [Header("Objects")]
         [SerializeField] private Transform dispenser;
         [SerializeField] private GameObject seedPrefab;
-        [SerializeField] private SpriteRenderer iconSr;
         [SerializeField] private Animator animator;
         
         private float lastSeedDropTime = 0f;
@@ -25,8 +24,7 @@ namespace WeirdSpices{
         void Start()
         {
             currentSeeds = initialSeeds;
-            quantityLeft.text = "" + currentSeeds;
-            iconSr.sprite = seedPrefab.GetComponent<SpriteRenderer>().sprite;
+            //quantityLeft.text = "" + currentSeeds;
         }
 
 
@@ -47,7 +45,7 @@ namespace WeirdSpices{
                         GameObject clone = Instantiate(seedPrefab, dispenser.transform.position, Quaternion.identity);
                         GameManager.Instance.AddToList(clone);
                         currentSeeds--;
-                        quantityLeft.text = "" + (currentSeeds);
+                        //quantityLeft.text = "" + (currentSeeds);
                     
                     }
                 }
