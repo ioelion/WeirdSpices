@@ -5,23 +5,40 @@ using UnityEngine;
 namespace WeirdSpices{
     public abstract class Entity : MonoBehaviour
     {
-        [SerializeField] private Weapon weapon;
+        #region General Status
+        [Header("General Status")]
+        [SerializeField] private int hp;
+        [SerializeField] private int maxHP;
+        [SerializeField] private float knockback;
+        #endregion
+        [SerializeField] protected Weapon weapon;
+        [SerializeField] protected Rigidbody2D rb;
+        [SerializeField] protected Animator an;
 
-        [SerializeField] private int healthPoints;
-
-        protected Animator an;
 
         public virtual void Start()
         {
-            an = this.GetComponent<Animator>();
         }
 
-        public virtual void ReduceHealth(int pointsToReduce){
-            healthPoints -= pointsToReduce;
+        public virtual void ReduceHP(int pointsToReduce){
+            hp -= pointsToReduce;
             an.SetTrigger("hit");
-            if(healthPoints <=0){
+            if(hp <=0){
                 Die();
             }
+        }
+
+        public virtual void AddHP(int pointsToAdd){
+            if(hp+pointsToAdd<= maxHP){
+                hp += pointsToAdd;
+            }else{
+                Debug.Log("Ya tiene vida maxima (actual)");
+            }
+
+        }
+
+        public void SetMaxHP(int maxHP){
+            this.maxHP = maxHP;
         }
 
         protected virtual void Die(){
@@ -37,8 +54,17 @@ namespace WeirdSpices{
             return weapon;
         }
 
-        public int GetHealthPoints(){
-            return healthPoints;
+        public int GetHP(){
+            return hp;
+        }
+
+        public void SetHP(int hp){
+            this.hp = hp;
+        }
+
+        public virtual void Knockback(Vector3 hitterPosition){
+
+           transform.position = transform.position + (transform.position - hitterPosition).normalized *knockback;
         }
 
     }

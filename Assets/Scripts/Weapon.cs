@@ -23,6 +23,9 @@ namespace WeirdSpices{
             }
         }
 
+        public int GetDamage(){
+            return this.damage;
+        }
         
     }
 }

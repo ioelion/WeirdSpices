@@ -32,7 +32,8 @@ namespace WeirdSpices{
 
             if(currentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
                 currentEnemies++;
-                Instantiate(enemies[Random.Range(0, enemies.Count)]);
+                Enemy enemy = Instantiate(enemies[Random.Range(0, enemies.Count)]).GetComponent<Enemy>();
+                enemy.SetEnemySpawner(this);
                 timeLastSpawn = Time.fixedTime;
             }
         }
@@ -57,6 +58,18 @@ namespace WeirdSpices{
         {
             Transform waypoint = waypoints[Random.Range(0, waypoints.Count)].transform;
             return waypoint;
+        }
+
+        public void SpawnGrowingEnemy(string name, Vector2 position){
+            foreach(GameObject enemyGameObject in enemies){
+                Debug.Log("enemyObjectname: " +enemyGameObject.name + " | name: " + name);
+                if(enemyGameObject.name == name){
+                    Enemy enemySpawned = Instantiate(enemyGameObject, position, Quaternion.identity).GetComponent<Enemy>();
+                    enemySpawned.SetEnemySpawner(this);
+                    enemySpawned.PlayGrowAnimation();
+                }
+            }
+
         }
     }
 }
