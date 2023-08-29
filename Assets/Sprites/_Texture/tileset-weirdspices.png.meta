@@ -5045,7 +5045,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -5053,6 +5053,111 @@ TextureImporter:
       bones: []
       spriteID: 213f35bed6e49d243b8bc53df24927de
       internalID: -1161237743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset-weirdspices_241
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 80
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e91d386a23a3ea84f907192611837697
+      internalID: -1663804562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset-weirdspices_242
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12a172cb855cde9458c6cc6c3f8abf77
+      internalID: 1342445463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset-weirdspices_243
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71f8a49e7511a314fb7b8234ac24cc25
+      internalID: -256056675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset-weirdspices_244
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38d83759feaaff84ca1804511b3c1f05
+      internalID: -1437407739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset-weirdspices_245
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3248cf1c1c49999498c4f1c7a91f09de
+      internalID: -1188896127
       vertices: []
       indices: 
       edges: []
@@ -5224,7 +5329,14 @@ TextureImporter:
       tileset-weirdspices_236: 1629342125
       tileset-weirdspices_237: -135465787
       tileset-weirdspices_238: -1960754570
+      tileset-weirdspices_239: -921710324
       tileset-weirdspices_24: 2069713251
+      tileset-weirdspices_240: 1675348901
+      tileset-weirdspices_241: -1663804562
+      tileset-weirdspices_242: 1342445463
+      tileset-weirdspices_243: -256056675
+      tileset-weirdspices_244: -1437407739
+      tileset-weirdspices_245: -1188896127
       tileset-weirdspices_25: 1953512240
       tileset-weirdspices_26: -1693388834
       tileset-weirdspices_27: -969488186

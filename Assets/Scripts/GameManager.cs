@@ -72,7 +72,7 @@ namespace WeirdSpices
         {   
             currentObjectivePoints = initialObjectivePoints;
             player.SetHP(initialPlayerHP);
-            player.SetMaxHP(initialMaxPlayerHP);
+            player.SetMaxHealthPoints(initialMaxPlayerHP);
             maxPlayerHP = uiManager.GetHeartQuantity();
             uiManager.SetHelpKey(helpKey);
             uiManager.SetHPParameters(initialPlayerHP, initialMaxPlayerHP);
@@ -265,16 +265,5 @@ namespace WeirdSpices
             EnemySpawner.Instance.SpawnGrowingEnemy("Zombie",position);
         }
         
-        public void Heal(int pointsToHeal, int price)
-        {
-            player.Heal(pointsToHeal);
-            LoseGold(price);
-        }
-
-        public int GetHealth()
-        {
-            int a = player.GetHealthPoints();
-            return a;
-        }
     }
 }

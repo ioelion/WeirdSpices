@@ -87,6 +87,10 @@ namespace WeirdSpices{
                     gameManager.PickedUpFood(other.gameObject);
                 }
             }
+
+            if(other.tag.Equals("Shop") && (Input.GetKey(interactKey) || Input.GetKey(attackKey))){
+                other.gameObject.GetComponent<Shop>().Buy(transform.position);
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -162,7 +166,7 @@ namespace WeirdSpices{
         }
 
         public void RecoverHP(int pointsToAdd){
-            base.AddHP(pointsToAdd);
+            base.AddHealthPoints(pointsToAdd);
             GameManager.Instance.SetPlayerHealthPoints(base.GetHealthPoints());
         }
 
@@ -203,7 +207,6 @@ namespace WeirdSpices{
             float x = sr.flipX ? -xDropDistance : xDropDistance;
             return new Vector2(this.transform.position.x+x,this.transform.position.y+yDropDistance);
         }
-
     }
 }
 

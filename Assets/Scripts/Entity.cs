@@ -8,7 +8,7 @@ namespace WeirdSpices{
         #region General Status
         [Header("General Status")]
         [SerializeField] private int healthPoints;
-        [SerializeField] private int maxHP;
+        [SerializeField] private int maxHealthPoints;
         [SerializeField] private float knockback;
         #endregion
         [SerializeField] protected Weapon weapon;
@@ -36,17 +36,26 @@ namespace WeirdSpices{
             }
             
         }
-        public virtual void AddHP(int pointsToAdd){
-            if(healthPoints+pointsToAdd<= maxHP){
+        public virtual void AddHealthPoints(int pointsToAdd){
+            if(healthPoints+pointsToAdd<= maxHealthPoints){
                 healthPoints += pointsToAdd;
             }else{
+                healthPoints = maxHealthPoints;
                 Debug.Log("Ya tiene vida maxima (actual)");
             }
 
         }
 
-        public void SetMaxHP(int maxHP){
-            this.maxHP = maxHP;
+        public void SetMaxHealthPoints(int maxHP){
+            this.maxHealthPoints = maxHP;
+        }
+
+        public int GetMaxHealthPoints(int maxHP){
+            return maxHealthPoints;
+        }
+
+        public bool IsOnMaxHealth(){
+            return healthPoints >= maxHealthPoints;
         }
 
         protected virtual void Die(){
