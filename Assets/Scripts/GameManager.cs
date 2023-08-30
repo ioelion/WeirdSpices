@@ -24,9 +24,8 @@ namespace WeirdSpices
         [SerializeField] private float initialObjectivePoints = 40f;
         [SerializeField] float fadingVelocityFactor = 0.1f;
         private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
-        private float currentObjectivePoints;
+        private float currentObjectivePoints, maxObjectivePointsReached = 0;
         private float currentObjectiveVelocity = 0f;
-
         private float fadeVelocity = 0f;
 
         [Header("Player")]
@@ -51,6 +50,8 @@ namespace WeirdSpices
         [SerializeField] private DeliveryBox deliveryBox;
         [SerializeField] private UIManager uiManager;
         [SerializeField] private List<Dropable> dropables;
+
+        [SerializeField] private WaveManager waveManager;
         #endregion
         public int currentPlayerGold { get; private set; }
         public static GameManager Instance { get; private set; }
@@ -107,6 +108,8 @@ namespace WeirdSpices
             uiManager.SetObjectivePoints(currentObjectivePoints);
             currentObjectiveVelocity += fadeVelocity;
             fadeVelocity = currentObjectiveVelocity != 0 ? (currentObjectiveVelocity*-1)*fadingVelocityFactor : 0;
+            if(currentObjectivePoints > maxObjectivePointsReached) maxObjectivePointsReached = currentObjectivePoints;
+            waveManager.CheckForWaveTrigger(maxObjectivePointsReached*100/objectivePointsToWin);
         }
 
 

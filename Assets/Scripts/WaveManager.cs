@@ -6,17 +6,31 @@ namespace WeirdSpices
     public class WaveManager : MonoBehaviour
     {
         [SerializeField] private List<Wave> waves;
+        [SerializeField] private List<float> wavesTriggerPercentages;
         private List<Wave> done;
         private Wave currentWave = null;
-        private float lastEnemySpawn;
-        private float currentEnemiesSpawned = 0;
-        private int currentWaveQtyEnemyTypes, currentWaveQtySpawns;
+        private float lastEnemySpawn, nextWaveTriggerPercentage = 0.0f;
+        private int currentWaveQtyEnemyTypes, currentWaveQtySpawns, currentEnemiesSpawned = 0;
+
+        public static WaveManager Instance { get; private set; }
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Debug.Log("Más de un WaveManager en escena.");
+            }
+        }
 
         void Start()
         {
             done = new List<Wave>();
             lastEnemySpawn = Time.fixedTime;
-            StartFirstWaveInList();
+            nextWaveTriggerPercentage = wavesTriggerPercentages[0];
         }
 
         void FixedUpdate()
@@ -41,5 +55,10 @@ namespace WeirdSpices
             currentEnemiesSpawned = 0;
         }
 
+        public void CheckForWaveTrigger(float percentage){
+            if(currentWave == null && percentage >= nextWaveTriggerPercentage){
+                StartFirstWaveInList();
+            }
+        }
     }
 }

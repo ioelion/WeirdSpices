@@ -9,7 +9,8 @@ namespace WeirdSpices{
         [SerializeField] private List<GameObject> waypoints;
         [SerializeField] private int maxEnemies;
         [SerializeField] private float timeToWaitToSpawn;
-        private int currentEnemies = 0;
+        private List<Enemy> currentEnemies;
+        private int qtyCurrentEnemies = 0;
         private float timeLastSpawn;
         public static EnemySpawner Instance { get; private set; }
 
@@ -29,15 +30,15 @@ namespace WeirdSpices{
         void Update()
         {
 
-            if(currentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
-                currentEnemies++;
-                Enemy enemy = Instantiate(enemies[Random.Range(0, enemies.Count)]).GetComponent<Enemy>();
+            if(qtyCurrentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
+                qtyCurrentEnemies++;
+                Enemy enemy = Instantiate(enemies[Random.Range(0, enemies.Count)]);
                 timeLastSpawn = Time.fixedTime;
             }
         }
 
         public void EnemyDied(){
-            currentEnemies--;
+            qtyCurrentEnemies--;
             timeLastSpawn = Time.fixedTime;
         }
 
@@ -69,9 +70,7 @@ namespace WeirdSpices{
         }
 
         public Enemy Spawn(Enemy enemy, Vector2 position){
-            Debug.Log("Entre");
             Enemy enemySpawned = Instantiate(enemy.gameObject, position, Quaternion.identity).GetComponent<Enemy>();
-            enemies.Add(enemySpawned);
             return enemySpawned;
         }
     }
