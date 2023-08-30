@@ -50,11 +50,8 @@ namespace WeirdSpices {
         override public void Start()
         {
             sr = this.GetComponent<SpriteRenderer>();
-            base.Start();          
-        }
-
-        public void SetEnemySpawner(EnemySpawner enemySpawner){
-            this.enemySpawner = enemySpawner;
+            base.Start();
+            this.enemySpawner = EnemySpawner.Instance;          
         }
 
         void Awake() {
