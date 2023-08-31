@@ -8,7 +8,6 @@ namespace WeirdSpices
         public List<Enemy> enemies;
         public List<Transform> spawnPoints;
         public int qtyToSpawn;
-        public float duration;
         public float timeBetweenEnemies;
     }
 }

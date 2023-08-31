@@ -7,7 +7,7 @@ namespace WeirdSpices
     {
         [SerializeField] private List<Wave> waves;
         [SerializeField] private List<float> wavesTriggerPercentages;
-        private List<Wave> done;
+        private Dictionary<Wave,float> wavesDoneWithPercentages;
         private Wave currentWave = null;
         private float lastEnemySpawn, nextWaveTriggerPercentage = 0.0f;
         private int currentWaveQtyEnemyTypes, currentWaveQtySpawns, currentEnemiesSpawned, currentEnemiesKilled = 0;
@@ -27,7 +27,7 @@ namespace WeirdSpices
 
         void Start()
         {
-            done = new List<Wave>();
+            wavesDoneWithPercentages = new Dictionary<Wave,float>();
             lastEnemySpawn = Time.fixedTime;
             nextWaveTriggerPercentage = wavesTriggerPercentages[0];
             GameManager.Instance.LoadFlags(wavesTriggerPercentages);
@@ -36,7 +36,7 @@ namespace WeirdSpices
         void FixedUpdate()
         {
             if(currentWave != null && currentEnemiesSpawned < currentWave.qtyToSpawn && Time.fixedTime - lastEnemySpawn > currentWave.timeBetweenEnemies){
-                EnemySpawner.Instance.Spawn(currentWave.enemies[Random.Range(0,currentWaveQtyEnemyTypes)], currentWave.spawnPoints[Random.Range(0, currentWaveQtySpawns)].position);
+                EnemySpawner.Instance.SpawnWaveEnemy(currentWave.enemies[Random.Range(0,currentWaveQtyEnemyTypes)], currentWave.spawnPoints[Random.Range(0, currentWaveQtySpawns)].position);
                 currentEnemiesSpawned++;
                 lastEnemySpawn = Time.fixedTime;
             }
@@ -46,19 +46,31 @@ namespace WeirdSpices
             currentWaveQtyEnemyTypes = currentWave.enemies.Count;
             currentWaveQtySpawns = currentWave.spawnPoints.Count;
             lastEnemySpawn = Time.fixedTime;
+            Debug.Log("Wave has started");
         }
 
         public void EndWave(){
-            done.Add(currentWave);
+            wavesDoneWithPercentages.Add(currentWave,wavesTriggerPercentages[0]);
             waves.Remove(currentWave);
+            wavesTriggerPercentages.Remove(wavesTriggerPercentages[0]);
             currentWave = null;
             currentEnemiesSpawned = 0;
+            currentEnemiesKilled = 0;
             nextWaveTriggerPercentage = wavesTriggerPercentages[0];
+            Debug.Log("Wave has ended");
         }
 
         public void CheckForWaveTrigger(float percentage){
             if(currentWave == null && percentage >= nextWaveTriggerPercentage){
                 StartFirstWaveInList();
+            }
+        }
+
+        public void EnemyFromWaveWasKilled(){
+            currentEnemiesKilled++;
+            Debug.Log("Killed enemies from wave: " + currentEnemiesKilled + " .Remaining: " + (currentWave.qtyToSpawn - currentEnemiesKilled));
+            if(currentEnemiesKilled == currentWave.qtyToSpawn){
+                EndWave();                
             }
         }
     }

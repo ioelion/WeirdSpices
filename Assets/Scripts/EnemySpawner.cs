@@ -42,9 +42,10 @@ namespace WeirdSpices{
             }
         }
 
-        public void EnemyDied(){
+        public void EnemyDied(Enemy enemy){
             qtyCurrentEnemies--;
             timeLastSpawn = Time.fixedTime;
+            if(enemy.fromWave) WaveManager.Instance.EnemyFromWaveWasKilled();
         }
 
 
@@ -77,6 +78,12 @@ namespace WeirdSpices{
         public Enemy Spawn(Enemy enemy, Vector2 position){
             Enemy enemySpawned = Instantiate(enemy.gameObject, position, Quaternion.identity).GetComponent<Enemy>();
             return enemySpawned;
+        }
+
+        public Enemy SpawnWaveEnemy(Enemy enemy, Vector2 position){
+            Enemy enemySpawned = Spawn(enemy,position);
+            enemySpawned.fromWave = true;
+            return enemy;
         }
     }
 }
