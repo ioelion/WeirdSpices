@@ -28,6 +28,10 @@ namespace WeirdSpices{
         private Vector3Int lastHighlightPosition;
         public static Soil Instance { get; private set; }
 
+        [SerializeField] private AudioClip sound;           //new
+        [SerializeField] private AudioClip sound2;
+        [SerializeField] private AudioClip soundReady;
+
         void Awake()
         {
             if (Instance == null)
@@ -46,17 +50,19 @@ namespace WeirdSpices{
             List<Seed> seedList = null; 
             if(soil.GetTile(position) != null){
                 if(!seeds.TryGetValue(position, out seedList)){
+                    AudioManager.Instance.PlaySound(sound);                 //new
                     seed.gameObject.SetActive(false);
                     seeds.Add(position, new List<Seed>(){seed});
                     foresoil.SetTile(position, CreateTile(seed.GetComponent<Seed>().GetSoilSprite()));
                 } else if(seeds[position].Count == 1){
+                    AudioManager.Instance.PlaySound(sound2);                 //new
                     seed.gameObject.SetActive(false);
                     seeds[position].Add(seed);
                     foresoil.SetTile(position, null);
                     foodToPlant = foodManager.GetFoodFromSeeds(seeds[position]);
                     if(foodToPlant != null){
                         currentCrop = Instantiate(cropPrefab, new Vector2(position.x + 0.5f, position.y +0.5f), Quaternion.identity);
-                        currentCrop.GetComponent<Crop>().StartToGrow(foodToPlant.gameObject);
+                        currentCrop.GetComponent<Crop>().StartToGrow(foodToPlant.gameObject,soundReady);
                     }else{
                         RemoveSeeds(position);
                         GameManager.Instance.IncorrectCombinationDone(new Vector2(position.x + 0.5f, position.y +0.5f));

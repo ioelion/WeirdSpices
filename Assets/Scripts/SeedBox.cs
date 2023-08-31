@@ -20,6 +20,8 @@ namespace WeirdSpices{
         [SerializeField] private Animator animator;
         
         private float lastSeedDropTime = 0f;
+
+        [SerializeField] private AudioClip sound;                   //new
         
         void Start()
         {
@@ -38,6 +40,7 @@ namespace WeirdSpices{
                     if ((Physics2D.OverlapPoint(posS) != null) && (Physics2D.OverlapPoint(posS).CompareTag("Seed") ) )
                     {
                         Debug.Log("Ya hay una semila");
+                        AudioManager.Instance.PlaySound(sound);                     //new
                     }
                     else
                     {                 

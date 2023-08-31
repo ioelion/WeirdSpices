@@ -29,6 +29,8 @@ public class Shop : MonoBehaviour
     private int currentQuantity;
     private bool isAnimatingText = false;
 
+    [SerializeField] private AudioClip sound;                //new
+
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -54,8 +56,10 @@ public class Shop : MonoBehaviour
                     }
 
             }else{
+                
                 if(!isAnimatingText){
                     StartCoroutine(ShowNotEnoughText());
+                    AudioManager.Instance.PlaySound(sound);             //new
                 }
             }
         }

@@ -12,13 +12,16 @@ namespace WeirdSpices{
         private float timeToWaitFullGrowth;
         private GameObject foodPrefab;
         private float timeGrowStarted;
-    
+
+        [SerializeField] private AudioClip sound;
+
         void Start()
         {
             soil = Soil.Instance;
         }
 
-        public void StartToGrow(GameObject foodPrefab){
+        public void StartToGrow(GameObject foodPrefab, AudioClip soundReady){
+            sound = soundReady;
             this.foodPrefab = foodPrefab;
             Food food = foodPrefab.GetComponent<Food>();
             spriteRenderer.sprite = food.GetSprite();
@@ -37,6 +40,7 @@ namespace WeirdSpices{
         void FixedUpdate()
         {
             if(Time.fixedTime - timeGrowStarted  > timeToWaitFullGrowth){
+                AudioManager.Instance.PlaySound(sound);
                 Instantiate(foodPrefab, this.transform.position, Quaternion.identity);
                 foodPrefab = null;
                 animator.SetBool("isGrowing", false);
