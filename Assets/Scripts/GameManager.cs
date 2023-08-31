@@ -50,7 +50,6 @@ namespace WeirdSpices
         [SerializeField] private DeliveryBox deliveryBox;
         [SerializeField] private UIManager uiManager;
         [SerializeField] private List<Dropable> dropables;
-
         [SerializeField] private WaveManager waveManager;
         #endregion
         public int currentPlayerGold { get; private set; }
@@ -80,6 +79,7 @@ namespace WeirdSpices
             uiManager.SetUIGold(currentPlayerGold);
             uiManager.SetObjectivePoints(currentObjectivePoints);
             uiManager.SetObjectivePointsToWin(objectivePointsToWin);
+            PauseGameWithKey();
         }
 
         void Update()
@@ -168,11 +168,11 @@ namespace WeirdSpices
         {
             if (Time.timeScale == 1)
             {
-                PauseGame();
+                PauseGameWithKey();
             }
             else
             {
-                ResumeGame();
+                ResumeGameWithKey();
             }
         }
         public void PauseGame()
@@ -180,6 +180,19 @@ namespace WeirdSpices
             uiManager.SetPauseScreen(true);
             Time.timeScale = 0;
         }
+
+        public void PauseGameWithKey()
+        {
+            PauseGame();
+            uiManager.SetPauseText(true);
+        }
+
+        public void ResumeGameWithKey(){
+            ResumeGame();
+            uiManager.SetPauseText(false);
+        }
+
+
         public void ResumeGame()
         {
             uiManager.SetPauseScreen(false);
@@ -266,6 +279,10 @@ namespace WeirdSpices
 
         public void IncorrectCombinationDone(Vector2 position){
             EnemySpawner.Instance.SpawnGrowingEnemy("Zombie",position);
+        }
+
+        public void LoadFlags(List<float> wavesTriggerPercentages){
+            uiManager.LoadFlags(wavesTriggerPercentages);
         }
         
     }

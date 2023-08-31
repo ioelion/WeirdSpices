@@ -11,11 +11,13 @@ namespace WeirdSpices
         [Header("UI")]
         [SerializeField] private TMP_Text endText;
         [SerializeField] private GameObject greyScreen;
+        [SerializeField] private TMP_Text pauseText;
         [SerializeField] private TMP_Text helpText;
         [SerializeField] private TMP_Text goldText;
         [SerializeField] private HPManager hpManager;
         [SerializeField] private Slider objectiveSlider;
-
+        [SerializeField] private GameObject waveFlagPrefab;
+        [SerializeField] private GameObject waveFlagsGroup;
         private KeyCode helpKey;
 
 
@@ -56,6 +58,10 @@ namespace WeirdSpices
             greyScreen.SetActive(active);
         }
 
+        public void SetPauseText(bool active){
+            pauseText.gameObject.SetActive(active);
+        }
+
         public void SetHPParameters(int currentPlayerHP, int currentMaxPlayerHP){
             hpManager.SetParameters(currentPlayerHP, currentMaxPlayerHP);
         }
@@ -74,6 +80,22 @@ namespace WeirdSpices
         public void ShowObjectiveProgress(){
             objectiveSlider.gameObject.SetActive(true);
         }
+
+        public void LoadFlags(List<float> wavesTriggerPercentages){
+            Vector2 basePosition = objectiveSlider.gameObject.transform.position;
+            Vector2 localPosition = objectiveSlider.gameObject.GetComponent<RectTransform>().localPosition;
+            float width = objectiveSlider.gameObject.GetComponent<RectTransform>().rect.width;
+            Vector2 position;
+            foreach(float percentage in wavesTriggerPercentages){
+                position = new Vector3(basePosition.x, basePosition.y, 0f);
+                GameObject gameObject = Instantiate(waveFlagPrefab,position ,Quaternion.identity) ;
+                gameObject.transform.SetParent(waveFlagsGroup.transform);
+                gameObject.transform.position = position;
+                
+                
+            }
+        }
+
     }
 
 }

@@ -10,8 +10,7 @@ namespace WeirdSpices
         private List<Wave> done;
         private Wave currentWave = null;
         private float lastEnemySpawn, nextWaveTriggerPercentage = 0.0f;
-        private int currentWaveQtyEnemyTypes, currentWaveQtySpawns, currentEnemiesSpawned = 0;
-
+        private int currentWaveQtyEnemyTypes, currentWaveQtySpawns, currentEnemiesSpawned, currentEnemiesKilled = 0;
         public static WaveManager Instance { get; private set; }
 
         void Awake()
@@ -31,6 +30,7 @@ namespace WeirdSpices
             done = new List<Wave>();
             lastEnemySpawn = Time.fixedTime;
             nextWaveTriggerPercentage = wavesTriggerPercentages[0];
+            GameManager.Instance.LoadFlags(wavesTriggerPercentages);
         }
 
         void FixedUpdate()
@@ -53,6 +53,7 @@ namespace WeirdSpices
             waves.Remove(currentWave);
             currentWave = null;
             currentEnemiesSpawned = 0;
+            nextWaveTriggerPercentage = wavesTriggerPercentages[0];
         }
 
         public void CheckForWaveTrigger(float percentage){
