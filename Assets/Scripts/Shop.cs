@@ -29,7 +29,8 @@ public class Shop : MonoBehaviour
     private int currentQuantity;
     private bool isAnimatingText = false;
 
-    [SerializeField] private AudioClip sound;                //new
+    [SerializeField] private AudioClip soundCantHeal;                //new
+    [SerializeField] private AudioClip soundHeal;
 
     private void Start()
     {
@@ -46,6 +47,7 @@ public class Shop : MonoBehaviour
         if(canSell){
             if ((GameManager.Instance.currentPlayerGold >= price))
                 {
+                    AudioManager.Instance.PlaySound(soundHeal);             //new
                     GameManager.Instance.LoseGold(price);
                     canSell = false;
                     Instantiate(objectToSell, positionToLeaveItem, Quaternion.identity);
@@ -59,7 +61,7 @@ public class Shop : MonoBehaviour
                 
                 if(!isAnimatingText){
                     StartCoroutine(ShowNotEnoughText());
-                    AudioManager.Instance.PlaySound(sound);             //new
+                    AudioManager.Instance.PlaySound(soundCantHeal);             //new
                 }
             }
         }
