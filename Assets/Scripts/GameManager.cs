@@ -80,7 +80,6 @@ namespace WeirdSpices
             uiManager.SetUIGold(currentPlayerGold);
             uiManager.SetObjectivePoints(currentObjectivePoints);
             uiManager.SetObjectivePointsToWin(objectivePointsToWin);
-            PauseGameWithKey();
         }
 
         void Update()

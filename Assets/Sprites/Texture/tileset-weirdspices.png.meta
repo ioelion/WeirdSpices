@@ -4202,7 +4202,7 @@ TextureImporter:
         serializedVersion: 2
         x: 208
         y: 48
-        width: 16
+        width: 32
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -4218,33 +4218,12 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset-weirdspices_204
-      rect:
-        serializedVersion: 2
-        x: 224
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b3351a2b63d68e44ea0938f365dc66cc
-      internalID: -1779590903
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: tileset-weirdspices_205
       rect:
         serializedVersion: 2
         x: 240
         y: 48
-        width: 16
+        width: 32
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -4255,27 +4234,6 @@ TextureImporter:
       bones: []
       spriteID: bb582260ea25945479fd5dd4dca45192
       internalID: -499788977
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset-weirdspices_206
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5f90096b3ab789941a44a5de007ed6e4
-      internalID: -1042940273
       vertices: []
       indices: 
       edges: []
@@ -5158,6 +5116,27 @@ TextureImporter:
       bones: []
       spriteID: bbbd8b65ecea1a6478ccb03786149e40
       internalID: -1798506129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset-weirdspices_132
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 16
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5e23afc7cdb6e045936b8f78f54f0a6
+      internalID: -339586004
       vertices: []
       indices: 
       edges: []
