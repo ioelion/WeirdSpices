@@ -18,6 +18,8 @@ namespace WeirdSpices
         [SerializeField] private Slider objectiveSlider;
         [SerializeField] private GameObject waveFlagPrefab;
         [SerializeField] private GameObject waveFlagsGroup;
+        [SerializeField] private TMP_Text waveAnnouncement;
+        [SerializeField] private float timeToHideWaveAnn;
         private KeyCode helpKey;
 
 
@@ -82,20 +84,35 @@ namespace WeirdSpices
         }
 
         public void LoadFlags(List<float> wavesTriggerPercentages){
-            Vector2 basePosition = objectiveSlider.gameObject.transform.position;
-            Vector2 localPosition = objectiveSlider.gameObject.GetComponent<RectTransform>().localPosition;
-            float width = objectiveSlider.gameObject.GetComponent<RectTransform>().rect.width;
-            Vector2 position;
+            Vector2 localPosition = waveFlagsGroup.transform.localPosition;
+            RectTransform rectTransform = objectiveSlider.gameObject.GetComponent<RectTransform>();
+            float width = rectTransform.rect.width;
+            float height = rectTransform.rect.height;
+            RectTransform rfWaveFlag = waveFlagPrefab.GetComponent<RectTransform>();
+            float offsetToCenterFlag = rfWaveFlag.localScale.x * rfWaveFlag.rect.width /5;
             foreach(float percentage in wavesTriggerPercentages){
-                position = new Vector3(basePosition.x, basePosition.y, 0f);
-                GameObject gameObject = Instantiate(waveFlagPrefab,position ,Quaternion.identity) ;
-                gameObject.transform.SetParent(waveFlagsGroup.transform);
-                gameObject.transform.position = position;
-                
-                
+                Vector3 position = new Vector3(localPosition.x - offsetToCenterFlag - width/2 + width * percentage/100 , localPosition.y+height/2, 0f);
+                GameObject gameObject = Instantiate(waveFlagPrefab,Vector3.zero ,Quaternion.identity,waveFlagsGroup.transform);
+                gameObject.transform.localPosition = position;
+                gameObject.GetComponent<RectTransform>().localScale = new Vector3(0.4f, 0.4f, 1f);
             }
         }
 
+        public void ShowWaveAnnouncement(string text){
+            waveAnnouncement.gameObject.SetActive(true);
+            waveAnnouncement.text = text;
+            waveAnnouncement.CrossFadeAlpha(0.0f, 0f, false);
+            waveAnnouncement.CrossFadeAlpha(1.0f, 0.25f, false);
+            StartCoroutine(HideWaveAnnouncement());
+        }
+
+
+        private IEnumerator HideWaveAnnouncement(){
+            yield return new WaitForSeconds(timeToHideWaveAnn);
+            waveAnnouncement.CrossFadeAlpha(0.0f, 0.25f, false);
+            yield return new WaitForSeconds(1f);
+            waveAnnouncement.gameObject.SetActive(false);
+        }
     }
 
 }

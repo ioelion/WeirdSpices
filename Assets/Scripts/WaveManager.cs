@@ -60,10 +60,12 @@ namespace WeirdSpices
             Debug.Log("Wave has ended");
         }
 
-        public void CheckForWaveTrigger(float percentage){
+        public bool CheckForWaveTrigger(float percentage){
             if(currentWave == null && percentage >= nextWaveTriggerPercentage){
                 StartFirstWaveInList();
+                return true;
             }
+            return false;
         }
 
         public void EnemyFromWaveWasKilled(){
