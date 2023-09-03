@@ -281,6 +281,10 @@ namespace WeirdSpices
             };
         }
 
+        public void WaveEnd(){
+            uiManager.ClearFirstWaveFlag();
+        }
+
         public int GetMinGoldRewarded() { return minGoldRewarded; }
         public int GetMaxGoldRewarded() { return maxGoldRewarded; }
         public int GetMinFoodRequired() { return minFoodRequired; }

@@ -22,6 +22,16 @@ namespace WeirdSpices
         [SerializeField] private float timeToHideWaveAnn;
         private KeyCode helpKey;
 
+        private List<GameObject> flags;
+
+        private List<GameObject> clearedFlags;
+
+
+        void Start()
+        {
+            flags = new List<GameObject>();
+            clearedFlags= new List<GameObject>();
+        }
 
         void Update() {
             //TODO mover este comportamiento al player llamando al gamemanager
@@ -95,6 +105,7 @@ namespace WeirdSpices
                 GameObject gameObject = Instantiate(waveFlagPrefab,Vector3.zero ,Quaternion.identity,waveFlagsGroup.transform);
                 gameObject.transform.localPosition = position;
                 gameObject.GetComponent<RectTransform>().localScale = new Vector3(0.4f, 0.4f, 1f);
+                flags.Add(gameObject);
             }
         }
 
@@ -112,6 +123,12 @@ namespace WeirdSpices
             waveAnnouncement.CrossFadeAlpha(0.0f, 0.25f, false);
             yield return new WaitForSeconds(1f);
             waveAnnouncement.gameObject.SetActive(false);
+        }
+
+        public void ClearFirstWaveFlag(){
+            flags[0].SetActive(false);
+            clearedFlags.Add(flags[0]);
+            flags.Remove(flags[0]);
         }
     }
 

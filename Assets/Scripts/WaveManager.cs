@@ -57,6 +57,7 @@ namespace WeirdSpices
             currentEnemiesSpawned = 0;
             currentEnemiesKilled = 0;
             nextWaveTriggerPercentage = wavesTriggerPercentages[0];
+            GameManager.Instance.WaveEnd();
             Debug.Log("Wave has ended");
         }
 
