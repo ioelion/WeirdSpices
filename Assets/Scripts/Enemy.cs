@@ -12,7 +12,7 @@ namespace WeirdSpices {
         #region Status
         [Header("Status")]
         [SerializeField] private float timeToRecoverFromStun = 0.5f;
-
+        public bool fromWave = false;
 
         #endregion Status
       
@@ -34,13 +34,8 @@ namespace WeirdSpices {
         [Header("Animation")]
         [SerializeField] private float growSpeedMultiplier = 0.2f;
         #endregion Animation
-        private bool inTouch = false;
-        private bool touched = false;
-        private bool destroying = false;
-        private bool isStunned = false;
-        private bool targetInAttackRange = false;
-        private float lastAttackTime = 0f;
-        private float lastStunTime = 0f;
+        private bool inTouch, touched, destroying,isStunned,targetInAttackRange= false; 
+        private float lastAttackTime,lastStunTime = 0f;
         private Vector2 moveDirection;
         private Vector2 _force;
         private Transform target;
@@ -50,11 +45,8 @@ namespace WeirdSpices {
         override public void Start()
         {
             sr = this.GetComponent<SpriteRenderer>();
-            base.Start();          
-        }
-
-        public void SetEnemySpawner(EnemySpawner enemySpawner){
-            this.enemySpawner = enemySpawner;
+            base.Start();
+            this.enemySpawner = EnemySpawner.Instance;          
         }
 
         void Awake() {
@@ -258,7 +250,7 @@ namespace WeirdSpices {
     
 
         override protected void Die(){
-            enemySpawner.EnemyDied();
+            enemySpawner.EnemyDied(this);
             base.Die();
         }
 

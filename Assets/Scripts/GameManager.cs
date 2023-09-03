@@ -24,9 +24,8 @@ namespace WeirdSpices
         [SerializeField] private float initialObjectivePoints = 40f;
         [SerializeField] float fadingVelocityFactor = 0.1f;
         private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
-        private float currentObjectivePoints;
+        private float currentObjectivePoints, maxObjectivePointsReached = 0;
         private float currentObjectiveVelocity = 0f;
-
         private float fadeVelocity = 0f;
 
         [Header("Player")]
@@ -34,9 +33,10 @@ namespace WeirdSpices
         [SerializeField] private int initialMaxPlayerHP;
         private int maxPlayerHP;
 
-        [Header("End")]
-        public string winText = "GANASTE!";
-        public string loseText = "Apreta R para reiniciar el nivel! ";
+        [Header("Texts")]
+        public string winText = "YOU SURVIVED!";
+        public string loseText = "PRESS R TO TRY AGAIN";
+        public string waveText = "MONSTERS ARE COMING";
 
         [Header("Keys")]
         [SerializeField] private KeyCode helpKey;
@@ -51,6 +51,7 @@ namespace WeirdSpices
         [SerializeField] private DeliveryBox deliveryBox;
         [SerializeField] private UIManager uiManager;
         [SerializeField] private List<Dropable> dropables;
+        [SerializeField] private WaveManager waveManager;
         #endregion
         public int currentPlayerGold { get; private set; }
         public static GameManager Instance { get; private set; }
@@ -79,6 +80,7 @@ namespace WeirdSpices
             uiManager.SetUIGold(currentPlayerGold);
             uiManager.SetObjectivePoints(currentObjectivePoints);
             uiManager.SetObjectivePointsToWin(objectivePointsToWin);
+            PauseGameWithKey();
         }
 
         void Update()
@@ -102,11 +104,8 @@ namespace WeirdSpices
             {
                 WinGame();
             }
-
-            currentObjectivePoints = currentObjectivePoints + currentObjectiveVelocity;
-            uiManager.SetObjectivePoints(currentObjectivePoints);
-            currentObjectiveVelocity += fadeVelocity;
-            fadeVelocity = currentObjectiveVelocity != 0 ? (currentObjectiveVelocity*-1)*fadingVelocityFactor : 0;
+            SetObjectivePoints();
+            CheckForWaveTriggers();
         }
 
 
@@ -119,10 +118,7 @@ namespace WeirdSpices
             PauseGame();
         }
 
-        public void SetPlayerHealthPoints(int healthPoints)
-        {
-            uiManager.SetUIHP(healthPoints);
-        }
+        public void SetPlayerHealthPoints(int healthPoints){ uiManager.SetUIHP(healthPoints);}
 
         public void GainGold(int goldWon)
         {
@@ -136,10 +132,7 @@ namespace WeirdSpices
             SetPlayerGold(currentPlayerGold);
         }
 
-        public void SetPlayerGold(int gold)
-        {
-            uiManager.SetUIGold(gold);
-        }
+        public void SetPlayerGold(int gold) { uiManager.SetUIGold(gold); }
 
         public void CreateCoin(Vector3 p)
         {
@@ -165,11 +158,11 @@ namespace WeirdSpices
         {
             if (Time.timeScale == 1)
             {
-                PauseGame();
+                PauseGameWithKey();
             }
             else
             {
-                ResumeGame();
+                ResumeGameWithKey();
             }
         }
         public void PauseGame()
@@ -177,19 +170,24 @@ namespace WeirdSpices
             uiManager.SetPauseScreen(true);
             Time.timeScale = 0;
         }
+
+        public void PauseGameWithKey()
+        {
+            PauseGame();
+            uiManager.SetPauseText(true);
+        }
+
+        public void ResumeGameWithKey(){
+            ResumeGame();
+            uiManager.SetPauseText(false);
+        }
+
+
         public void ResumeGame()
         {
             uiManager.SetPauseScreen(false);
             Time.timeScale = 1;
         }
-
-        public int GetMinGoldRewarded() { return minGoldRewarded; }
-        public int GetMaxGoldRewarded() { return maxGoldRewarded; }
-        public int GetMinFoodRequired() { return minFoodRequired; }
-        public int GetMaxFoodRequired() { return maxFoodRequired; }
-        public float GetMinDeliverTime() { return minDeliverTime; }
-        public float GetMaxDeliverTime() { return maxDeliverTime; }
-        public float GetWaitTimeBetweenCards() { return waitTimeBetweenCards; }
 
         public void SuccessfulDelivery(int coinQuantity)
         {
@@ -264,6 +262,31 @@ namespace WeirdSpices
         public void IncorrectCombinationDone(Vector2 position){
             EnemySpawner.Instance.SpawnGrowingEnemy("Zombie",position);
         }
+
+        public void LoadFlags(List<float> wavesTriggerPercentages){
+            uiManager.LoadFlags(wavesTriggerPercentages);
+        }
         
+        public void SetObjectivePoints(){
+            currentObjectivePoints = currentObjectivePoints + currentObjectiveVelocity;
+            uiManager.SetObjectivePoints(currentObjectivePoints);
+            currentObjectiveVelocity += fadeVelocity;
+            fadeVelocity = currentObjectiveVelocity != 0 ? (currentObjectiveVelocity*-1)*fadingVelocityFactor : 0;
+            if(currentObjectivePoints > maxObjectivePointsReached) maxObjectivePointsReached = currentObjectivePoints;
+        }
+
+        public void CheckForWaveTriggers(){
+            if(waveManager.CheckForWaveTrigger(maxObjectivePointsReached*100/objectivePointsToWin)){
+                uiManager.ShowWaveAnnouncement(waveText);
+            };
+        }
+
+        public int GetMinGoldRewarded() { return minGoldRewarded; }
+        public int GetMaxGoldRewarded() { return maxGoldRewarded; }
+        public int GetMinFoodRequired() { return minFoodRequired; }
+        public int GetMaxFoodRequired() { return maxFoodRequired; }
+        public float GetMinDeliverTime() { return minDeliverTime; }
+        public float GetMaxDeliverTime() { return maxDeliverTime; }
+        public float GetWaitTimeBetweenCards() { return waitTimeBetweenCards; }
     }
 }

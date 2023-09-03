@@ -5,15 +5,15 @@ using UnityEngine;
 namespace WeirdSpices{
     public class EnemySpawner : MonoBehaviour
     {
-        [SerializeField] private List<GameObject> enemies;
+        [SerializeField] private List<Enemy> enemies;
         [SerializeField] private List<GameObject> waypoints;
         [SerializeField] private int maxEnemies;
         [SerializeField] private float timeToWaitToSpawn;
-        private int currentEnemies = 0;
+        [SerializeField] private List<Transform> spawnPositions;
+        private List<Enemy> currentEnemies;
+        private int qtyCurrentEnemies, qtySpawnPositions, qtyEnemiesTypes = 0;
         private float timeLastSpawn;
         public static EnemySpawner Instance { get; private set; }
-
-        public 
 
         void Awake()
         {
@@ -26,20 +26,26 @@ namespace WeirdSpices{
             timeLastSpawn = Time.fixedTime;
         }
 
+        void Start()
+        {
+            qtySpawnPositions = spawnPositions.Count;
+            qtyEnemiesTypes = enemies.Count;
+        }
+
         void Update()
         {
 
-            if(currentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
-                currentEnemies++;
-                Enemy enemy = Instantiate(enemies[Random.Range(0, enemies.Count)]).GetComponent<Enemy>();
-                enemy.SetEnemySpawner(this);
+            if(qtyCurrentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
+                qtyCurrentEnemies++;
+                Enemy enemy = Instantiate(enemies[Random.Range(0,qtyEnemiesTypes)], spawnPositions[Random.Range(0, qtySpawnPositions)].position,Quaternion.identity);
                 timeLastSpawn = Time.fixedTime;
             }
         }
 
-        public void EnemyDied(){
-            currentEnemies--;
+        public void EnemyDied(Enemy enemy){
+            qtyCurrentEnemies--;
             timeLastSpawn = Time.fixedTime;
+            if(enemy.fromWave) WaveManager.Instance.EnemyFromWaveWasKilled();
         }
 
 
@@ -60,15 +66,24 @@ namespace WeirdSpices{
         }
 
         public void SpawnGrowingEnemy(string name, Vector2 position){
-            foreach(GameObject enemyGameObject in enemies){
-                Debug.Log("enemyObjectname: " +enemyGameObject.name + " | name: " + name);
-                if(enemyGameObject.name == name){
-                    Enemy enemySpawned = Instantiate(enemyGameObject, position, Quaternion.identity).GetComponent<Enemy>();
-                    enemySpawned.SetEnemySpawner(this);
-                    enemySpawned.PlayGrowAnimation();
+            foreach(Enemy enemy in enemies){
+                Debug.Log("enemyObjectname: " +enemy.gameObject.name + " | name: " + name);
+                if(enemy.gameObject.name == name){
+                    Spawn(enemy,position).PlayGrowAnimation();
                 }
             }
 
+        }
+
+        public Enemy Spawn(Enemy enemy, Vector2 position){
+            Enemy enemySpawned = Instantiate(enemy.gameObject, position, Quaternion.identity).GetComponent<Enemy>();
+            return enemySpawned;
+        }
+
+        public Enemy SpawnWaveEnemy(Enemy enemy, Vector2 position){
+            Enemy enemySpawned = Spawn(enemy,position);
+            enemySpawned.fromWave = true;
+            return enemy;
         }
     }
 }
