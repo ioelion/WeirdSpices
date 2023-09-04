@@ -25,6 +25,25 @@ namespace WeirdSpices
         private List<GameObject> flags;
 
         private List<GameObject> clearedFlags;
+        public static UIManager Instance { get; private set; }
+
+        private List<string> alreadyDoneTooltips = new List<string>();
+
+        private string tooltipShowing = "";
+
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Debug.Log("Más de un UIManager en escena.");
+            }
+        }
+
 
 
         void Start()
@@ -130,6 +149,28 @@ namespace WeirdSpices
             clearedFlags.Add(flags[0]);
             flags.Remove(flags[0]);
         }
+
+
+        public bool AlreadyDoneTooltip(string tooltipName){
+            
+            foreach(string name in alreadyDoneTooltips){
+                if(name.Equals(tooltipName)) return true;
+            }
+            return false;
+        }
+
+        public void AddCompletedTooltip(string tooltipName){
+            alreadyDoneTooltips.Add(tooltipName);
+        }
+
+        public bool isShowingTooltip(string tooltipName){
+            return tooltipShowing.Equals(tooltipName);
+        }
+
+        public void showingTooltip(string tooltipName){
+            tooltipShowing = tooltipName;
+        }
+        
     }
 
 }

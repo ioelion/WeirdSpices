@@ -18,6 +18,7 @@ namespace WeirdSpices{
         [SerializeField] private Transform dispenser;
         [SerializeField] private GameObject seedPrefab;
         [SerializeField] private Animator animator;
+        [SerializeField] private Tooltiper tooltiper;
         
         private float lastSeedDropTime = 0f;
         
@@ -30,6 +31,7 @@ namespace WeirdSpices{
 
         public void DropSeed()
         {
+            
             if((Time.fixedTime - lastSeedDropTime  > timeToWaitTillSeedDrop)){
                 lastSeedDropTime = Time.fixedTime;                               
                 if (currentSeeds > 0 ) 
@@ -37,16 +39,14 @@ namespace WeirdSpices{
                     Vector2 posS = dispenser.transform.position;
                     if ((Physics2D.OverlapPoint(posS) != null) && (Physics2D.OverlapPoint(posS).CompareTag("Seed") ) )
                     {
-                        Debug.Log("Ya hay una semila");
+                        Debug.Log("Ya hay una semilla");
                     }
                     else
                     {                 
                         animator.SetTrigger("wasHit");
                         GameObject clone = Instantiate(seedPrefab, dispenser.transform.position, Quaternion.identity);
                         GameManager.Instance.AddToList(clone);
-                        currentSeeds--;
-                        //quantityLeft.text = "" + (currentSeeds);
-                    
+                        currentSeeds--;                    
                     }
                 }
                 else
@@ -54,7 +54,20 @@ namespace WeirdSpices{
                     Debug.Log("Maximo de semillas agarradas");
                 }
             }
+
+            if(tooltiper.ShowingTooltip() && !tooltiper.AlreadyDoneTooltip("seedbox") ) {
+                tooltiper.CompletedTooltip("seedbox");
+            }
+
         }
-        
+
+        void OnTriggerStay2D(Collider2D other)
+        {
+            if(other.gameObject.CompareTag("PlayerHitbox")){
+                if(!tooltiper.AlreadyDoneTooltip("seedbox")){
+                    tooltiper.ShowTooltip("seedbox");
+                }
+            }
+        }
     }
 }

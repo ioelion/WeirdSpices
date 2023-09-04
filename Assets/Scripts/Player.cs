@@ -31,7 +31,7 @@ namespace WeirdSpices{
         [SerializeField] private GameObject inventory;
         [SerializeField] private GameManager gameManager;
         [SerializeField] private BoxCollider2D hitbox;
-
+        [SerializeField] private Tooltiper tooltiper;
         #endregion
         private SpriteRenderer sr;
         private GameObject itemInInventory;
@@ -47,6 +47,7 @@ namespace WeirdSpices{
             sr = this.GetComponent<SpriteRenderer>();
             base.Start();
             soil = Soil.Instance;
+            StartCoroutine(ShowTooltip("movement"));
         }
 
         void Update()
@@ -57,21 +58,14 @@ namespace WeirdSpices{
         private void FixedUpdate() { 
             if(isOnSoil && itemInInventory && itemInInventory.CompareTag("Seed")){
                 soil.Highlight(transform.position);
+                StartCoroutine(ShowTooltip("plant"));
             }
             if(wasHit && Time.fixedTime - timePlayerWasHitted > timeToEnableBeingHit){
                 wasHit = false;
                 hitbox.gameObject.SetActive(true);
             }
         }
-
-        private void OnCollisionStay2D(Collision2D other)
-        {
-            if(other.gameObject.tag.Equals("SeedBox") && (Input.GetKey(attackKey) || Input.GetKey(interactKey))){
-                other.gameObject.GetComponent<SeedBox>().DropSeed();
-            }
-
-        }
-
+        
         void OnTriggerStay2D(Collider2D other)
         {
             
@@ -91,6 +85,12 @@ namespace WeirdSpices{
             if(other.tag.Equals("Shop") && (Input.GetKey(interactKey) || Input.GetKey(attackKey))){
                 other.gameObject.GetComponent<Shop>().Buy(transform.position);
             }
+
+            if(other.gameObject.tag.Equals("SeedBox") && (Input.GetKey(attackKey) || Input.GetKey(interactKey))){
+                other.gameObject.GetComponent<SeedBox>().DropSeed();
+            }
+
+
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -207,6 +207,41 @@ namespace WeirdSpices{
             float x = sr.flipX ? -xDropDistance : xDropDistance;
             return new Vector2(this.transform.position.x+x,this.transform.position.y+yDropDistance);
         }
+
+        private bool IsMoving(){
+            return this.rb.velocity != Vector2.zero;
+        }
+
+        private IEnumerator ShowTooltip(string tooltipName){
+            //TODO rehacer
+            if(!tooltiper.AlreadyDoneTooltip(tooltipName)){
+                switch(tooltipName){
+                    case "movement":
+                        if(!IsMoving()){
+                                tooltiper.ShowTooltip(tooltipName);
+                                yield return new WaitForSeconds(1f);
+                                StartCoroutine(ShowTooltip(tooltipName));
+                            }else{
+                                tooltiper.CompletedTooltip(tooltipName);
+                            }
+                            break;
+                    case "plant":
+                        if(!(Input.GetKey(interactKey) && isOnSoil == true)){
+                                tooltiper.ShowTooltip(tooltipName);
+                                yield return new WaitForSeconds(1f);
+                                StartCoroutine(ShowTooltip(tooltipName));
+                            }else{
+                                tooltiper.CompletedTooltip(tooltipName);
+                            }
+                            break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+
     }
 }
 
