@@ -53,6 +53,14 @@ namespace WeirdSpices
         [SerializeField] private List<Dropable> dropables;
         [SerializeField] private WaveManager waveManager;
         #endregion
+
+        #region Sounds
+        [Header("Sounds")]
+        [SerializeField] private AudioClip soundSuccessfulDelivery;
+        [SerializeField] private AudioClip soundFailedDelivery;
+        private bool s = false;             //sonido reproduciendo
+        [SerializeField] private AudioClip soundDefeat;
+        #endregion
         public int currentPlayerGold { get; private set; }
         public static GameManager Instance { get; private set; }
 
@@ -193,6 +201,7 @@ namespace WeirdSpices
             if(currentDeliveries == 0){
                 uiManager.ShowObjectiveProgress();
             }
+            AudioManager.Instance.PlaySound(soundSuccessfulDelivery);           //new
             currentDeliveries++;
             successfulDeliveries++;
             currentObjectiveVelocity += velocitySuccesfulDelivery;
@@ -201,11 +210,15 @@ namespace WeirdSpices
 
         public void FailedDelivery()
         {
+            if (!s) {
+                s = true;
+                AudioManager.Instance.PlaySound(soundFailedDelivery);           }//new
             currentDeliveries++;
             failedDeliveries++;
             currentObjectiveVelocity += velocityFailedDelivery;
             if(currentObjectivePoints < objectivePointsToLose)
             {
+                AudioManager.Instance.PlaySound(soundDefeat);           //new
                 EndGame(loseText);
             }
 
