@@ -40,6 +40,7 @@ namespace WeirdSpices{
         {
             timeLastDelivery = Time.fixedTime;
             gameObject.SetActive(false);
+            animator.SetBool("failed",false);
         }
 
         void FixedUpdate()
@@ -60,6 +61,7 @@ namespace WeirdSpices{
             this.ingredient2 = seedsNeeded[1];
             SetCardUI();
             timeLastDelivery = Time.fixedTime;
+            animator.SetBool("failed",false);
 
         }
 
@@ -118,6 +120,12 @@ namespace WeirdSpices{
 
         private void Fail(){
             GameManager.Instance.FailedDelivery();
+            animator.SetBool("failed",true);
+            StartCoroutine(Failed());
+        }
+
+        private IEnumerator Failed(){
+            yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0)[0].clip.length); 
             Deactivate();
         }
     }

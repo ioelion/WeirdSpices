@@ -11,13 +11,46 @@ namespace WeirdSpices
         [Header("UI")]
         [SerializeField] private TMP_Text endText;
         [SerializeField] private GameObject greyScreen;
+        [SerializeField] private TMP_Text pauseText;
         [SerializeField] private TMP_Text helpText;
         [SerializeField] private TMP_Text goldText;
         [SerializeField] private HPManager hpManager;
         [SerializeField] private Slider objectiveSlider;
-
+        [SerializeField] private GameObject waveFlagPrefab;
+        [SerializeField] private GameObject waveFlagsGroup;
+        [SerializeField] private TMP_Text waveAnnouncement;
+        [SerializeField] private float timeToHideWaveAnn;
         private KeyCode helpKey;
 
+        private List<GameObject> flags;
+
+        private List<GameObject> clearedFlags;
+        public static UIManager Instance { get; private set; }
+
+        private List<string> alreadyDoneTooltips = new List<string>();
+
+        private string tooltipShowing = "";
+
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Debug.Log("Más de un UIManager en escena.");
+            }
+        }
+
+
+
+        void Start()
+        {
+            flags = new List<GameObject>();
+            clearedFlags= new List<GameObject>();
+        }
 
         void Update() {
             //TODO mover este comportamiento al player llamando al gamemanager
@@ -56,6 +89,10 @@ namespace WeirdSpices
             greyScreen.SetActive(active);
         }
 
+        public void SetPauseText(bool active){
+            pauseText.gameObject.SetActive(active);
+        }
+
         public void SetHPParameters(int currentPlayerHP, int currentMaxPlayerHP){
             hpManager.SetParameters(currentPlayerHP, currentMaxPlayerHP);
         }
@@ -74,6 +111,66 @@ namespace WeirdSpices
         public void ShowObjectiveProgress(){
             objectiveSlider.gameObject.SetActive(true);
         }
+
+        public void LoadFlags(List<float> wavesTriggerPercentages){
+            Vector2 localPosition = waveFlagsGroup.transform.localPosition;
+            RectTransform rectTransform = objectiveSlider.gameObject.GetComponent<RectTransform>();
+            float width = rectTransform.rect.width;
+            float height = rectTransform.rect.height;
+            RectTransform rfWaveFlag = waveFlagPrefab.GetComponent<RectTransform>();
+            float offsetToCenterFlag = rfWaveFlag.localScale.x * rfWaveFlag.rect.width /5;
+            foreach(float percentage in wavesTriggerPercentages){
+                Vector3 position = new Vector3(localPosition.x - offsetToCenterFlag - width/2 + width * percentage/100 , localPosition.y+height/2, 0f);
+                GameObject gameObject = Instantiate(waveFlagPrefab,Vector3.zero ,Quaternion.identity,waveFlagsGroup.transform);
+                gameObject.transform.localPosition = position;
+                gameObject.GetComponent<RectTransform>().localScale = new Vector3(0.4f, 0.4f, 1f);
+                flags.Add(gameObject);
+            }
+        }
+
+        public void ShowWaveAnnouncement(string text){
+            waveAnnouncement.gameObject.SetActive(true);
+            waveAnnouncement.text = text;
+            waveAnnouncement.CrossFadeAlpha(0.0f, 0f, false);
+            waveAnnouncement.CrossFadeAlpha(1.0f, 0.25f, false);
+            StartCoroutine(HideWaveAnnouncement());
+        }
+
+
+        private IEnumerator HideWaveAnnouncement(){
+            yield return new WaitForSeconds(timeToHideWaveAnn);
+            waveAnnouncement.CrossFadeAlpha(0.0f, 0.25f, false);
+            yield return new WaitForSeconds(1f);
+            waveAnnouncement.gameObject.SetActive(false);
+        }
+
+        public void ClearFirstWaveFlag(){
+            flags[0].SetActive(false);
+            clearedFlags.Add(flags[0]);
+            flags.Remove(flags[0]);
+        }
+
+
+        public bool AlreadyDoneTooltip(string tooltipName){
+            
+            foreach(string name in alreadyDoneTooltips){
+                if(name.Equals(tooltipName)) return true;
+            }
+            return false;
+        }
+
+        public void AddCompletedTooltip(string tooltipName){
+            alreadyDoneTooltips.Add(tooltipName);
+        }
+
+        public bool isShowingTooltip(string tooltipName){
+            return tooltipShowing.Equals(tooltipName);
+        }
+
+        public void showingTooltip(string tooltipName){
+            tooltipShowing = tooltipName;
+        }
+        
     }
 
 }
