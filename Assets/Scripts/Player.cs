@@ -86,8 +86,9 @@ namespace WeirdSpices{
                 other.gameObject.GetComponent<Shop>().Buy(transform.position);
             }
 
-            if(other.gameObject.tag.Equals("SeedBox") && (Input.GetKey(attackKey) || Input.GetKey(interactKey))){
-                other.gameObject.GetComponent<SeedBox>().DropSeed(this.transform.position);
+            if(other.gameObject.tag.Equals("SeedBox") && (Input.GetKey(attackKey) || Input.GetKey(interactKey)) && itemInInventory == null){
+                PickUpItem(other.gameObject.GetComponent<SeedBox>().DropSeed(this.transform.position));
+                
             }
 
 
@@ -191,10 +192,12 @@ namespace WeirdSpices{
 
 
         private void PickUpItem(GameObject newItem){
-            itemInInventory = newItem;
-            newItem.gameObject.transform.parent = inventory.transform;
-            newItem.transform.position = new Vector2(inventory.transform.position.x, inventory.transform.position.y + 1);
-            lastItemTime = Time.fixedTime; 
+            if(newItem != null){
+                itemInInventory = newItem;
+                newItem.gameObject.transform.parent = inventory.transform;
+                newItem.transform.position = new Vector2(inventory.transform.position.x, inventory.transform.position.y + 1);
+                lastItemTime = Time.fixedTime; 
+            }
         }
 
         private void Attack(){

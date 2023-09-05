@@ -31,8 +31,6 @@ namespace WeirdSpices
 
         private HashSet<string> tooltipsShowing = new HashSet<string>();
 
-        private string tooltipShowing = "";
-
 
         void Awake()
         {

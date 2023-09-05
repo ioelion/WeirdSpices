@@ -29,8 +29,11 @@ namespace WeirdSpices{
         }
 
 
-        public void DropSeed(Vector2 positionToDrop)
+        public GameObject DropSeed(Vector2 positionToDrop)
         {
+            if(tooltiper.ShowingTooltip() && !tooltiper.AlreadyDoneTooltip("seedbox") ) {
+                tooltiper.CompletedTooltip("seedbox");
+            }
             
             if((Time.fixedTime - lastSeedDropTime  > timeToWaitTillSeedDrop)){
                 lastSeedDropTime = Time.fixedTime;                               
@@ -46,7 +49,8 @@ namespace WeirdSpices{
                         animator.SetTrigger("wasHit");
                         GameObject clone = Instantiate(seedPrefab, positionToDrop, Quaternion.identity);
                         GameManager.Instance.AddToList(clone);
-                        currentSeeds--;                    
+                        currentSeeds--; 
+                        return clone;                   
                     }
                 }
                 else
@@ -55,10 +59,7 @@ namespace WeirdSpices{
                 }
             }
 
-            if(tooltiper.ShowingTooltip() && !tooltiper.AlreadyDoneTooltip("seedbox") ) {
-                tooltiper.CompletedTooltip("seedbox");
-            }
-
+            return null;
         }
 
         void OnTriggerStay2D(Collider2D other)
