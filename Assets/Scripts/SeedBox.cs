@@ -29,7 +29,7 @@ namespace WeirdSpices{
         }
 
 
-        public void DropSeed()
+        public void DropSeed(Vector2 positionToDrop)
         {
             
             if((Time.fixedTime - lastSeedDropTime  > timeToWaitTillSeedDrop)){
@@ -44,7 +44,7 @@ namespace WeirdSpices{
                     else
                     {                 
                         animator.SetTrigger("wasHit");
-                        GameObject clone = Instantiate(seedPrefab, dispenser.transform.position, Quaternion.identity);
+                        GameObject clone = Instantiate(seedPrefab, positionToDrop, Quaternion.identity);
                         GameManager.Instance.AddToList(clone);
                         currentSeeds--;                    
                     }

@@ -71,7 +71,7 @@ namespace WeirdSpices{
             
             if(Input.GetKey(interactKey) && (Time.fixedTime - lastItemTime  > timeToWaitTillGrab))
             {
-                if(other.tag.Equals("Seed")){
+                if(other.tag.Equals("Seed") && !other.gameObject.Equals(itemInInventory)){
                     DropItem();
                     PickUpItem(other.gameObject);
                 }
@@ -87,7 +87,7 @@ namespace WeirdSpices{
             }
 
             if(other.gameObject.tag.Equals("SeedBox") && (Input.GetKey(attackKey) || Input.GetKey(interactKey))){
-                other.gameObject.GetComponent<SeedBox>().DropSeed();
+                other.gameObject.GetComponent<SeedBox>().DropSeed(this.transform.position);
             }
 
 
@@ -228,7 +228,7 @@ namespace WeirdSpices{
                     case "plant":
                         if(!(Input.GetKey(interactKey) && isOnSoil == true)){
                                 tooltiper.ShowTooltip(tooltipName);
-                                yield return new WaitForSeconds(1f);
+                                yield return new WaitForSeconds(0.5f);
                                 StartCoroutine(ShowTooltip(tooltipName));
                             }else{
                                 tooltiper.CompletedTooltip(tooltipName);

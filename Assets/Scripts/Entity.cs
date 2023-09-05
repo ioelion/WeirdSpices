@@ -82,6 +82,7 @@ namespace WeirdSpices{
         public virtual void Knockback(Vector3 hitterPosition){
 
            transform.position = transform.position + (transform.position - hitterPosition).normalized *knockback;
+           rb.velocity = Vector3.zero;
         }
 
     }

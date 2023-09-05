@@ -29,6 +29,8 @@ namespace WeirdSpices
 
         private List<string> alreadyDoneTooltips = new List<string>();
 
+        private HashSet<string> tooltipsShowing = new HashSet<string>();
+
         private string tooltipShowing = "";
 
 
@@ -161,14 +163,15 @@ namespace WeirdSpices
 
         public void AddCompletedTooltip(string tooltipName){
             alreadyDoneTooltips.Add(tooltipName);
+            tooltipsShowing.Remove(tooltipName);
         }
 
         public bool isShowingTooltip(string tooltipName){
-            return tooltipShowing.Equals(tooltipName);
+            return tooltipsShowing.Contains(tooltipName);
         }
 
         public void showingTooltip(string tooltipName){
-            tooltipShowing = tooltipName;
+            tooltipsShowing.Add(tooltipName);
         }
         
     }
