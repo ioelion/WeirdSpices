@@ -26,7 +26,7 @@ namespace WeirdSpices
                 minY=transform.position.y-min;
                 maxY=transform.position.y+max;
                 text.CrossFadeAlpha(0.0f, 0f, false);
-                StartCoroutine(ShowText());
+                StartCoroutine(ShowText(textWaitTime));
         }
 
         // Update is called once per frame
@@ -35,23 +35,34 @@ namespace WeirdSpices
             seamless.transform.position =new Vector3(Mathf.PingPong(Time.time/4,maxX*5)+minX, Mathf.PingPong(Time.time,maxY*5)+minY, transform.position.z);       
             if(Input.anyKeyDown && !keyWasPressed){
                 keyWasPressed = true;
+                StopAllCoroutines();
                 StartCoroutine(StartGame());
             }
         }
 
-        private IEnumerator ShowText(){
-            text.CrossFadeAlpha(1.0f, textWaitTime, false);            
-            yield return new WaitForSeconds(textWaitTime);
-            StartCoroutine(HideText());
+        private void ShowText(){
+            ShowText(textWaitTime);
         }
 
-        private IEnumerator HideText(){
-            text.CrossFadeAlpha(0.0f,textWaitTime, false);
-            yield return new WaitForSeconds(textWaitTime);
-            StartCoroutine(ShowText());
+
+        private IEnumerator ShowText(float timeToWait){
+            text.CrossFadeAlpha(1.0f, timeToWait, false);            
+            yield return new WaitForSeconds(timeToWait);
+            StartCoroutine(HideText(timeToWait));
+        }
+
+        private void HideText(){
+            HideText(textWaitTime);
+        }
+
+        private IEnumerator HideText(float timeToWait){
+            text.CrossFadeAlpha(0.0f,timeToWait, false);
+            yield return new WaitForSeconds(timeToWait);
+            StartCoroutine(ShowText(timeToWait));
         }
 
         private IEnumerator StartGame(){
+            StartCoroutine(ShowText(0.1f));
             yield return new WaitForSeconds(startGameWaitTime); 
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1, LoadSceneMode.Single);
         }
