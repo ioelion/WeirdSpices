@@ -42,7 +42,9 @@ namespace WeirdSpices{
         private bool wasHit = false;
         private float timePlayerWasHitted;
 
-        [SerializeField] private AudioClip[] attackSounds;
+        [SerializeField] private AudioClip[] attackSounds;                  //NEW
+        [SerializeField] private AudioClip[] walkSounds;
+        private bool walking = false;
 
         override public void Start()
         {
@@ -124,6 +126,17 @@ namespace WeirdSpices{
 
             if (_force != Vector2.zero)
             {
+                if (!walking)
+                {
+                    int x = 1;
+                    AudioManager.Instance.PlaySound(walkSounds[x]);
+                    StartCoroutine(Walking());
+                    if (x == 1)
+                    {
+                        x = 0;
+                        AudioManager.Instance.PlaySound(walkSounds[x]);
+                    }
+                }
                 animator.SetBool("walk", true);
                 animator.SetFloat("walkSpeed", walkClip.averageDuration*movementSpeed*0.5f);
                 rb.velocity = _force;
@@ -134,6 +147,13 @@ namespace WeirdSpices{
                 animator.SetBool("walk", false);
                 rb.velocity = Vector2.zero;
             }
+        }
+
+        private IEnumerator Walking()
+        {
+            walking = true;
+            yield return new WaitForSeconds(0.5f);
+            walking = false;
         }
 
         private void KeyDownActions(){
