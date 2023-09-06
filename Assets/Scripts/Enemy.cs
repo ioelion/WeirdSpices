@@ -45,7 +45,7 @@ namespace WeirdSpices{
 
         void FixedUpdate()
         {
-            if(!isStunned && Time.fixedTime - lastAttackTime > timeToWaitTillAttack && (target.position - transform.position).magnitude < distanceToFollow)
+            if(!isStunned && Time.fixedTime - lastAttackTime > timeToWaitTillAttack)
             {
                 LookTowards(target.transform);
                 _force = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
