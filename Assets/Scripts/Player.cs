@@ -44,6 +44,7 @@ namespace WeirdSpices{
 
         [SerializeField] private AudioClip[] attackSounds;                  //NEW
         [SerializeField] private AudioClip[] walkSounds;
+        [SerializeField] private AudioClip pickUpSound;
         private bool walking = false;
 
         override public void Start()
@@ -78,11 +79,13 @@ namespace WeirdSpices{
                 if(other.tag.Equals("Seed")){
                     DropItem();
                     PickUpItem(other.gameObject);
+                    AudioManager.Instance.PlaySound(pickUpSound);
                 }
                 else if(other.tag.Equals("Food")){
                     DropItem();
                     PickUpItem(other.gameObject);
                     gameManager.PickedUpFood(other.gameObject);
+                    AudioManager.Instance.PlaySound(pickUpSound);
                 }
             }
 
@@ -126,15 +129,17 @@ namespace WeirdSpices{
 
             if (_force != Vector2.zero)
             {
-                if (!walking)
+                if (!walking)                                   //NEW
                 {
                     int x = 1;
                     AudioManager.Instance.PlaySound(walkSounds[x]);
+                    Debug.Log(x);
                     StartCoroutine(Walking());
                     if (x == 1)
                     {
                         x = 0;
                         AudioManager.Instance.PlaySound(walkSounds[x]);
+                        Debug.Log(x);
                     }
                 }
                 animator.SetBool("walk", true);

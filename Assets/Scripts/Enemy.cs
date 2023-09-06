@@ -42,7 +42,7 @@ namespace WeirdSpices {
         private SpriteRenderer sr;
         private EnemySpawner enemySpawner;
 
-        [SerializeField] private AudioClip soundAttackEnemy;
+        [SerializeField] private AudioClip soundAttackEnemy;            //NEW
 
         override public void Start()
         {
@@ -273,7 +273,7 @@ namespace WeirdSpices {
             an.SetTrigger("attack");
             base.getWeapon().gameObject.SetActive(true);
             lastAttackTime = Time.fixedTime;
-            AudioManager.Instance.PlaySound(soundAttackEnemy);
+            AudioManager.Instance.PlaySound(soundAttackEnemy);                  //new
         }
 
         public override void ReduceHP(int pointsToReduce)
