@@ -154,7 +154,6 @@ namespace WeirdSpices{
                 animator.SetFloat("walkSpeed", walkClip.averageDuration*movementSpeed*0.5f);
                 rb.velocity = _force;
                 sr.flipX = Mathf.Sign(_force.x) < 0;
-                audioSource.PlayOneShot(walk);
             }
             else
             {
@@ -178,6 +177,7 @@ namespace WeirdSpices{
                 soil.PlantSeed(seed, this.transform.position);
                 soil.ClearLastPositionHighlighted();
                 DropItem();
+                audioSource.PlayOneShot(plant);
             }
         }
 
@@ -192,6 +192,7 @@ namespace WeirdSpices{
             wasHit = true;
             hitbox.gameObject.SetActive(false);
             timePlayerWasHitted = Time.fixedTime;
+            audioSource.PlayOneShot(getHit);
         }
 
         public void RecoverHP(int pointsToAdd){
