@@ -11,8 +11,7 @@ namespace WeirdSpices{
         [SerializeField] private float timeToWaitTillSeedDrop = 1.5f;
         [SerializeField] private int initialSeeds = 50;
         [SerializeField] private int currentSeeds;
-
-
+        [SerializeField] private int seedboxNumber;
 
         [Header("Objects")]
         [SerializeField] private Transform dispenser;
@@ -69,6 +68,14 @@ namespace WeirdSpices{
                     tooltiper.ShowTooltip("seedbox");
                 }
             }
+        }
+
+        public GameObject GetSeedPrefab(){
+            return seedPrefab;
+        }
+
+        public int GetSeedBoxNumber(){
+            return seedboxNumber;
         }
     }
 }

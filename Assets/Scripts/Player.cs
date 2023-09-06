@@ -67,7 +67,7 @@ namespace WeirdSpices{
             Move();
         }
         private void FixedUpdate() { 
-            if(isOnSoil && itemInInventory && itemInInventory.CompareTag("Seed")){
+            if(isOnSoil && itemInInventory != null && itemInInventory.CompareTag("Seed")){
                 soil.Highlight(transform.position);
                 StartCoroutine(ShowTooltip("plant"));
             }
@@ -104,24 +104,25 @@ namespace WeirdSpices{
 
 
         }
-
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             if(other.tag.Equals("Soil") ){
                 isOnSoil = true;
             }
 
-            if(other.tag.Equals("RequestCard") && itemInInventory && itemInInventory.tag.Equals("Food")){
-                other.gameObject.GetComponent<RequestCard>().ReceiveFood(itemInInventory);
-                Destroy(itemInInventory, 0.01f);
-                DropItem();
+            if(other.tag.Equals("RequestCard") && itemInInventory != null && itemInInventory.tag.Equals("Food")){
+                    other.gameObject.GetComponent<RequestCard>().ReceiveFood(itemInInventory);
+                    Destroy(itemInInventory, 0.01f);
+                    DropItem();
             }
 
-            if(other.tag.Equals("Heart")){
-                Heart heart = other.gameObject.GetComponent<Heart>();
-                RecoverHP(heart.GetHP());
-                heart.Destroy();
+            if(other.tag.Equals("TutorialRequestCard") && itemInInventory != null && itemInInventory.tag.Equals("Food")){
+                    other.gameObject.GetComponent<TutorialRequestCard>().ReceiveFood(itemInInventory);
+                    Destroy(itemInInventory, 0.01f);
+                    DropItem();
             }
+           
         }
 
         public void IsOnSoil(bool isOnSoil){
@@ -148,7 +149,7 @@ namespace WeirdSpices{
 
         private void KeyDownActions(){
             
-            if(Input.GetKeyDown(dropKey) && itemInInventory && (Time.fixedTime - lastItemTime  > timeToWaitTillGrab) ){
+            if(Input.GetKeyDown(dropKey) && itemInInventory != null && (Time.fixedTime - lastItemTime  > timeToWaitTillGrab) ){
                 DropItem();
             }
 
@@ -156,7 +157,7 @@ namespace WeirdSpices{
                 Attack();
             }
             
-            if(Input.GetKeyDown(interactKey) && itemInInventory && itemInInventory.tag.Equals("Seed") && isOnSoil){
+            if(Input.GetKeyDown(interactKey) && itemInInventory != null && itemInInventory.tag.Equals("Seed") && isOnSoil){
                 Seed seed = itemInInventory.GetComponent<Seed>();
                 soil.PlantSeed(seed, this.transform.position);
                 soil.ClearLastPositionHighlighted();

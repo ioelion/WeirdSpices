@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WeirdSpices{
-    public class Heart : MonoBehaviour
+    public class Heart : Dropable
     {
-        [SerializeField] private int addHP = 1;
-        
-        public int GetHP(){
-            return addHP;
+        [SerializeField] private int hp = 1;
+    
+
+        public override void PickedUpBy(Player player)
+        {
+            player.RecoverHP(hp);
+            base.PickedUpBy(player);
+            Destroy(this.gameObject, 0.1f);
         }
-        public void Destroy(){
-            Destroy(gameObject, 0.1f);
-        }
+
     }
 }
 

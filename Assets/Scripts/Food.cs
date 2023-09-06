@@ -8,6 +8,7 @@ namespace WeirdSpices{
         [SerializeField] private float timeNeededToGrow;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private List<Seed> seedsNeeded;
+        [SerializeField] private int foodNumber;
 
 
         private void Start()
@@ -26,6 +27,10 @@ namespace WeirdSpices{
 
         public List<Seed> GetSeedsNeeded(){
             return this.seedsNeeded;
+        }
+
+        public int GetFoodNumber(){
+            return foodNumber;
         }
 
     }

@@ -189,11 +189,11 @@ namespace WeirdSpices
 
         public void PickedUpFood(GameObject food)
         {
-            deliveryBox.AnimateCardsWithFood(food);
+            if(deliveryBox.gameObject.activeInHierarchy) deliveryBox.AnimateCardsWithFood(food);
         }
         public void PlayerDroppedFood()
         {
-            deliveryBox.StopAnimations();
+            if(deliveryBox.gameObject.activeInHierarchy) deliveryBox.StopAnimations();
         }
 
         public void AddToList(GameObject item)

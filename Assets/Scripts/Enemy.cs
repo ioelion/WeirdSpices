@@ -9,6 +9,7 @@ namespace WeirdSpices{
         [SerializeField] private float moveSpeed;
         [SerializeField] private float distanceToAttack = 2f;
         [SerializeField] private float distanceToFollow = 20f;
+        [SerializeField] private List<Dropable> drops;
 
         #region Status
         [Header("Status")]
@@ -53,7 +54,7 @@ namespace WeirdSpices{
                 
                 if(((target.position - transform.position).magnitude < distanceToAttack) && Time.fixedTime - lastAttackTime > timeToWaitTillAttack){
                     Attack();
-                    base.getWeapon().FlipPositionX(!sr.flipX);
+                    base.getWeapon().FlipPositionX(sr.flipX);
                 }
             }else{
                 rb.velocity = Vector2.zero;   
@@ -64,6 +65,7 @@ namespace WeirdSpices{
         override protected void Die(){
             enemySpawner.EnemyDied(this);
             base.Die();
+            RandomDrop();
         }
 
         private void LookTowards(Transform target){
@@ -120,6 +122,16 @@ namespace WeirdSpices{
             an.SetTrigger("grow");
             GetStunned(an.GetCurrentAnimatorClipInfo(0)[0].clip.length);
 
+        }
+
+        private void RandomDrop(){
+
+            foreach(Dropable dropable in drops){
+                if(Random.Range(0, 100) < dropable.dropChance){
+                    Vector2 position = new Vector2(transform.position.x + Random.Range(-1f,1f), transform.position.y + Random.Range(-1f,1f));
+                    Instantiate(dropable, position, Quaternion.identity);
+                }
+            }
         }
     }
 

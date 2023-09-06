@@ -7,14 +7,12 @@ public class Coin : Dropable
 {
     [SerializeField] private int value = 1;
 
-    private void OnTriggerEnter2D(Collider2D col)
+    public override void PickedUpBy(Player player)
     {
-        if(col.CompareTag("Player"))
-        {
-            Destroy(this.gameObject);
-            GameManager.Instance.GainGold(value);
-            GameManager.Instance.RemoveToList(this.gameObject);
-        }
+        base.PickedUpBy(player);
+        GameManager.Instance.GainGold(value);
+        GameManager.Instance.RemoveToList(this.gameObject);
+        Destroy(this.gameObject, 0.1f);
     }
 
 }
