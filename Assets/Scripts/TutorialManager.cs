@@ -142,6 +142,7 @@ namespace WeirdSpices
             SetScoreState(true);
             SetShopState(true);
             uiManager.ObjectiveProgressVisible(true);
+            GameManager.Instance.SetManagers();
             this.gameObject.SetActive(false);
         }
     }

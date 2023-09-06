@@ -20,8 +20,8 @@ namespace WeirdSpices
         [SerializeField] private GameObject waveFlagsGroup;
         [SerializeField] private TMP_Text waveAnnouncement;
         [SerializeField] private float timeToHideWaveAnn;
-
         [SerializeField] private GameObject objectiveProgress;
+        [SerializeField] private Color enemyColor;
         private KeyCode helpKey;
 
         private List<GameObject> flags;
@@ -184,6 +184,29 @@ namespace WeirdSpices
             objectiveProgress.SetActive(enabled);
         }
         
+        public void TurnGreenProgressBar(){
+
+            ColorBlock colorBlock = objectiveSlider.colors;
+            colorBlock.pressedColor = Color.green;
+            objectiveSlider.colors = colorBlock;
+            StartCoroutine(WaitAndGoBack(1.5f));
+
+        }
+
+        public void TurnRedProgressBar(){
+            
+            ColorBlock colorBlock = objectiveSlider.colors;
+            colorBlock.pressedColor = Color.red;
+            objectiveSlider.colors = colorBlock;
+            StartCoroutine(WaitAndGoBack(1.5f));
+        }
+
+        private IEnumerator WaitAndGoBack(float seconds){
+            yield return new WaitForSeconds(seconds);
+            ColorBlock colorBlock = objectiveSlider.colors;
+            colorBlock.pressedColor = enemyColor;
+            objectiveSlider.colors = colorBlock;
+        }
     }
 
 }

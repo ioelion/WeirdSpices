@@ -252,6 +252,16 @@ namespace WeirdSpices
             };
         }
 
+
+        public void SetManagers(){
+
+            scoreManager.SetCurrentPoints(initialPoints);
+            scoreManager.Set(velocitySuccesfulDelivery, velocityFailedDelivery, pointsToWin, pointsToLose, fadingPointsFactor);
+            player.SetHP(initialPlayerHP);
+            uiManager.SetHPParameters(initialPlayerHP, initialMaxPlayerHP);
+            uiManager.SetObjectivePoints(initialPoints);
+            uiManager.SetObjectivePointsToWin(pointsToWin);;
+        }
         public int GetMinGoldRewarded() { return minGoldRewarded; }
         public int GetMaxGoldRewarded() { return maxGoldRewarded; }
         public int GetMinFoodRequired() { return minFoodRequired; }

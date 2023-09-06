@@ -58,12 +58,14 @@ namespace WeirdSpices
             currentDeliveries++;
             successfulDeliveries++;
             currentVelocity = velocitySuccesfulDelivery;
+            uiManager.TurnGreenProgressBar();
         }
 
         public void FailedDelivery(){
             currentDeliveries++;
             failedDeliveries++;
             currentVelocity = velocityFailedDelivery;
+            uiManager.TurnRedProgressBar();
         }
 
         public void SetObjectivePoints(){

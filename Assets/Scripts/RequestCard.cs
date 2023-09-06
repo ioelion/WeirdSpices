@@ -137,7 +137,7 @@ namespace WeirdSpices{
             foodText.gameObject.gameObject.SetActive(active);
             goldText.gameObject.gameObject.SetActive(active);
             timerText.gameObject.gameObject.SetActive(active);
-            ingredient1.gameObject.gameObject.SetActive(active);
+            //ingredient1.gameObject.gameObject.SetActive(active);
         }
     }
 }
