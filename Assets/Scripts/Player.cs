@@ -164,9 +164,6 @@ namespace WeirdSpices{
 
             if(Input.GetKeyDown(attackKey)){
                 Attack();
-                int x = Random.Range(0, attackSounds.Length);                   //new
-                AudioClip s = attackSounds[x]; 
-                AudioManager.Instance.PlaySound(s);
             }
             
             if(Input.GetKeyDown(interactKey) && itemInInventory && itemInInventory.tag.Equals("Seed") && isOnSoil){
@@ -226,6 +223,9 @@ namespace WeirdSpices{
             animator.SetTrigger("attack");
             base.getWeapon().gameObject.SetActive(true);
             base.getWeapon().FlipPositionX(sr.flipX);
+            int x = Random.Range(0, attackSounds.Length);                   //new
+            AudioClip s = attackSounds[x];
+            AudioManager.Instance.PlaySound(s);
         }
 
         private Vector2 GetDropPosition(){
