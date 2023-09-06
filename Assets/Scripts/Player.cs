@@ -34,6 +34,17 @@ namespace WeirdSpices{
         [SerializeField] private BoxCollider2D hitbox;
         [SerializeField] private Tooltiper tooltiper;
         #endregion
+       
+               
+        #region Sounds
+        [Header("Sounds")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip attack;
+        [SerializeField] private AudioClip plant;
+        [SerializeField] private AudioClip getHit;
+        [SerializeField] private AudioClip walk;
+        [SerializeField] private AudioClip pickUpObject;
+        #endregion Sounds
         private SpriteRenderer sr;
         private GameObject itemInInventory = null;
         private float lastItemTime;
@@ -85,16 +96,20 @@ namespace WeirdSpices{
                 if(other.tag.Equals("Seed") && !other.gameObject.Equals(itemInInventory)){
                     DropItem();
                     PickUpItem(other.gameObject);
+                    audioSource.PlayOneShot(pickUpObject);
                 }
                 else if(other.tag.Equals("Food")){
                     DropItem();
                     PickUpItem(other.gameObject);
                     gameManager.PickedUpFood(other.gameObject);
+                    audioSource.PlayOneShot(pickUpObject);
+
                 }
             }
 
             if(other.tag.Equals("Shop") && (Input.GetKey(interactKey) || Input.GetKey(attackKey))){
                 other.gameObject.GetComponent<Shop>().Buy(transform.position);
+
             }
 
             if(other.gameObject.tag.Equals("SeedBox") && (Input.GetKey(attackKey) || Input.GetKey(interactKey)) && itemInInventory == null){
@@ -139,6 +154,7 @@ namespace WeirdSpices{
                 animator.SetFloat("walkSpeed", walkClip.averageDuration*movementSpeed*0.5f);
                 rb.velocity = _force;
                 sr.flipX = Mathf.Sign(_force.x) < 0;
+                audioSource.PlayOneShot(walk);
             }
             else
             {
@@ -215,6 +231,8 @@ namespace WeirdSpices{
             animator.SetTrigger("attack");
             base.getWeapon().gameObject.SetActive(true);
             base.getWeapon().FlipPositionX(sr.flipX);
+            audioSource.PlayOneShot(attack);
+
         }
 
         private Vector2 GetDropPosition(){
