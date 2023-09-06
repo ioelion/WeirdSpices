@@ -40,7 +40,6 @@ namespace WeirdSpices{
         {
             timeLastDelivery = Time.fixedTime;
             gameObject.SetActive(false);
-            animator.SetBool("failed",false);
         }
 
         void FixedUpdate()
@@ -51,6 +50,7 @@ namespace WeirdSpices{
             }
         }
         public void SetCard(Food foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
+            SetActiveTextsAndImages(true);
             this.foodRequired = foodRequired;
             this.foodRequiredSprite = foodRequired.GetSprite();
             this.foodQuantity = foodQuantity;
@@ -61,7 +61,7 @@ namespace WeirdSpices{
             this.ingredient2 = seedsNeeded[1];
             SetCardUI();
             timeLastDelivery = Time.fixedTime;
-            animator.SetBool("failed",false);
+
 
         }
 
@@ -101,32 +101,43 @@ namespace WeirdSpices{
             this.foodQuantity -= 1;
             //foodText.text = "" + foodQuantity;
             if(foodQuantity == 0){
-                DeliverRequest();
+                Deliver();
             }
 
 
         }
 
-        private void DeliverRequest(){
+        private void Deliver(){
             timeLastDelivery = Time.fixedTime;
+            animator.SetTrigger("success");
             GameManager.Instance.SuccessfulDelivery(rewardGold);
-            Deactivate();
+            StartCoroutine(Deactivation());
         }
 
-        private void Deactivate(){
-            timeLastDelivery = Time.fixedTime;
-            DeliveryBox.Instance.AddRequestCardToWaitList(this);
-        }
 
         private void Fail(){
             GameManager.Instance.FailedDelivery();
-            animator.SetBool("failed",true);
-            StartCoroutine(Failed());
+            animator.SetTrigger("fail");
+            StartCoroutine(Deactivation());
         }
 
-        private IEnumerator Failed(){
+        private IEnumerator Deactivation(){
+            SetActiveTextsAndImages(false);
             yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0)[0].clip.length); 
             Deactivate();
+        }
+        
+        private void Deactivate(){
+            timeLastDelivery = Time.fixedTime;
+            DeliveryBox.Instance.AddRequestCardToWaitList(this);     
+        }
+
+        
+        public void SetActiveTextsAndImages(bool active){
+            foodText.gameObject.gameObject.SetActive(active);
+            goldText.gameObject.gameObject.SetActive(active);
+            timerText.gameObject.gameObject.SetActive(active);
+            ingredient1.gameObject.gameObject.SetActive(active);
         }
     }
 }

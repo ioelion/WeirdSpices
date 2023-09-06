@@ -57,6 +57,7 @@ namespace WeirdSpices{
                     base.getWeapon().FlipPositionX(sr.flipX);
                 }
             }else{
+                if (Time.fixedTime - lastStunTime > timeToRecoverFromStun) isStunned = false;
                 rb.velocity = Vector2.zero;   
                 an.SetBool("walk", false);
             }

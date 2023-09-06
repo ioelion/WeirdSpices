@@ -6,7 +6,7 @@ namespace WeirdSpices{
     public abstract class Dropable : MonoBehaviour
     {
         public float dropChance = 100f;
-        [SerializeField] private BoxCollider2D boxCollider2D;
+        [SerializeField] protected BoxCollider2D boxCollider2D;
     
         private void OnTriggerEnter2D(Collider2D other)
         {

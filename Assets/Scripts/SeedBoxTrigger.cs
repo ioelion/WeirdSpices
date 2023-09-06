@@ -25,6 +25,7 @@ namespace WeirdSpices{
         private void FixedUpdate()
         {
             if(pickedUp){
+                boxCollider2D.enabled = false;
                 transform.position = Vector3.SmoothDamp(transform.position,seedBoxPosition,ref currentVelocity,0.4f);
                 if(IsNearTo(transform.position, seedBoxPosition)){
                     Destroy(this.gameObject);

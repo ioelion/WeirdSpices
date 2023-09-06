@@ -65,7 +65,7 @@ namespace WeirdSpices
             foreach(SeedBox seedBox in seedBoxes){
                 if(seedBox.GetSeedBoxNumber() == seedBoxNumber){
                     seedBox.gameObject.SetActive(enabled);
-                    activatedSeedBoxesQty++;
+                    activatedSeedBoxesQty+=1;
                     Debug.Log(activatedSeedBoxesQty);
                     if(activatedSeedBoxesQty == 2){
                         SetFirstCard();
