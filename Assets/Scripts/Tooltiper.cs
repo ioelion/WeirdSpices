@@ -15,20 +15,20 @@ namespace WeirdSpices
 
 
         public void ShowTooltip(string tooltipName){
-            if(!UIManager.Instance.isShowingTooltip(tooltipName)){
+            if(!UIManager.Instance.IsShowingTooltip(tooltipName)){
                 spriteRendererTooltip.gameObject.SetActive(true);
                 animator.SetBool(tooltipName, true);
                 showingTooltip = true;
-                UIManager.Instance.showingTooltip(tooltipName);
+                UIManager.Instance.ShowingTooltip(tooltipName);
             }
         }
 
         public void HideToolTip(string tooltipName){
-            if(UIManager.Instance.isShowingTooltip(tooltipName)){
+            if(UIManager.Instance.IsShowingTooltip(tooltipName)){
                 spriteRendererTooltip.gameObject.SetActive(false);
                 animator.SetBool(tooltipName, false);
                 showingTooltip = false;
-                UIManager.Instance.notShowingTooltip(tooltipName);
+                UIManager.Instance.NotShowingTooltip(tooltipName);
             }
         }
 
@@ -44,7 +44,7 @@ namespace WeirdSpices
             yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
             spriteRendererTooltip.gameObject.SetActive(false);
             showingTooltip = false;
-            UIManager.Instance.showingTooltip("");
+            UIManager.Instance.ShowingTooltip("");
         }
 
         public bool AlreadyDoneTooltip(string tooltipName){

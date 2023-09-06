@@ -20,6 +20,8 @@ namespace WeirdSpices
         [SerializeField] private GameObject waveFlagsGroup;
         [SerializeField] private TMP_Text waveAnnouncement;
         [SerializeField] private float timeToHideWaveAnn;
+
+        [SerializeField] private GameObject objectiveProgress;
         private KeyCode helpKey;
 
         private List<GameObject> flags;
@@ -164,18 +166,22 @@ namespace WeirdSpices
             tooltipsShowing.Remove(tooltipName);
         }
 
-        public bool isShowingTooltip(string tooltipName){
+        public bool IsShowingTooltip(string tooltipName){
             return tooltipsShowing.Contains(tooltipName);
         }
 
-        public void showingTooltip(string tooltipName){
+        public void ShowingTooltip(string tooltipName){
             tooltipsShowing.Add(tooltipName);
         }
 
-        public void notShowingTooltip(string tooltipName){
+        public void NotShowingTooltip(string tooltipName){
             if(tooltipsShowing.Contains(tooltipName)){
                 tooltipsShowing.Remove(tooltipName);
             }
+        }
+
+        public void ObjectiveProgressVisible(bool enabled){
+            objectiveProgress.SetActive(enabled);
         }
         
     }

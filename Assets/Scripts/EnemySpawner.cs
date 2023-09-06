@@ -14,6 +14,7 @@ namespace WeirdSpices{
         private int qtyCurrentEnemies, qtySpawnPositions, qtyEnemiesTypes = 0;
         private float timeLastSpawn;
         public static EnemySpawner Instance { get; private set; }
+        private bool spawning = true;
 
         void Awake()
         {
@@ -35,7 +36,7 @@ namespace WeirdSpices{
         void Update()
         {
 
-            if(qtyCurrentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
+            if(spawning && qtyCurrentEnemies < maxEnemies && Time.fixedTime - timeLastSpawn  > timeToWaitToSpawn){
                 qtyCurrentEnemies++;
                 Enemy enemy = Instantiate(enemies[Random.Range(0,qtyEnemiesTypes)], spawnPositions[Random.Range(0, qtySpawnPositions)].position,Quaternion.identity);
                 timeLastSpawn = Time.fixedTime;
@@ -85,5 +86,10 @@ namespace WeirdSpices{
             enemySpawned.fromWave = true;
             return enemy;
         }
+
+        public void isSpawning(bool spawning){
+            this.spawning = spawning;
+        }
+
     }
 }

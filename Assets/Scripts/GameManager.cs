@@ -19,15 +19,10 @@ namespace WeirdSpices
         [SerializeField] private float waitTimeBetweenCards;
         [SerializeField] private float velocitySuccesfulDelivery = 0.05f;
         [SerializeField] private float velocityFailedDelivery = -0.02f;
-        [SerializeField] private float objectivePointsToWin = 100f;
-        [SerializeField] private float objectivePointsToLose = -10f;
-        [SerializeField] private float initialObjectivePoints = 40f;
-        [SerializeField] float fadingVelocityFactor = 0.1f;
-        private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
-        private float currentObjectivePoints, maxObjectivePointsReached = 0;
-        private float currentObjectiveVelocity = 0f;
-        private float fadeVelocity = 0f;
-
+        [SerializeField] private float pointsToWin = 100f;
+        [SerializeField] private float pointsToLose = -10f;
+        [SerializeField] private float initialPoints = 40f;
+        [SerializeField] float fadingPointsFactor = 0.1f;
         [Header("Player")]
         [SerializeField] private int initialPlayerHP;
         [SerializeField] private int initialMaxPlayerHP;
@@ -52,6 +47,8 @@ namespace WeirdSpices
         [SerializeField] private UIManager uiManager;
         [SerializeField] private List<Dropable> dropables;
         [SerializeField] private WaveManager waveManager;
+        [SerializeField] private ScoreManager scoreManager;
+        
         #endregion
         public int currentPlayerGold { get; private set; }
         public static GameManager Instance { get; private set; }
@@ -71,15 +68,17 @@ namespace WeirdSpices
 
         void Start()
         {   
-            currentObjectivePoints = initialObjectivePoints;
+            scoreManager.SetCurrentPoints(initialPoints);
+            scoreManager.Set(velocitySuccesfulDelivery, velocityFailedDelivery, pointsToWin, pointsToLose, fadingPointsFactor);
             player.SetHP(initialPlayerHP);
             player.SetMaxHealthPoints(initialMaxPlayerHP);
             maxPlayerHP = uiManager.GetHeartQuantity();
             uiManager.SetHelpKey(helpKey);
             uiManager.SetHPParameters(initialPlayerHP, initialMaxPlayerHP);
             uiManager.SetUIGold(currentPlayerGold);
-            uiManager.SetObjectivePoints(currentObjectivePoints);
-            uiManager.SetObjectivePointsToWin(objectivePointsToWin);
+            uiManager.SetObjectivePoints(initialPoints);
+            uiManager.SetObjectivePointsToWin(pointsToWin);
+            TutorialManager.Instance.StartTutorial();
         }
 
         void Update()
@@ -96,17 +95,6 @@ namespace WeirdSpices
             }
 
         }
-
-        void FixedUpdate()
-        {
-            if (currentObjectivePoints >= objectivePointsToWin )
-            {
-                WinGame();
-            }
-            SetObjectivePoints();
-            CheckForWaveTriggers();
-        }
-
 
         public void WinGame() { EndGame(winText); }
         public void LoseGame() { EndGame(loseText); }
@@ -190,25 +178,13 @@ namespace WeirdSpices
 
         public void SuccessfulDelivery(int coinQuantity)
         {
-            if(currentDeliveries == 0){
-                uiManager.ShowObjectiveProgress();
-            }
-            currentDeliveries++;
-            successfulDeliveries++;
-            currentObjectiveVelocity += velocitySuccesfulDelivery;
+            scoreManager.SuccesfulDelivery();
             GainGold(coinQuantity);
         }
 
         public void FailedDelivery()
         {
-            currentDeliveries++;
-            failedDeliveries++;
-            currentObjectiveVelocity += velocityFailedDelivery;
-            if(currentObjectivePoints < objectivePointsToLose)
-            {
-                EndGame(loseText);
-            }
-
+            scoreManager.FailedDelivery();
         }
 
         public void PickedUpFood(GameObject food)
@@ -266,22 +242,14 @@ namespace WeirdSpices
             uiManager.LoadFlags(wavesTriggerPercentages);
         }
         
-        public void SetObjectivePoints(){
-            currentObjectivePoints = currentObjectivePoints + currentObjectiveVelocity;
-            uiManager.SetObjectivePoints(currentObjectivePoints);
-            currentObjectiveVelocity += fadeVelocity;
-            fadeVelocity = currentObjectiveVelocity != 0 ? (currentObjectiveVelocity*-1)*fadingVelocityFactor : 0;
-            if(currentObjectivePoints > maxObjectivePointsReached) maxObjectivePointsReached = currentObjectivePoints;
-        }
-
-        public void CheckForWaveTriggers(){
-            if(waveManager.CheckForWaveTrigger(maxObjectivePointsReached*100/objectivePointsToWin)){
-                uiManager.ShowWaveAnnouncement(waveText);
-            };
-        }
-
         public void WaveEnd(){
             uiManager.ClearFirstWaveFlag();
+        }
+
+        public void CheckForWaveTriggers(float percentage){
+            if(waveManager.CheckForWaveTrigger(percentage)){
+                uiManager.ShowWaveAnnouncement(waveText);
+            };
         }
 
         public int GetMinGoldRewarded() { return minGoldRewarded; }

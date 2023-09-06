@@ -42,7 +42,17 @@ namespace WeirdSpices{
         private Soil soil;
         private bool wasHit = false;
         private float timePlayerWasHitted;
+        public static Player Instance { get; private set; }
 
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            } else {
+                Debug.Log("Más de un Player en escena.");
+            }
+        }
         override public void Start()
         {
             sr = this.GetComponent<SpriteRenderer>();
