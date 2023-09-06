@@ -5,11 +5,11 @@ using UnityEditor;
 
 namespace WeirdSpices{
     public class Player : Entity
-    {       
+    {
         #region Parameters
         [Header("Parameters")]
         [SerializeField] private int movementSpeed;
-        [SerializeField] private float timeToWaitTillGrab = 0.5f; 
+        [SerializeField] private float timeToWaitTillGrab = 0.5f;
         [SerializeField] private float timeToEnableBeingHit = 1.2f;
         [SerializeField] private float xDropDistance;
         [SerializeField] private float yDropDistance;
@@ -21,9 +21,9 @@ namespace WeirdSpices{
         [SerializeField] private KeyCode dropKey;
         [SerializeField] private KeyCode attackKey;
         [SerializeField] private KeyCode interactKey;
-        
+
         #endregion
-        
+
         #region Objects
         [Header("Objects")]
         [SerializeField] private AnimationClip walkClip;
@@ -41,6 +41,8 @@ namespace WeirdSpices{
         private Soil soil;
         private bool wasHit = false;
         private float timePlayerWasHitted;
+
+        [SerializeField] private AudioClip[] attackSounds;
 
         override public void Start()
         {
@@ -142,6 +144,10 @@ namespace WeirdSpices{
 
             if(Input.GetKeyDown(attackKey)){
                 Attack();
+                int x = Random.Range(0, attackSounds.Length);
+                Debug.Log(x);
+                AudioClip s = attackSounds[x]; 
+                AudioManager.Instance.PlaySound(s);
             }
             
             if(Input.GetKeyDown(interactKey) && itemInInventory && itemInInventory.tag.Equals("Seed") && isOnSoil){
