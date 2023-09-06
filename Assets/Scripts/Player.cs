@@ -149,7 +149,7 @@ namespace WeirdSpices{
             }
         }
 
-        private IEnumerator Walking()
+        private IEnumerator Walking()               //new
         {
             walking = true;
             yield return new WaitForSeconds(0.5f);
@@ -164,8 +164,7 @@ namespace WeirdSpices{
 
             if(Input.GetKeyDown(attackKey)){
                 Attack();
-                int x = Random.Range(0, attackSounds.Length);
-                Debug.Log(x);
+                int x = Random.Range(0, attackSounds.Length);                   //new
                 AudioClip s = attackSounds[x]; 
                 AudioManager.Instance.PlaySound(s);
             }
