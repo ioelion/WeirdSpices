@@ -23,6 +23,15 @@ namespace WeirdSpices
             }
         }
 
+        public void HideToolTip(string tooltipName){
+            if(UIManager.Instance.isShowingTooltip(tooltipName)){
+                spriteRendererTooltip.gameObject.SetActive(false);
+                animator.SetBool(tooltipName, false);
+                showingTooltip = false;
+                UIManager.Instance.notShowingTooltip(tooltipName);
+            }
+        }
+
         public void CompletedTooltip(string tooltipName){
             spriteRendererTooltip.sprite = correctSprite;
             UIManager.Instance.AddCompletedTooltip(tooltipName);

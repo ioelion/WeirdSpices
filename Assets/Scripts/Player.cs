@@ -229,13 +229,15 @@ namespace WeirdSpices{
                             }
                             break;
                     case "plant":
-                        if(!(Input.GetKey(interactKey) && isOnSoil == true)){
+                        if(!(Input.GetKey(interactKey)) && isOnSoil){
                                 tooltiper.ShowTooltip(tooltipName);
                                 yield return new WaitForSeconds(0.5f);
                                 StartCoroutine(ShowTooltip(tooltipName));
-                            }else{
-                                tooltiper.CompletedTooltip(tooltipName);
-                            }
+                        }else if (!isOnSoil) {
+                                tooltiper.HideToolTip(tooltipName);
+                        }else{
+                            tooltiper.CompletedTooltip(tooltipName);
+                        }
                             break;
                     default:
                         break;

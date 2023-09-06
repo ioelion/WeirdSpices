@@ -171,6 +171,12 @@ namespace WeirdSpices
         public void showingTooltip(string tooltipName){
             tooltipsShowing.Add(tooltipName);
         }
+
+        public void notShowingTooltip(string tooltipName){
+            if(tooltipsShowing.Contains(tooltipName)){
+                tooltipsShowing.Remove(tooltipName);
+            }
+        }
         
     }
 
