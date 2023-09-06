@@ -23,7 +23,7 @@ namespace WeirdSpices{
        
         private Dictionary<Vector3Int,List<Seed>> seeds = new Dictionary<Vector3Int, List<Seed>>();
         private Food foodToPlant;
-        private GameObject currentCrop;
+        private GameObject currentCrop = null;
 
         private Vector3Int lastHighlightPosition;
         public static Soil Instance { get; private set; }
@@ -54,12 +54,15 @@ namespace WeirdSpices{
                     seeds[position].Add(seed);
                     foresoil.SetTile(position, null);
                     foodToPlant = foodManager.GetFoodFromSeeds(seeds[position]);
+                    currentCrop = Instantiate(cropPrefab, new Vector2(position.x + 0.5f, position.y +0.5f), Quaternion.identity);
+                    
                     if(foodToPlant != null){
-                        currentCrop = Instantiate(cropPrefab, new Vector2(position.x + 0.5f, position.y +0.5f), Quaternion.identity);
-                        currentCrop.GetComponent<Crop>().StartToGrow(foodToPlant.gameObject);
+                        currentCrop.GetComponent<Crop>().StartToGrow(foodToPlant);
                     }else{
+                        currentCrop.GetComponent<Crop>().IncorrectSeeds();
                         RemoveSeeds(position);
-                        GameManager.Instance.IncorrectCombinationDone(new Vector2(position.x + 0.5f, position.y +0.5f));
+                        currentCrop = null;
+                        //GameManager.Instance.IncorrectCombinationDone(new Vector2(position.x + 0.5f, position.y +0.5f));
                     }
                 }
             }
