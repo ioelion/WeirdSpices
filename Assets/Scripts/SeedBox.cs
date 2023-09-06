@@ -39,6 +39,7 @@ namespace WeirdSpices{
                 lastSeedDropTime = Time.fixedTime;                               
                 if (currentSeeds > 0 ) 
                 {
+                    animator.SetTrigger("wasHit");
                     Vector2 posS = dispenser.transform.position;
                     if ((Physics2D.OverlapPoint(posS) != null) && (Physics2D.OverlapPoint(posS).CompareTag("Seed") ) )
                     {
@@ -46,7 +47,6 @@ namespace WeirdSpices{
                     }
                     else
                     {                 
-                        animator.SetTrigger("wasHit");
                         GameObject clone = Instantiate(seedPrefab, positionToDrop, Quaternion.identity);
                         GameManager.Instance.AddToList(clone);
                         currentSeeds--; 

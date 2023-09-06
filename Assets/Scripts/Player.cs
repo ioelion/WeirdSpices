@@ -11,6 +11,7 @@ namespace WeirdSpices{
         [SerializeField] private int movementSpeed;
         [SerializeField] private float timeToWaitTillGrab = 0.5f; 
         [SerializeField] private float timeToEnableBeingHit = 1.2f;
+        [SerializeField] private float knockbackDuration = 0.10f;
         [SerializeField] private float xDropDistance;
         [SerializeField] private float yDropDistance;
 
@@ -34,7 +35,7 @@ namespace WeirdSpices{
         [SerializeField] private Tooltiper tooltiper;
         #endregion
         private SpriteRenderer sr;
-        private GameObject itemInInventory;
+        private GameObject itemInInventory = null;
         private float lastItemTime;
         private float timeKeyToRemoveWasPressed;
         private bool isOnSoil = false;
@@ -182,7 +183,6 @@ namespace WeirdSpices{
             if(itemInInventory != null){
                 if(itemInInventory.tag.Equals("Food")) gameManager.PlayerDroppedFood();
                 Transform tfchildren = inventory.transform.GetChild(0);
-                
                 tfchildren.position = GetDropPosition();
                 inventory.transform.DetachChildren();
                 itemInInventory = null;
@@ -242,8 +242,21 @@ namespace WeirdSpices{
                 }
             }
         }
+        public override void Knockback(Vector3 hitterPosition)
+        {
+            Knockback(hitterPosition,knockbackDuration);
+        }
 
+        public void Knockback(Vector3 hitterPosition, float stunTime){
+            base.Knockback(hitterPosition);
+            StartCoroutine(EnablePlayer(stunTime));
+            this.enabled = false;
+        }
 
+        private IEnumerator EnablePlayer(float timeToWait){
+            yield return new WaitForSeconds(timeToWait);
+            this.enabled =true;
+        }
 
     }
 }

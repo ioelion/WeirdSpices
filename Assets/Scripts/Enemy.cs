@@ -77,7 +77,7 @@ namespace WeirdSpices {
 
         void FixedUpdate()
         {
-            if(!isStunned){
+            if(!isStunned && Time.fixedTime - lastAttackTime > timeToWaitTillAttack){
                 if (_item == null)
                 {
                     runToWaypoint = false;

@@ -21,6 +21,7 @@ namespace WeirdSpices{
             requestCardsWaitList = new List<RequestCard>();
             GetGameManagerVariables();
             requestCardsWaitList.AddRange(requestCards);
+            timeLastCardSetted = Time.fixedTime;
         }
 
         void Awake()
