@@ -75,17 +75,22 @@ namespace WeirdSpices{
 
         public void AnimateCardsWithFood(GameObject food){
             foreach(RequestCard requestCard in requestCards){
-                requestCard.StopAnimation();
-                if(requestCard.GetFoodRequiredSprite() == food.GetComponent<SpriteRenderer>().sprite) {
-                    requestCard.PlayAnimation();
+                if(requestCard.gameObject.activeInHierarchy){
+                    requestCard.StopAnimation();
+                    if(requestCard.GetFoodRequiredSprite() == food.GetComponent<SpriteRenderer>().sprite) {
+                        requestCard.PlayAnimation();
+                    }
                 }
+
 
             }
         }
 
         public void StopAnimations(){
             foreach(RequestCard requestCard in requestCards){
-                requestCard.StopAnimation();
+                if(requestCard.gameObject.activeInHierarchy){
+                    requestCard.StopAnimation();
+                }
             }
         }
 

@@ -52,19 +52,16 @@ namespace WeirdSpices
         }
 
         public void SuccesfulDelivery(){
-            if(currentDeliveries == 0){
-                uiManager.ShowObjectiveProgress();
-            }
             currentDeliveries++;
             successfulDeliveries++;
-            currentVelocity = velocitySuccesfulDelivery;
+            currentVelocity += velocitySuccesfulDelivery;
     //        uiManager.TurnGreenProgressBar();
         }
 
         public void FailedDelivery(){
             currentDeliveries++;
             failedDeliveries++;
-            currentVelocity = velocityFailedDelivery;
+            currentVelocity += velocityFailedDelivery;
 //            uiManager.TurnRedProgressBar();
         }
 

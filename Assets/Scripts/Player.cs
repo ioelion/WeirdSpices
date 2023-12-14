@@ -130,9 +130,7 @@ namespace WeirdSpices{
                     other.gameObject.GetComponent<RequestCard>().ReceiveFood(itemInInventory);
                     Destroy(itemInInventory, 0.01f);
                     DropItem();
-            }
-
-            if(other.tag.Equals("TutorialRequestCard") && itemInInventory != null && itemInInventory.tag.Equals("Food")){
+            } else if(other.tag.Equals("TutorialRequestCard") && itemInInventory != null && itemInInventory.tag.Equals("Food")){
                     other.gameObject.GetComponent<TutorialRequestCard>().ReceiveFood(itemInInventory);
                     Destroy(itemInInventory, 0.01f);
                     DropItem();

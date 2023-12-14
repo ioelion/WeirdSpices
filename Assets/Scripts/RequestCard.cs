@@ -29,6 +29,9 @@ namespace WeirdSpices{
         [SerializeField] private Seed ingredient1;
         [SerializeField] private Seed ingredient2;
         [SerializeField] private Food foodRequired;
+
+        [SerializeField] private GameObject recipe;
+        [SerializeField] private Sprite backgroundSprite;
         private Sprite foodRequiredSprite;
         private int foodQuantity;
         private int rewardGold;
@@ -39,7 +42,6 @@ namespace WeirdSpices{
         void Start()
         {
             timeLastDelivery = Time.fixedTime;
-            gameObject.SetActive(false);
         }
 
         void FixedUpdate()
@@ -61,8 +63,7 @@ namespace WeirdSpices{
             this.ingredient2 = seedsNeeded[1];
             SetCardUI();
             timeLastDelivery = Time.fixedTime;
-
-
+            this.GetComponent<SpriteRenderer>().sprite = backgroundSprite;
         }
 
         public void SetCardUI(){
@@ -99,12 +100,8 @@ namespace WeirdSpices{
 
         private void ReduceFoodLeft(int quantity){
             this.foodQuantity -= 1;
+            Deliver();
             //foodText.text = "" + foodQuantity;
-            if(foodQuantity == 0){
-                Deliver();
-            }
-
-
         }
 
         private void Deliver(){
@@ -123,13 +120,13 @@ namespace WeirdSpices{
 
         private IEnumerator Deactivation(){
             SetActiveTextsAndImages(false);
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0)[0].clip.length); 
+            yield return new WaitForSeconds(0.5f);//animator.GetCurrentAnimatorClipInfo(0)[0].clip.length); 
             Deactivate();
         }
         
         private void Deactivate(){
             timeLastDelivery = Time.fixedTime;
-            DeliveryBox.Instance.AddRequestCardToWaitList(this);     
+            DeliveryBox.Instance.AddRequestCardToWaitList(this);  
         }
 
         
@@ -137,7 +134,7 @@ namespace WeirdSpices{
             foodText.gameObject.gameObject.SetActive(active);
             goldText.gameObject.gameObject.SetActive(active);
             timerText.gameObject.gameObject.SetActive(active);
-            //ingredient1.gameObject.gameObject.SetActive(active);
+            recipe.SetActive(active);
         }
     }
 }

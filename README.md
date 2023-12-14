@@ -1,2 +1,0 @@
-# WeirdSpices
-Pruebawebhook1
