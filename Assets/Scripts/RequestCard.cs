@@ -4,12 +4,13 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-namespace WeirdSpices{
+namespace WeirdSpices
+{
     public class RequestCard : MonoBehaviour
     {
         [Header("Food")]
         [SerializeField] private TMP_Text foodText;
-        [SerializeField] private Image foodImage; 
+        [SerializeField] private Image foodImage;
 
         [Header("Gold")]
         [SerializeField] private TMP_Text goldText;
@@ -47,11 +48,13 @@ namespace WeirdSpices{
         void FixedUpdate()
         {
             timerText.text = "" + Mathf.RoundToInt(maxTimeToDeliver - (Time.fixedTime - timeLastDelivery));
-            if(Time.fixedTime - timeLastDelivery  > maxTimeToDeliver){
+            if (Time.fixedTime - timeLastDelivery > maxTimeToDeliver)
+            {
                 Fail();
             }
         }
-        public void SetCard(Food foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver){
+        public void SetCard(Food foodRequired, int foodQuantity, int rewardGold, float maxTimeToDeliver)
+        {
             SetActiveTextsAndImages(true);
             this.foodRequired = foodRequired;
             this.foodRequiredSprite = foodRequired.GetSprite();
@@ -63,10 +66,11 @@ namespace WeirdSpices{
             this.ingredient2 = seedsNeeded[1];
             SetCardUI();
             timeLastDelivery = Time.fixedTime;
-            this.GetComponent<SpriteRenderer>().sprite = backgroundSprite;
+            //this.GetComponent<SpriteRenderer>().sprite = backgroundSprite;
         }
 
-        public void SetCardUI(){
+        public void SetCardUI()
+        {
             //foodText.text = "" + foodQuantity;
             goldText.text = "" + rewardGold;
             foodImage.sprite = foodRequiredSprite;
@@ -74,37 +78,47 @@ namespace WeirdSpices{
             ingredient2Img.sprite = ingredient2.GetSprite();
         }
 
-        public void ReceiveFood(GameObject food){
-            if(food.GetComponent<SpriteRenderer>().sprite == foodImage.sprite){
+        public void ReceiveFood(GameObject food)
+        {
+            if (food.GetComponent<SpriteRenderer>().sprite == foodImage.sprite)
+            {
                 ReduceFoodLeft(1);
-            }else if(food.GetComponent<SpriteRenderer>().sprite != foodImage.sprite){
+            }
+            else if (food.GetComponent<SpriteRenderer>().sprite != foodImage.sprite)
+            {
                 Fail();
             }
         }
 
-        public Food GetFoodRequired(){
+        public Food GetFoodRequired()
+        {
             return foodRequired;
         }
 
-        public Sprite GetFoodRequiredSprite(){
+        public Sprite GetFoodRequiredSprite()
+        {
             return foodRequiredSprite;
         }
 
-        public void PlayAnimation(){
+        public void PlayAnimation()
+        {
             animator.SetBool("playerHasFood", true);
         }
 
-        public void StopAnimation(){
+        public void StopAnimation()
+        {
             animator.SetBool("playerHasFood", false);
         }
 
-        private void ReduceFoodLeft(int quantity){
+        private void ReduceFoodLeft(int quantity)
+        {
             this.foodQuantity -= 1;
             Deliver();
             //foodText.text = "" + foodQuantity;
         }
 
-        private void Deliver(){
+        private void Deliver()
+        {
             timeLastDelivery = Time.fixedTime;
             animator.SetTrigger("success");
             GameManager.Instance.SuccessfulDelivery(rewardGold);
@@ -112,25 +126,29 @@ namespace WeirdSpices{
         }
 
 
-        private void Fail(){
+        private void Fail()
+        {
             GameManager.Instance.FailedDelivery();
             animator.SetTrigger("fail");
             StartCoroutine(Deactivation());
         }
 
-        private IEnumerator Deactivation(){
+        private IEnumerator Deactivation()
+        {
             SetActiveTextsAndImages(false);
             yield return new WaitForSeconds(0.5f);//animator.GetCurrentAnimatorClipInfo(0)[0].clip.length); 
             Deactivate();
         }
-        
-        private void Deactivate(){
+
+        private void Deactivate()
+        {
             timeLastDelivery = Time.fixedTime;
-            DeliveryBox.Instance.AddRequestCardToWaitList(this);  
+            DeliveryBox.Instance.AddRequestCardToWaitList(this);
         }
 
-        
-        public void SetActiveTextsAndImages(bool active){
+
+        public void SetActiveTextsAndImages(bool active)
+        {
             foodText.gameObject.gameObject.SetActive(active);
             goldText.gameObject.gameObject.SetActive(active);
             timerText.gameObject.gameObject.SetActive(active);

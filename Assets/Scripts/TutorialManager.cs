@@ -41,44 +41,57 @@ namespace WeirdSpices
             }
         }
 
-        public void SetEnemySpawnerState(bool enabled){
+        public void SetEnemySpawnerState(bool enabled)
+        {
             enemySpawner.isSpawning(enabled);
         }
 
-        public void SetDeliveryBoxState(bool enabled){
+        public void SetDeliveryBoxState(bool enabled)
+        {
             deliveryBox.gameObject.SetActive(enabled);
         }
 
-        public void SetFirstCard(){
+        public void SetFirstCard()
+        {
             Debug.Log("First card activated");
             firstRequestCard.gameObject.SetActive(true);
             firstRequestCard.SetCard(firstCardFood, 1, 0, 99);
         }
 
-        public void SetSecondCard(){
+        public void SetSecondCard()
+        {
             Debug.Log("Second card activated");
             secondRequestCard.gameObject.SetActive(true);
             secondRequestCard.SetCard(secondCardFood, 1, 0, 99);
         }
 
-        public void SetSeedBoxState(bool enabled, int seedBoxNumber){
-            foreach(SeedBox seedBox in seedBoxes){
-                if(seedBox.GetSeedBoxNumber() == seedBoxNumber){
+        public void SetSeedBoxState(bool enabled, int seedBoxNumber)
+        {
+            foreach (SeedBox seedBox in seedBoxes)
+            {
+                if (seedBox.GetSeedBoxNumber() == seedBoxNumber)
+                {
                     seedBox.gameObject.SetActive(enabled);
-                    activatedSeedBoxesQty+=1;
+                    activatedSeedBoxesQty += 1;
                     Debug.Log(activatedSeedBoxesQty);
-                    if(activatedSeedBoxesQty == 2){
+                    if (activatedSeedBoxesQty == 2)
+                    {
                         SetFirstCard();
-                    }else if(activatedSeedBoxesQty == 3){
+                    }
+                    else if (activatedSeedBoxesQty == 3)
+                    {
                         SetSecondCard();
                     }
                 }
             }
         }
 
-        public Vector2 GetSeedBoxPosition(int seedBoxNumber){
-            foreach(SeedBox seedBox in seedBoxes){
-                if(seedBox.GetSeedBoxNumber() == seedBoxNumber){
+        public Vector2 GetSeedBoxPosition(int seedBoxNumber)
+        {
+            foreach (SeedBox seedBox in seedBoxes)
+            {
+                if (seedBox.GetSeedBoxNumber() == seedBoxNumber)
+                {
                     return seedBox.gameObject.transform.position;
                 }
             }
@@ -86,44 +99,56 @@ namespace WeirdSpices
             return Vector2.zero;
         }
 
-        public void SetAllSeedBoxesState(bool enabled){
-            foreach(SeedBox seedBox in seedBoxes){
+        public void SetAllSeedBoxesState(bool enabled)
+        {
+            foreach (SeedBox seedBox in seedBoxes)
+            {
                 seedBox.gameObject.SetActive(enabled);
             }
         }
 
-        public void SetScoreState(bool enabled){
-            uiManager.ObjectiveProgressVisible(false);
-            scoreManager.gameObject.SetActive(false);
+        public void SetScoreState(bool enabled)
+        {
+            uiManager.ObjectiveProgressVisible(enabled);
+            scoreManager.gameObject.SetActive(enabled);
         }
 
-        public void SetShopState(bool enabled){
-            shop.gameObject.SetActive(false);
+        public void SetShopState(bool enabled)
+        {
+            shop.gameObject.SetActive(enabled);
         }
 
 
-        public void CardCompleted(Food food){
-            if(food.GetFoodNumber() == firstCardFood.GetFoodNumber()){
+        public void CardCompleted(Food food)
+        {
+            if (food.GetFoodNumber() == firstCardFood.GetFoodNumber())
+            {
                 FirstCardCompleted();
-            }else if(food.GetFoodNumber() == secondCardFood.GetFoodNumber()){
+            }
+            else if (food.GetFoodNumber() == secondCardFood.GetFoodNumber())
+            {
                 SecondCardCompleted();
             }
         }
-        public void FirstCardCompleted(){
+        public void FirstCardCompleted()
+        {
             Debug.Log("First card completed");
             Instantiate(tutorialZombie, tutorialZombieSpawnPoint.position, Quaternion.identity);
         }
 
-        public void SecondCardCompleted(){
+        public void SecondCardCompleted()
+        {
             Debug.Log("Second card completed");
             EndTutorial();
         }
 
-        public void DeactivateAllTutorialCards(){
+        public void DeactivateAllTutorialCards()
+        {
             firstRequestCard.gameObject.SetActive(true);
             secondRequestCard.gameObject.SetActive(true);
         }
-        public void StartTutorial(){
+        public void StartTutorial()
+        {
             Debug.Log("Tutorial started");
             DeactivateAllTutorialCards();
             SetAllSeedBoxesState(false);
@@ -134,7 +159,8 @@ namespace WeirdSpices
             uiManager.ObjectiveProgressVisible(false);
         }
 
-        public void EndTutorial(){
+        public void EndTutorial()
+        {
             Debug.Log("Ending Tutorial");
             SetAllSeedBoxesState(true);
             SetDeliveryBoxState(true);
