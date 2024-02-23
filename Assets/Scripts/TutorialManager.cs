@@ -142,7 +142,7 @@ namespace WeirdSpices
             EndTutorial();
         }
 
-        public void DeactivateAllTutorialCards()
+        public void ActivateTutorialCards()
         {
             firstRequestCard.gameObject.SetActive(true);
             secondRequestCard.gameObject.SetActive(true);
@@ -150,7 +150,7 @@ namespace WeirdSpices
         public void StartTutorial()
         {
             Debug.Log("Tutorial started");
-            DeactivateAllTutorialCards();
+            ActivateTutorialCards();
             SetAllSeedBoxesState(false);
             SetDeliveryBoxState(false);
             SetEnemySpawnerState(false);
@@ -162,8 +162,8 @@ namespace WeirdSpices
         public void EndTutorial()
         {
             Debug.Log("Ending Tutorial");
-            SetAllSeedBoxesState(true);
             SetDeliveryBoxState(true);
+            SetAllSeedBoxesState(true);
             SetEnemySpawnerState(true);
             SetScoreState(true);
             SetShopState(true);

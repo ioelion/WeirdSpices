@@ -11,14 +11,15 @@ namespace WeirdSpices
         [SerializeField] private float pointsToWin = 100f;
         [SerializeField] private float pointsToLose = -10f;
         [SerializeField] float fadingPointsFactor = 0.1f;
-        private int currentDeliveries, failedDeliveries,successfulDeliveries = 0;
+        private int currentDeliveries, failedDeliveries, successfulDeliveries = 0;
         private float currentPoints, maxPointsReached = 0;
         private float currentVelocity = 0f;
         private float fadeVelocity = 0f;
         GameManager gameManager;
         UIManager uiManager;
 
-        public void Set(float velocitySuccesfulDelivery, float velocityFailedDelivery, float pointsToWin, float pointsToLose, float fadingPointsFactor){
+        public void Set(float velocitySuccesfulDelivery, float velocityFailedDelivery, float pointsToWin, float pointsToLose, float fadingPointsFactor)
+        {
             this.velocitySuccesfulDelivery = velocitySuccesfulDelivery;
             this.velocityFailedDelivery = velocityFailedDelivery;
             this.pointsToWin = pointsToWin;
@@ -26,13 +27,14 @@ namespace WeirdSpices
             this.fadingPointsFactor = fadingPointsFactor;
         }
 
-        public void SetCurrentPoints(float currentPoints){
+        public void SetCurrentPoints(float currentPoints)
+        {
             this.currentPoints = currentPoints;
         }
 
         void Start()
         {
-            gameManager = GameManager.Instance;    
+            gameManager = GameManager.Instance;
             uiManager = UIManager.Instance;
         }
 
@@ -40,10 +42,11 @@ namespace WeirdSpices
 
         void FixedUpdate()
         {
-            if (currentPoints >= pointsToWin )
+            if (currentPoints >= pointsToWin)
             {
                 gameManager.WinGame();
-            }else if(currentPoints < pointsToLose)
+            }
+            else if (currentPoints < pointsToLose)
             {
                 gameManager.LoseGame();
             }
@@ -51,30 +54,34 @@ namespace WeirdSpices
             CheckForWaveTriggers();
         }
 
-        public void SuccesfulDelivery(){
+        public void SuccesfulDelivery()
+        {
             currentDeliveries++;
             successfulDeliveries++;
             currentVelocity += velocitySuccesfulDelivery;
-    //        uiManager.TurnGreenProgressBar();
+            //        uiManager.TurnGreenProgressBar();
         }
 
-        public void FailedDelivery(){
+        public void FailedDelivery()
+        {
             currentDeliveries++;
             failedDeliveries++;
             currentVelocity += velocityFailedDelivery;
-//            uiManager.TurnRedProgressBar();
+            //            uiManager.TurnRedProgressBar();
         }
 
-        public void SetObjectivePoints(){
+        public void SetObjectivePoints()
+        {
             currentPoints = currentPoints + currentVelocity;
             uiManager.SetObjectivePoints(currentPoints);
             currentVelocity += fadeVelocity;
-            fadeVelocity = currentVelocity != 0 ? (currentVelocity*-1)*fadingPointsFactor : 0;
-            if(currentPoints > maxPointsReached) maxPointsReached = currentPoints;
+            fadeVelocity = currentVelocity != 0 ? (currentVelocity * -1) * fadingPointsFactor : 0;
+            if (currentPoints > maxPointsReached) maxPointsReached = currentPoints;
         }
 
-        public void CheckForWaveTriggers(){
-            gameManager.CheckForWaveTriggers(maxPointsReached*100/pointsToWin);
+        public void CheckForWaveTriggers()
+        {
+            gameManager.CheckForWaveTriggers(maxPointsReached * 100 / pointsToWin);
         }
 
 

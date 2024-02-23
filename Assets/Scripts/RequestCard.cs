@@ -36,7 +36,7 @@ namespace WeirdSpices
         private Sprite foodRequiredSprite;
         private int foodQuantity;
         private int rewardGold;
-        private float maxTimeToDeliver;
+        private float maxTimeToDeliver = 999f;
         private float timeLastDelivery;
 
 
